@@ -123,11 +123,12 @@ class AnswerService {
 
 IMPORTANT RULES:
 1. Only use information from the provided excerpts
-2. Quote exact text from the excerpts when possible
-3. Include citations in the format [c:chunk_id -> section_name]
+2. Answer in your own words - do NOT quote the exact text from the excerpts
+3. Include citations in the format [c:chunk_id -> section_name] for key points
 4. If the answer is not clearly found in the excerpts, respond with: "I could not find this in the policy."
 5. Be precise and factual
 6. If you're unsure, err on the side of saying you couldn't find it
+7. Write naturally and avoid extra spaces before punctuation
 
 Question: ${question}
 
@@ -152,7 +153,18 @@ Answer:`;
         max_tokens: 500
       });
 
-      const answerText = response.choices[0].message.content.trim();
+      let answerText = response.choices[0].message.content.trim();
+      
+      // Clean up spacing issues
+      answerText = answerText
+        .replace(/\s+\./g, '.')  // Remove spaces before periods
+        .replace(/\s+,/g, ',')   // Remove spaces before commas
+        .replace(/\s+;/g, ';')   // Remove spaces before semicolons
+        .replace(/\s+:/g, ':')   // Remove spaces before colons
+        .replace(/\s+!/g, '!')   // Remove spaces before exclamation marks
+        .replace(/\s+\?/g, '?')  // Remove spaces before question marks
+        .replace(/\s+/g, ' ')    // Replace multiple spaces with single space
+        .trim();
       
       // Calculate confidence based on chunk scores
       const avgScore = chunks.reduce((sum, chunk) => sum + chunk.score, 0) / chunks.length;

@@ -26,6 +26,9 @@ class DocumentProcessor {
     try {
       logger.info(`Starting document processing for: ${filename}`);
       
+      console.log('Content length:', content.length);
+      console.log('Content preview:', content.substring(0, 200) + '...');
+      
       // Parse markdown
       const parsed = this.parseMarkdown(content);
       
@@ -60,6 +63,9 @@ class DocumentProcessor {
     const sections = [];
     let currentSection = null;
     
+    console.log('Parsing markdown, found tokens:', tokens.length);
+    console.log('Token types:', tokens.map(t => t.type));
+    
     for (const token of tokens) {
       if (token.type === 'heading') {
         currentSection = {
@@ -69,20 +75,39 @@ class DocumentProcessor {
           sentences: []
         };
         sections.push(currentSection);
-      } else if (currentSection) {
+        console.log('Created section:', token.text);
+      } else if (token.type === 'paragraph' || token.type === 'list') {
+        // If no section exists yet, create a default one
+        if (!currentSection) {
+          currentSection = {
+            title: 'Document Content',
+            level: 1,
+            content: [],
+            sentences: []
+          };
+          sections.push(currentSection);
+          console.log('Created default section for content without headings');
+        }
+        
         if (token.type === 'paragraph') {
           currentSection.content.push(token.text);
           // Split into sentences
           const sentences = this.splitIntoSentences(token.text);
           currentSection.sentences.push(...sentences);
+          console.log('Added paragraph with', sentences.length, 'sentences');
         } else if (token.type === 'list') {
           const listText = token.items.map(item => item.text).join(' ');
           currentSection.content.push(listText);
           const sentences = this.splitIntoSentences(listText);
           currentSection.sentences.push(...sentences);
+          console.log('Added list with', sentences.length, 'sentences');
         }
       }
     }
+    
+    console.log('Final sections:', sections.length);
+    console.log('Total content pieces:', sections.reduce((sum, s) => sum + s.content.length, 0));
+    console.log('Total sentences:', sections.reduce((sum, s) => sum + s.sentences.length, 0));
     
     return sections;
   }
@@ -100,7 +125,11 @@ class DocumentProcessor {
     const chunks = [];
     let chunkId = 0;
     
+    console.log('Creating chunks from', sections.length, 'sections');
+    
     for (const section of sections) {
+      console.log('Processing section:', section.title, 'with', section.content.length, 'content pieces and', section.sentences.length, 'sentences');
+      
       // Add paragraph-level chunks
       if (section.content.length > 0) {
         const paragraphText = section.content.join(' ');
@@ -113,6 +142,7 @@ class DocumentProcessor {
             section: section.title,
             level: section.level
           });
+          console.log('Created paragraph chunk:', paragraphText.substring(0, 50) + '...');
         }
       }
       
@@ -131,6 +161,7 @@ class DocumentProcessor {
       }
     }
     
+    console.log('Total chunks created:', chunks.length);
     return chunks;
   }
 

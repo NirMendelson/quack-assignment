@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Send, Bot, User, FileText } from 'lucide-react'
+import { Send, User, FileText } from 'lucide-react'
 
 interface Message {
   id: string
@@ -27,6 +27,14 @@ export function ChatInterface() {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const cleanContent = (content: string) => {
+    // Remove citation patterns like [c:1 -> Official support email]
+    return content.replace(/\[c:\d+\s*->[^\]]+\]/g, '')
+      // Remove bold markers around quoted text
+      .replace(/\*\*([^*]+)\*\*/g, '$1')
+      .trim()
   }
 
   useEffect(() => {
@@ -92,7 +100,7 @@ export function ChatInterface() {
       <Card className="flex-1 flex flex-col">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <Bot className="h-5 w-5" />
+            <span className="text-2xl">🦆</span>
             <span>Policy Q&A</span>
           </CardTitle>
         </CardHeader>
@@ -128,7 +136,7 @@ export function ChatInterface() {
                     {message.type === 'user' ? (
                       <User className="h-4 w-4" />
                     ) : (
-                      <Bot className="h-4 w-4" />
+                      <span className="text-lg">🦆</span>
                     )}
                   </div>
                   <div
@@ -138,7 +146,7 @@ export function ChatInterface() {
                         : 'bg-muted'
                     }`}
                   >
-                    <div className="whitespace-pre-wrap">{message.content}</div>
+                    <div className="whitespace-pre-wrap">{cleanContent(message.content)}</div>
                   </div>
                 </div>
               </div>
@@ -147,7 +155,7 @@ export function ChatInterface() {
             {isLoading && (
               <div className="flex space-x-3 justify-start">
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center">
-                  <Bot className="h-4 w-4" />
+                  <span className="text-lg">🦆</span>
                 </div>
                 <div className="bg-muted rounded-lg px-4 py-2">
                   <div className="flex space-x-1">

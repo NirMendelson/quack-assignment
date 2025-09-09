@@ -114,16 +114,6 @@ export function FileUpload({ onDocumentLoaded }: FileUploadProps) {
           </div>
         )}
 
-        <div className="mt-6 text-center">
-          <Button
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isUploading}
-            className="w-full"
-          >
-            <FileText className="h-4 w-4 mr-2" />
-            {isUploading ? 'Processing...' : 'Choose File'}
-          </Button>
-        </div>
       </CardContent>
     </Card>
   )
