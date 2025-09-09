@@ -1,4 +1,4 @@
-### Q1. What should a customer do if they receive a copyright claim on a video using Artlist music?  
+<!-- ### Q1. What should a customer do if they receive a copyright claim on a video using Artlist music?  
 **A:** The claim is usually automated, and the customer should use the license certificate to dispute it.
 > *“sometimes people ask why their video got a copyright claim the answer is usually that the claim is automated and they should use the license certificate to dispute it which they can generate from their account dashboard under downloads selecting the track they used”*
 
@@ -45,7 +45,7 @@
 ---
 
 ### Q9. Does Artlist support nonprofit or school discounts?  
-**A:** No, there is no special nonprofit tier. They need a standard subscription unless they qualify for an enterprise deal.  
+**A:** No information about nonprofit or school discounts is mentioned. The text only specifies that students can get a 30% discount by proving their status through a third-party form.
 > *“sometimes schools or nonprofits want to use artlist and in those cases they need a standard subscription because there’s no special nonprofit tier except enterprise deals”*
 
 ---
@@ -66,13 +66,13 @@
 **A:** Footage usually comes in 23.98, 25, 30, 50, or 60 fps, depending on the clip.  
 > *“people also ask about frame rates footage usually comes in 23.98 25 30 50 60 fps but depends on the clip”*
 
----
+--- -->
 
 ### Q13. How should customers handle copyright claims on projects?  
 **A:** They need to generate a license certificate per project, not once per account.  
 > *“license certificates need to be generated per project not once per account so remind them to do it for each upload to avoid copyright claims”*
 
----
+<!-- ---
 
 ### Q14. Does Artlist support accessibility for blind users?  
 **A:** The site works with screen readers, but not all controls are perfect. Blind customers should use the simplified search view.  
@@ -148,19 +148,22 @@
 ---
 
 ### Q27. Can customers pay for Artlist with cryptocurrency like Bitcoin or Ethereum?  
-**A:** No information.  
+**A:** No, Artlist does not accept cryptocurrency payments. Customers can pay with credit cards, PayPal, or some local methods in Europe.  
+> *“regarding payment methods artlist accepts credit cards paypal and some local methods in europe but not crypto if customer asks”*
 
 ---
 
 ### Q28. Does Artlist provide dedicated phone support lines for enterprise clients?  
-**A:** No information.  
+**A:** No, Artlist does not provide phone support. All support is handled via email or chat, with response times usually within 24 hours (up to 48 hours on weekends).  
+> *“phone support doesn’t exist everything is via email or chat and expected response time is 24 hours but sometimes up to 48 on weekends”*
+
 
 ---
 
 ### Q29. Are there analytics tools in Artlist that show how often a downloaded track is used worldwide?  
 **A:** No information.  
 
----
+--- -->
 
-### Q30. Does Artlist have a built-in collaboration workspace where multiple users can edit playlists together in real time?  
-**A:** No information.  
+<!-- ### Q30. Does Artlist have a built-in collaboration workspace where multiple users can edit playlists together in real time?  
+**A:** No information.   -->

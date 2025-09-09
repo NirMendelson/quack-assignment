@@ -36,8 +36,8 @@ class AutomatedTestRunner {
     const testDirs = await this.getTestDirectories();
     console.log(`Found ${testDirs.length} test directories: ${testDirs.join(', ')}\n`);
 
-    // For now, only run the first test
-    const testToRun = testDirs[0]; // test1
+    // For now, only run the second test
+    const testToRun = testDirs[1]; // test2
     console.log(`🎯 Running only: ${testToRun} (limited test mode)\n`);
 
     console.log(`📁 Processing ${testToRun}...`);
@@ -148,9 +148,24 @@ class AutomatedTestRunner {
     let currentQuestion = null;
     let currentAnswer = null;
     let inAnswer = false;
+    let inComment = false;
 
     for (const line of lines) {
       const trimmed = line.trim();
+      
+      // Check for comment start/end
+      if (trimmed.includes('<!--')) {
+        inComment = true;
+      }
+      if (trimmed.includes('-->')) {
+        inComment = false;
+        continue; // Skip the rest of this line
+      }
+      
+      // Skip if we're inside a comment
+      if (inComment) {
+        continue;
+      }
       
       if (trimmed.startsWith('### Q')) {
         // Save previous question if exists
@@ -185,10 +200,21 @@ class AutomatedTestRunner {
   }
 
   async testQuestion(question, testDir, questionNumber) {
+    console.log(`\n🔍 Testing Question ${questionNumber}: "${question.question}"`);
+    console.log(`📋 Expected Answer: "${question.expectedAnswer}"`);
+    
     // Search for relevant content
-    const searchResults = await this.searchService.search(question.question, 5);
+    console.log(`🔎 Searching for relevant content...`);
+    const searchResults = await this.searchService.search(question.question, 20);
+    console.log(`📊 Found ${searchResults.length} search results`);
+    
+    // Log search results details
+    searchResults.forEach((result, index) => {
+      console.log(`  ${index + 1}. [${result.type}] ${result.id} Score: ${result.score.toFixed(3)} | "${result.content.substring(0, 100)}..."`);
+    });
     
     if (searchResults.length === 0) {
+      console.log(`❌ No search results found`);
       return {
         testDir,
         questionNumber,
@@ -202,16 +228,30 @@ class AutomatedTestRunner {
     }
 
     // Rerank results
+    console.log(`🔄 Reranking results...`);
     const rerankedResults = await this.answerService.rerankResults(question.question, searchResults);
+    console.log(`📊 Reranked to ${rerankedResults.length} results`);
+    
+    // Log reranked results
+    rerankedResults.forEach((result, index) => {
+      console.log(`  ${index + 1}. [${result.type}] Score: ${result.score.toFixed(3)} | "${result.content.substring(0, 100)}..."`);
+    });
     
     // Generate answer
+    console.log(`🤖 Generating answer...`);
     const answer = await this.answerService.generateAnswer(question.question, rerankedResults);
+    console.log(`📝 Generated answer: "${answer.text}"`);
+    console.log(`🎯 Confidence: ${answer.confidence}`);
+    console.log(`📚 Citations: ${answer.citations?.length || 0}`);
     
     // Clean up citations from the answer text
     const cleanAnswer = this.cleanAnswerText(answer.text);
+    console.log(`🧹 Cleaned answer: "${cleanAnswer}"`);
     
     // Evaluate correctness using LLM
+    console.log(`⚖️ Evaluating correctness...`);
     const isCorrect = await this.evaluateAnswerWithLLM(question.expectedAnswer, cleanAnswer, question.question);
+    console.log(`✅ Final result: ${isCorrect ? 'CORRECT' : 'INCORRECT'}`);
     
     return {
       testDir,

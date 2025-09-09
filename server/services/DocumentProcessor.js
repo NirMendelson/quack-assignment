@@ -45,6 +45,9 @@ class DocumentProcessor {
       // Persist to disk
       await this.persistIndexes();
       
+      // Save chunks for inspection
+      await this.saveChunksForInspection(chunks, filename);
+      
       logger.info(`Document processing completed: ${chunks.length} chunks, ${embeddings.size} embeddings`);
       
       return { chunks, embeddings: Object.fromEntries(embeddings) };
@@ -99,12 +102,37 @@ class DocumentProcessor {
   }
 
   splitIntoSentences(text) {
-    // Simple sentence splitting - can be improved with more sophisticated NLP
-    return text
-      .split(/[.!?]+/)
+    // Enhanced sentence splitting for policy documents
+    // Split on periods, exclamation marks, question marks, and semicolons
+    // But be careful with abbreviations and decimal numbers
+    const sentences = text
+      .split(/(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\!|\?|;)\s+/)
       .map(s => s.trim())
       .filter(s => s.length > 10) // Filter out very short fragments
       .map(s => s.replace(/\s+/g, ' ')); // Normalize whitespace
+    
+    // For very long sentences (common in policy text), try to split further
+    const finalSentences = [];
+    for (const sentence of sentences) {
+      if (sentence.length > 200) {
+        // Try to split long sentences on conjunctions
+        const parts = sentence.split(/,\s*(?=and|but|or|so|yet|for|nor)/gi);
+        if (parts.length > 1) {
+          parts.forEach(part => {
+            const trimmed = part.trim();
+            if (trimmed.length > 10) {
+              finalSentences.push(trimmed);
+            }
+          });
+        } else {
+          finalSentences.push(sentence);
+        }
+      } else {
+        finalSentences.push(sentence);
+      }
+    }
+    
+    return finalSentences;
   }
 
   createChunks(sections) {
@@ -116,33 +144,118 @@ class DocumentProcessor {
       if (section.content.length > 0) {
         const paragraphText = section.content.join(' ');
         if (paragraphText.trim().length > 0) {
-          chunks.push({
-            id: `p_${chunkId++}`,
-            content: paragraphText,
-            title: section.title,
-            type: 'paragraph',
-            section: section.title,
-            level: section.level
-          });
+          // Create overlapping windows for better coverage
+          const windowedChunks = this.createOverlappingWindows(paragraphText, section, chunkId);
+          chunks.push(...windowedChunks);
+          chunkId += windowedChunks.length;
         }
       }
       
-      // Add sentence-level chunks
-      for (const sentence of section.sentences) {
-        if (sentence.trim().length > 0) {
-          chunks.push({
-            id: `s_${chunkId++}`,
-            content: sentence,
-            title: section.title,
-            type: 'sentence',
-            section: section.title,
-            level: section.level
-          });
-        }
-      }
+      // Add sentence-level chunks with context
+      const sentenceChunks = this.createSentenceWindows(section, chunkId);
+      chunks.push(...sentenceChunks);
+      chunkId += sentenceChunks.length;
     }
     return chunks;
   }
+
+  createOverlappingWindows(text, section, startId) {
+    const chunks = [];
+    const words = text.split(' ');
+    const windowSize = 280; // ~280 tokens for good context
+    const stride = 100; // ~100 token overlap
+    let chunkId = startId;
+    
+    // Create overlapping windows
+    for (let i = 0; i < words.length; i += windowSize - stride) {
+      const windowWords = words.slice(i, i + windowSize);
+      if (windowWords.length > 20) { // Only create meaningful chunks
+        const windowText = windowWords.join(' ');
+        chunks.push({
+          id: `w_${chunkId++}`,
+          content: windowText,
+          title: section.title,
+          type: 'window',
+          section: section.title,
+          level: section.level,
+          position: i, // Track position for bias correction
+          windowSize: windowWords.length
+        });
+      }
+    }
+    
+    return chunks;
+  }
+
+  createSentenceWindows(section, startId) {
+    const chunks = [];
+    let chunkId = startId;
+    const sentences = section.sentences;
+    
+    // Create 2-3 sentence windows with stride 1
+    const windowSize = 3; // 3 sentences per window
+    const stride = 1; // Move by 1 sentence
+    
+    for (let i = 0; i < sentences.length; i += stride) {
+      const windowSentences = sentences.slice(i, i + windowSize);
+      if (windowSentences.length >= 2) { // At least 2 sentences
+        const windowText = windowSentences.join(' ');
+        chunks.push({
+          id: `sw_${chunkId++}`,
+          content: windowText,
+          title: section.title,
+          type: 'sentence_window',
+          section: section.title,
+          level: section.level,
+          position: i, // Track position for bias correction
+          sentenceCount: windowSentences.length
+        });
+      }
+    }
+    
+    // Also create individual sentence chunks with context
+    for (let i = 0; i < sentences.length; i++) {
+      const sentence = sentences[i];
+      if (sentence.trim().length > 10) {
+        // Prepend lightweight context
+        const context = this.getSentenceContext(section, i);
+        const contextualSentence = context + sentence;
+        
+        chunks.push({
+          id: `sc_${chunkId++}`,
+          content: contextualSentence,
+          title: section.title,
+          type: 'sentence_context',
+          section: section.title,
+          level: section.level,
+          position: i,
+          originalSentence: sentence
+        });
+      }
+    }
+    
+    return chunks;
+  }
+
+  getSentenceContext(section, sentenceIndex) {
+    const context = [];
+    
+    // Add section title
+    if (section.title) {
+      context.push(`[${section.title}]`);
+    }
+    
+    // Add previous sentence for context (if not first sentence)
+    if (sentenceIndex > 0 && section.sentences[sentenceIndex - 1]) {
+      const prevSentence = section.sentences[sentenceIndex - 1];
+      if (prevSentence.length > 20) {
+        context.push(`[Previous: ${prevSentence.substring(0, 50)}...]`);
+      }
+    }
+    
+    return context.length > 0 ? context.join(' ') + ' ' : '';
+  }
+
 
   async generateEmbeddings(chunks) {
     try {
@@ -267,6 +380,64 @@ class DocumentProcessor {
 
   getKeywordIndex() {
     return this.keywordIndex;
+  }
+
+  async saveChunksForInspection(chunks, filename) {
+    try {
+      const inspectionPath = path.join(process.cwd(), 'data', 'chunks-inspection');
+      await fs.mkdir(inspectionPath, { recursive: true });
+      
+      // Group chunks by type for better analysis
+      const chunksByType = {
+        window: chunks.filter(c => c.type === 'window'),
+        sentence_window: chunks.filter(c => c.type === 'sentence_window'),
+        sentence_context: chunks.filter(c => c.type === 'sentence_context'),
+        paragraph: chunks.filter(c => c.type === 'paragraph'),
+        sentence: chunks.filter(c => c.type === 'sentence')
+      };
+      
+      // Save detailed chunks info
+      const chunksInfo = {
+        filename: filename,
+        totalChunks: chunks.length,
+        chunksByType: Object.keys(chunksByType).reduce((acc, type) => {
+          acc[type] = {
+            count: chunksByType[type].length,
+            chunks: chunksByType[type].map(chunk => ({
+              id: chunk.id,
+              content: chunk.content,
+              position: chunk.position,
+              windowSize: chunk.windowSize,
+              sentenceCount: chunk.sentenceCount,
+              originalSentence: chunk.originalSentence
+            }))
+          };
+          return acc;
+        }, {}),
+        allChunks: chunks.map(chunk => ({
+          id: chunk.id,
+          type: chunk.type,
+          content: chunk.content,
+          position: chunk.position,
+          windowSize: chunk.windowSize,
+          sentenceCount: chunk.sentenceCount
+        }))
+      };
+      
+      const outputFile = path.join(inspectionPath, `${filename.replace('.md', '')}-chunks.json`);
+      await fs.writeFile(outputFile, JSON.stringify(chunksInfo, null, 2));
+      
+      console.log(`📊 Chunks saved for inspection: ${outputFile}`);
+      console.log(`📈 Total chunks: ${chunks.length}`);
+      Object.keys(chunksByType).forEach(type => {
+        if (chunksByType[type].length > 0) {
+          console.log(`  - ${type}: ${chunksByType[type].length}`);
+        }
+      });
+      
+    } catch (error) {
+      logger.error('Error saving chunks for inspection:', error);
+    }
   }
 }
 

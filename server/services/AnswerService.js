@@ -12,18 +12,23 @@ class AnswerService {
 
   async generateAnswer(question, searchResults) {
     try {
+      console.log(`🤖 Generating answer for: "${question}"`);
       logger.info(`Generating answer for question: ${question}`);
 
       // Re-rank results using Cohere
+      console.log(`🔄 Reranking ${searchResults.length} search results...`);
       const rerankedResults = await this.rerankResults(question, searchResults);
       
-      // Select top 3-5 most relevant chunks
-      const topChunks = rerankedResults.slice(0, 5);
+      // Select top 10 most relevant chunks for better coverage
+      const topChunks = rerankedResults.slice(0, 10);
+      console.log(`📊 Selected top ${topChunks.length} chunks for evidence check`);
       
       // Check if we have sufficient evidence
+      console.log(`🔍 Checking if evidence is sufficient...`);
       const hasEvidence = this.hasSufficientEvidence(topChunks);
       
       if (!hasEvidence) {
+        console.log(`❌ Insufficient evidence - returning "I could not find this in the policy."`);
         return {
           text: "I could not find this in the policy.",
           citations: [],
@@ -33,12 +38,15 @@ class AnswerService {
       }
       
       // Generate answer using GPT-4.1
+      console.log(`✅ Sufficient evidence found - generating answer with GPT...`);
       const answer = await this.generateAnswerWithGPT(question, topChunks);
       
+      console.log(`📝 Generated answer: "${answer.text}"`);
       logger.info('Answer generated successfully');
       return answer;
 
     } catch (error) {
+      console.log(`❌ Error generating answer: ${error.message}`);
       logger.error('Error generating answer:', error.message);
       throw error;
     }
@@ -90,19 +98,31 @@ class AnswerService {
   }
 
   hasSufficientEvidence(chunks) {
+    console.log(`🔍 Checking evidence sufficiency for ${chunks.length} chunks`);
+    
     if (chunks.length === 0) {
+      console.log(`❌ No chunks provided`);
       return false;
     }
 
     // Check if any chunk has a reasonable score
     const hasGoodScore = chunks.some(chunk => chunk.score > 0.3);
+    console.log(`📊 Has good score (>0.3): ${hasGoodScore}`);
+    
+    // Log chunk scores
+    chunks.forEach((chunk, index) => {
+      console.log(`  Chunk ${chunk.id}: Score ${chunk.score.toFixed(3)} | "${chunk.content.substring(0, 80)}..."`);
+    });
     
     // Check if chunks contain relevant content
     const hasRelevantContent = chunks.some(chunk => 
       chunk.content && chunk.content.length > 20
     );
+    console.log(`🔍 Has relevant content: ${hasRelevantContent}`);
 
-    return hasGoodScore && hasRelevantContent;
+    const sufficient = hasGoodScore && hasRelevantContent;
+    console.log(`✅ Evidence sufficient: ${sufficient}`);
+    return sufficient;
   }
 
   async generateAnswerWithGPT(question, chunks) {
