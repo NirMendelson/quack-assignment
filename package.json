@@ -12,6 +12,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.61.0",
     "@radix-ui/react-slot": "^1.0.2",
     "axios": "^1.6.0",
     "class-variance-authority": "^0.7.0",

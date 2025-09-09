@@ -154,6 +154,11 @@ class DocumentProcessor {
       const sentenceChunks = this.createSentenceWindows(section, chunkId);
       chunks.push(...sentenceChunks);
       chunkId += sentenceChunks.length;
+      
+      // Add individual sentence chunks for precise factoid questions
+      const individualSentences = this.createIndividualSentences(section, chunkId);
+      chunks.push(...individualSentences);
+      chunkId += individualSentences.length;
     }
     return chunks;
   }
@@ -278,6 +283,30 @@ class DocumentProcessor {
     return context.length > 0 ? context.join(' ') + ' ' : '';
   }
 
+  createIndividualSentences(section, startId) {
+    const chunks = [];
+    let chunkId = startId;
+    const sentences = section.sentences;
+    
+    // Create individual sentence chunks for precise factoid questions
+    for (let i = 0; i < sentences.length; i++) {
+      const sentence = sentences[i];
+      if (sentence.trim().length > 10) { // Only meaningful sentences
+        chunks.push({
+          id: `s_${chunkId++}`,
+          content: sentence,
+          title: section.title,
+          type: 'sentence',
+          section: section.title,
+          level: section.level,
+          position: i,
+          originalSentence: sentence
+        });
+      }
+    }
+    
+    return chunks;
+  }
 
   async generateEmbeddings(chunks) {
     try {

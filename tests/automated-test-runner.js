@@ -37,7 +37,7 @@ class AutomatedTestRunner {
     console.log(`Found ${testDirs.length} test directories: ${testDirs.join(', ')}\n`);
 
     // For now, only run the second test
-    const testToRun = testDirs[1]; // test2
+    const testToRun = testDirs[0]; // test1
     console.log(`🎯 Running only: ${testToRun} (limited test mode)\n`);
 
     console.log(`📁 Processing ${testToRun}...`);
@@ -227,19 +227,18 @@ class AutomatedTestRunner {
       };
     }
 
-    // Rerank results
-    console.log(`🔄 Reranking results...`);
-    const rerankedResults = await this.answerService.rerankResults(question.question, searchResults);
-    console.log(`📊 Reranked to ${rerankedResults.length} results`);
+    // Skip reranking - use original search results directly
+    console.log(`📊 Using original search results (reranking disabled)...`);
+    console.log(`📊 Using top ${Math.min(5, searchResults.length)} results`);
     
-    // Log reranked results
-    rerankedResults.forEach((result, index) => {
+    // Log original results
+    searchResults.slice(0, 5).forEach((result, index) => {
       console.log(`  ${index + 1}. [${result.type}] Score: ${result.score.toFixed(3)} | "${result.content.substring(0, 100)}..."`);
     });
     
     // Generate answer
     console.log(`🤖 Generating answer...`);
-    const answer = await this.answerService.generateAnswer(question.question, rerankedResults);
+    const answer = await this.answerService.generateAnswer(question.question, searchResults);
     console.log(`📝 Generated answer: "${answer.text}"`);
     console.log(`🎯 Confidence: ${answer.confidence}`);
     console.log(`📚 Citations: ${answer.citations?.length || 0}`);
@@ -291,23 +290,19 @@ Please evaluate if the actual answer is correct. Consider:
 
 Respond with ONLY "CORRECT" or "INCORRECT" followed by a brief explanation.`;
 
-      const response = await this.answerService.openai.chat.completions.create({
-        model: 'gpt-4-1106-preview',
+      const response = await this.answerService.claude.messages.create({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 100,
+        temperature: 0,
         messages: [
           {
-            role: 'system',
-            content: 'You are an expert evaluator for policy Q&A systems. Be fair and consider semantic equivalence.'
-          },
-          {
             role: 'user',
-            content: prompt
+            content: `You are an expert evaluator for policy Q&A systems. Be fair and consider semantic equivalence.\n\n${prompt}`
           }
-        ],
-        temperature: 0,
-        max_tokens: 100
+        ]
       });
 
-      const evaluation = response.choices[0].message.content.trim();
+      const evaluation = response.content[0].text.trim();
       const isCorrect = evaluation.startsWith('CORRECT');
       
       console.log(`    Evaluation: ${isCorrect ? '✅' : '❌'} ${evaluation}`);

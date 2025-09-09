@@ -1,12 +1,12 @@
 const axios = require('axios');
-const OpenAI = require('openai');
+const Anthropic = require('@anthropic-ai/sdk');
 const { logger } = require('../utils/logger');
 
 class AnswerService {
   constructor() {
     this.cohereApiKey = process.env.COHERE_API_KEY;
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+    this.claude = new Anthropic({
+      apiKey: process.env.CLAUDE_API_KEY,
     });
   }
 
@@ -15,12 +15,9 @@ class AnswerService {
       console.log(`🤖 Generating answer for: "${question}"`);
       logger.info(`Generating answer for question: ${question}`);
 
-      // Re-rank results using Cohere
-      console.log(`🔄 Reranking ${searchResults.length} search results...`);
-      const rerankedResults = await this.rerankResults(question, searchResults);
-      
-      // Select top 10 most relevant chunks for better coverage
-      const topChunks = rerankedResults.slice(0, 10);
+      // Skip reranking - use original search results directly
+      console.log(`📊 Using original search results (reranking disabled)...`);
+      const topChunks = searchResults.slice(0, 10);
       console.log(`📊 Selected top ${topChunks.length} chunks for evidence check`);
       
       // Check if we have sufficient evidence
@@ -37,9 +34,9 @@ class AnswerService {
         };
       }
       
-      // Generate answer using GPT-4.1
-      console.log(`✅ Sufficient evidence found - generating answer with GPT...`);
-      const answer = await this.generateAnswerWithGPT(question, topChunks);
+      // Generate answer using Claude Sonnet 3
+      console.log(`✅ Sufficient evidence found - generating answer with Claude...`);
+      const answer = await this.generateAnswerWithClaude(question, topChunks);
       
       console.log(`📝 Generated answer: "${answer.text}"`);
       logger.info('Answer generated successfully');
@@ -125,11 +122,11 @@ class AnswerService {
     return sufficient;
   }
 
-  async generateAnswerWithGPT(question, chunks) {
+  async generateAnswerWithClaude(question, chunks) {
     try {
       // Prepare context from chunks
       const context = chunks.map((chunk, index) => 
-        `[${index + 1}] ${chunk.content}`
+        `[Chunk ${index + 1}] ${chunk.content}`
       ).join('\n\n');
 
       // Create citations
@@ -139,16 +136,18 @@ class AnswerService {
         chunkIndex: index + 1
       }));
 
-      const prompt = `You are a policy support agent. Answer the user's question strictly based on the provided policy document excerpts. 
+      const prompt = `You are a policy support agent. Answer the user's question STRICTLY based on the provided policy document excerpts.
 
-IMPORTANT RULES:
-1. Only use information from the provided excerpts
-2. Answer in your own words - do NOT quote the exact text from the excerpts
-3. Include citations in the format [c:chunk_id -> section_name] for key points
-4. If the answer is not clearly found in the excerpts, respond with: "I could not find this in the policy."
-5. Be precise and factual
-6. If you're unsure, err on the side of saying you couldn't find it
-7. Write naturally and avoid extra spaces before punctuation
+CRITICAL RULES - NO EXCEPTIONS:
+1. ONLY use information that is explicitly stated in the provided excerpts
+2. DO NOT use any information from your training data or general knowledge
+3. DO NOT make assumptions or inferences beyond what is directly stated
+4. If information is not in the provided excerpts, respond with: "I could not find this in the policy."
+5. Answer in your own words - do NOT quote the exact text from the excerpts
+6. Include citations in the format [c:chunk_id -> section_name] for key points
+7. Be precise and factual
+8. If you're unsure, err on the side of saying you couldn't find it
+9. Write naturally and avoid extra spaces before punctuation
 
 Question: ${question}
 
@@ -157,23 +156,19 @@ ${context}
 
 Answer:`;
 
-      const response = await this.openai.chat.completions.create({
-        model: 'gpt-4-1106-preview', // GPT-4.1
+      const response = await this.claude.messages.create({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        temperature: 0, // Deterministic responses
         messages: [
-          {
-            role: 'system',
-            content: 'You are a helpful policy support agent that answers questions based strictly on provided policy documents.'
-          },
           {
             role: 'user',
             content: prompt
           }
-        ],
-        temperature: 0, // Deterministic responses
-        max_tokens: 500
+        ]
       });
 
-      let answerText = response.choices[0].message.content.trim();
+      let answerText = response.content[0].text.trim();
       
       // Clean up spacing issues
       answerText = answerText
@@ -198,7 +193,7 @@ Answer:`;
       };
 
     } catch (error) {
-      logger.error('Error generating answer with GPT:', error.message);
+      logger.error('Error generating answer with Claude:', error.message);
       throw error;
     }
   }
