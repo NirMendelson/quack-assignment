@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "node tests/test-runner.js",
+    "test:auto": "node tests/automated-test-runner.js",
     "test:e2e": "playwright test"
   },
   "dependencies": {

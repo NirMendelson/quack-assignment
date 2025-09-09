@@ -19,17 +19,8 @@ export async function POST(request: NextRequest) {
 
     logger.info(`Processing uploaded file: ${file.name}`)
     
-    console.log('File details:', {
-      name: file.name,
-      size: file.size,
-      type: file.type
-    });
-    
     // Read the file content
     const fileContent = await file.text()
-    
-    console.log('File content length:', fileContent.length);
-    console.log('File content preview:', fileContent.substring(0, 200) + '...');
     
     // Process the document
     const processedDoc = await documentProcessor.processDocument(fileContent, file.name)

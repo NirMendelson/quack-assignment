@@ -65,4 +65,20 @@
 ---
 
 ### Q12. Does monday.com enforce two-factor authentication (2FA) for all users?  
+**A:** No, it is recommended but not enforced.  
+> *“Two-factor authentication (2FA) is recommended but not enforced.”*  
+
+---
+
+### Q13. Does the monday.com policy document mention anything about data retention or how long customer data is stored?  
+**A:** No data about it in the text.  
+
+---
+
+### Q14. Are there any details in the policy draft about integrations with third-party applications or APIs?  
+**A:** No data about it in the text.  
+
+---
+
+### Q15. Who is the CEO of Monday.com?
 **A:** No data about it in the text.  
