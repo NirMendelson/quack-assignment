@@ -39,7 +39,7 @@ class AnswerService {
       return answer;
 
     } catch (error) {
-      logger.error('Error generating answer:', error);
+      logger.error('Error generating answer:', error.message);
       throw error;
     }
   }
@@ -83,7 +83,7 @@ class AnswerService {
       return rerankedResults;
 
     } catch (error) {
-      logger.error('Error reranking results:', error);
+      logger.error('Error reranking results:', error.message);
       // Fallback to original results if reranking fails
       return searchResults.slice(0, 5);
     }
@@ -166,7 +166,7 @@ Answer:`;
       };
 
     } catch (error) {
-      logger.error('Error generating answer with GPT:', error);
+      logger.error('Error generating answer with GPT:', error.message);
       throw error;
     }
   }

@@ -37,7 +37,7 @@ class SearchService {
       return sortedResults;
 
     } catch (error) {
-      logger.error('Error in search:', error);
+      logger.error('Error in search:', error.message);
       throw error;
     }
   }
@@ -102,7 +102,7 @@ class SearchService {
         .slice(0, limit);
 
     } catch (error) {
-      logger.error('Error in semantic search:', error);
+      logger.error('Error in semantic search:', error.message);
       return [];
     }
   }

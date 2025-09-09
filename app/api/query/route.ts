@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { DocumentProcessor } from '@/server/services/DocumentProcessor'
-import { SearchService } from '@/server/services/SearchService'
-import { AnswerService } from '@/server/services/AnswerService'
-import { logger } from '@/server/utils/logger'
+import { DocumentProcessor } from '../../../server/services/DocumentProcessor'
+import { SearchService } from '../../../server/services/SearchService'
+import { AnswerService } from '../../../server/services/AnswerService'
+import { logger } from '../../../server/utils/logger'
 
 // Initialize services
 const documentProcessor = new DocumentProcessor()
@@ -25,10 +25,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Question is required' }, { status: 400 })
     }
 
+    // Check if search service is available
+    if (!global.searchService) {
+      return NextResponse.json({ 
+        error: 'No document uploaded yet. Please upload a document first.' 
+      }, { status: 400 })
+    }
+
     logger.info(`Processing query: ${question}`)
     
     // Search for relevant chunks
-    const searchResults = await searchService.search(question)
+    const searchResults = await global.searchService.search(question)
     
     // Generate answer
     const answer = await answerService.generateAnswer(question, searchResults)
@@ -47,7 +54,7 @@ export async function POST(request: NextRequest) {
     })
     
   } catch (error) {
-    logger.error('Error processing query:', error)
+    logger.error('Error processing query:', error.message)
     return NextResponse.json({ 
       error: 'Failed to process query',
       details: error instanceof Error ? error.message : 'Unknown error'

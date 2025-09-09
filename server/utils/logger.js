@@ -5,7 +5,7 @@ const path = require('path');
 const logDir = path.join(process.cwd(), 'logs');
 
 const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || 'info',
+  level: process.env.LOG_LEVEL || 'warn',
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.errors({ stack: true }),

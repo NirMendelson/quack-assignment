@@ -136,6 +136,10 @@ class DocumentProcessor {
 
   async generateEmbeddings(chunks) {
     try {
+      if (chunks.length === 0) {
+        throw new Error('No chunks to process - document may be empty or malformed');
+      }
+      
       logger.info(`Generating embeddings for ${chunks.length} chunks`);
       
       const texts = chunks.map(chunk => chunk.content);
@@ -161,7 +165,7 @@ class DocumentProcessor {
       return embeddings;
       
     } catch (error) {
-      logger.error('Error generating embeddings:', error);
+      logger.error('Error generating embeddings:', error.message);
       throw error;
     }
   }

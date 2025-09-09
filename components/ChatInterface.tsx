@@ -86,22 +86,6 @@ export function ChatInterface() {
     }
   }
 
-  const formatCitations = (citations: Message['citations']) => {
-    if (!citations || citations.length === 0) return null
-
-    return (
-      <div className="mt-3 p-3 bg-muted/50 rounded-lg">
-        <h4 className="text-sm font-medium mb-2">Sources:</h4>
-        <div className="space-y-1">
-          {citations.map((citation, index) => (
-            <div key={index} className="text-xs text-muted-foreground">
-              [{index + 1}] {citation.section}
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="flex flex-col h-[600px]">
@@ -155,12 +139,6 @@ export function ChatInterface() {
                     }`}
                   >
                     <div className="whitespace-pre-wrap">{message.content}</div>
-                    {message.citations && formatCitations(message.citations)}
-                    {message.confidence && (
-                      <div className="mt-2 text-xs opacity-70">
-                        Confidence: {Math.round(message.confidence * 100)}%
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>

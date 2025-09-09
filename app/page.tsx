@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { FileUpload } from '@/components/FileUpload'
 import { ChatInterface } from '@/components/ChatInterface'
-import { Header } from '@/components/Header'
 
 export default function Home() {
   const [documentLoaded, setDocumentLoaded] = useState(false)
@@ -16,12 +15,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 pt-16 pb-8">
         {!documentLoaded ? (
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold mb-4">Quack Policy Agent 🦆</h1>
+              <h1 className="text-4xl font-bold mb-4">Quack Home Assignment 🦆</h1>
               <p className="text-lg text-muted-foreground mb-8">
                 Upload a policy document and ask questions. The agent will answer strictly based on the document content.
               </p>
