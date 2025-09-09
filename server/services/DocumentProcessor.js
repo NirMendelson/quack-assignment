@@ -3,6 +3,7 @@ const axios = require('axios');
 const MiniSearch = require('minisearch');
 const fs = require('fs').promises;
 const path = require('path');
+const natural = require('natural');
 const { logger } = require('../utils/logger');
 
 class DocumentProcessor {
@@ -102,11 +103,9 @@ class DocumentProcessor {
   }
 
   splitIntoSentences(text) {
-    // Enhanced sentence splitting for policy documents
-    // Split on periods, exclamation marks, question marks, and semicolons
-    // But be careful with abbreviations and decimal numbers
-    const sentences = text
-      .split(/(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\!|\?|;)\s+/)
+    // Use proper sentence tokenizer from natural library
+    const sentenceTokenizer = new natural.SentenceTokenizer();
+    const sentences = sentenceTokenizer.tokenize(text)
       .map(s => s.trim())
       .filter(s => s.length > 10) // Filter out very short fragments
       .map(s => s.replace(/\s+/g, ' ')); // Normalize whitespace
@@ -195,11 +194,23 @@ class DocumentProcessor {
     // Create 2-3 sentence windows with stride 1
     const windowSize = 3; // 3 sentences per window
     const stride = 1; // Move by 1 sentence
+    const maxChars = 350; // Hard character cap to prevent bloated chunks
     
     for (let i = 0; i < sentences.length; i += stride) {
       const windowSentences = sentences.slice(i, i + windowSize);
       if (windowSentences.length >= 2) { // At least 2 sentences
-        const windowText = windowSentences.join(' ');
+        let windowText = windowSentences.join(' ');
+        
+        // Apply character cap to prevent bloated chunks
+        if (windowText.length > maxChars) {
+          windowText = windowText.substring(0, maxChars).trim();
+          // Try to end at a word boundary
+          const lastSpace = windowText.lastIndexOf(' ');
+          if (lastSpace > maxChars * 0.8) { // Only if we don't lose too much content
+            windowText = windowText.substring(0, lastSpace);
+          }
+        }
+        
         chunks.push({
           id: `sw_${chunkId++}`,
           content: windowText,
@@ -219,7 +230,18 @@ class DocumentProcessor {
       if (sentence.trim().length > 10) {
         // Prepend lightweight context
         const context = this.getSentenceContext(section, i);
-        const contextualSentence = context + sentence;
+        let contextualSentence = context + sentence;
+        
+        // Apply character cap to prevent bloated chunks
+        const maxChars = 350;
+        if (contextualSentence.length > maxChars) {
+          contextualSentence = contextualSentence.substring(0, maxChars).trim();
+          // Try to end at a word boundary
+          const lastSpace = contextualSentence.lastIndexOf(' ');
+          if (lastSpace > maxChars * 0.8) { // Only if we don't lose too much content
+            contextualSentence = contextualSentence.substring(0, lastSpace);
+          }
+        }
         
         chunks.push({
           id: `sc_${chunkId++}`,

@@ -1,12 +1,14 @@
 const axios = require('axios');
 const { logger } = require('../utils/logger');
 const { QueryProcessor } = require('./queryProcessor');
+const { GenericQueryAnalyzer } = require('./GenericQueryAnalyzer');
 
 class SearchService {
   constructor() {
     this.voyageApiKey = process.env.VOYAGE_API_KEY;
     this.documentProcessor = null;
     this.queryProcessor = new QueryProcessor();
+    this.queryAnalyzer = new GenericQueryAnalyzer();
   }
 
   setDocumentProcessor(processor) {
@@ -21,14 +23,20 @@ class SearchService {
 
       logger.info(`Searching for: ${query}`);
 
-      // Process query with expansion and variations
+      // Analyze query with generic analyzer
+      const queryAnalysis = this.queryAnalyzer.analyzeQuery(query);
+      
+      // Process query with expansion and variations (legacy)
       const processedQuery = this.queryProcessor.processQuery(query);
       
       // Get results from multiple search strategies
       const results = await this.hybridSearch(processedQuery, limit);
       
+      // Apply token bucket filtering
+      const filteredResults = this.applyTokenBucketFiltering(results, queryAnalysis);
+      
       // Apply domain-specific reranking
-      const rerankedResults = this.rerankResults(results, processedQuery);
+      const rerankedResults = this.rerankResults(filteredResults, processedQuery);
       
       // Return top results
       const finalResults = rerankedResults.slice(0, limit);
@@ -300,6 +308,32 @@ class SearchService {
     }
     
     return dotProduct / (normA * normB);
+  }
+
+  applyTokenBucketFiltering(results, queryAnalysis) {
+    const filteredResults = [];
+    
+    for (const result of results) {
+      // Check if chunk matches token buckets
+      const bucketMatch = this.queryAnalyzer.matchesTokenBuckets(result, queryAnalysis.tokenBuckets);
+      
+      if (bucketMatch.matches) {
+        // Boost score based on token bucket matches
+        const bucketBoost = bucketMatch.score * 0.3; // 30% boost for token matches
+        result.bucketScore = bucketMatch.score;
+        result.bucketMatches = bucketMatch;
+        result.originalScore = result.score;
+        result.score = result.score + bucketBoost;
+        
+        filteredResults.push(result);
+      }
+    }
+    
+    // Sort by combined score (original + bucket boost)
+    filteredResults.sort((a, b) => b.score - a.score);
+    
+    logger.info(`Token bucket filtering: ${filteredResults.length}/${results.length} chunks passed`);
+    return filteredResults;
   }
 }
 
