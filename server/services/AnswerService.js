@@ -1,12 +1,10 @@
-const { CohereClient } = require('cohere-ai');
+const axios = require('axios');
 const OpenAI = require('openai');
 const { logger } = require('../utils/logger');
 
 class AnswerService {
   constructor() {
-    this.cohere = new CohereClient({
-      token: process.env.COHERE_API_KEY,
-    });
+    this.cohereApiKey = process.env.COHERE_API_KEY;
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
@@ -58,17 +56,22 @@ class AnswerService {
         id: result.id
       }));
 
-      // Use Cohere Rerank
-      const rerankResponse = await this.cohere.rerank({
-        model: 'rerank-english-v2.0',
+      // Use Cohere Rerank via REST API
+      const rerankResponse = await axios.post('https://api.cohere.ai/v1/rerank', {
+        model: 'rerank-english-v3.0',
         query: question,
-        documents: documents,
-        topN: Math.min(5, documents.length)
+        documents: documents.map(doc => doc.text),
+        top_n: Math.min(5, documents.length)
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.cohereApiKey}`,
+          'Content-Type': 'application/json'
+        }
       });
 
       // Map reranked results back to original format
-      const rerankedResults = rerankResponse.results.map(result => {
-        const originalResult = searchResults.find(r => r.id === result.document.id);
+      const rerankedResults = rerankResponse.data.results.map((result, index) => {
+        const originalResult = searchResults.find(r => r.id === documents[result.index].id);
         return {
           ...originalResult,
           rerankScore: result.relevance_score,

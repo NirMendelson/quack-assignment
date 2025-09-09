@@ -1,9 +1,9 @@
-const { VoyageAI } = require('voyageai');
+const axios = require('axios');
 const { logger } = require('../utils/logger');
 
 class SearchService {
   constructor() {
-    this.voyage = new VoyageAI(process.env.VOYAGE_API_KEY);
+    this.voyageApiKey = process.env.VOYAGE_API_KEY;
     this.documentProcessor = null;
   }
 
@@ -59,9 +59,19 @@ class SearchService {
 
   async semanticSearch(query, limit) {
     try {
-      // Generate embedding for query
-      const queryEmbedding = await this.voyage.embed([query], 'voyage-3-large');
-      const queryVector = queryEmbedding.embeddings[0];
+      // Generate embedding for query using Voyage AI REST API
+      const response = await axios.post('https://api.voyageai.com/v1/embeddings', {
+        input: [query],
+        model: 'voyage-3-large',
+        input_type: 'query'
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.voyageApiKey}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const queryVector = response.data.data[0].embedding;
       
       // Get all chunks and embeddings
       const chunks = this.documentProcessor.getChunks();

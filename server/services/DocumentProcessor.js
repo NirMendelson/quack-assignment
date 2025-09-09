@@ -1,5 +1,5 @@
 const { marked } = require('marked');
-const { VoyageAI } = require('voyageai');
+const axios = require('axios');
 const MiniSearch = require('minisearch');
 const fs = require('fs').promises;
 const path = require('path');
@@ -7,7 +7,7 @@ const { logger } = require('../utils/logger');
 
 class DocumentProcessor {
   constructor() {
-    this.voyage = new VoyageAI(process.env.VOYAGE_API_KEY);
+    this.voyageApiKey = process.env.VOYAGE_API_KEY;
     this.embeddings = new Map();
     this.keywordIndex = new MiniSearch({
       fields: ['content', 'title'],
@@ -139,11 +139,22 @@ class DocumentProcessor {
       logger.info(`Generating embeddings for ${chunks.length} chunks`);
       
       const texts = chunks.map(chunk => chunk.content);
-      const response = await this.voyage.embed(texts, 'voyage-3-large');
+      
+      // Use Voyage AI REST API
+      const response = await axios.post('https://api.voyageai.com/v1/embeddings', {
+        input: texts,
+        model: 'voyage-3-large',
+        input_type: 'document'
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.voyageApiKey}`,
+          'Content-Type': 'application/json'
+        }
+      });
       
       const embeddings = new Map();
       chunks.forEach((chunk, index) => {
-        embeddings.set(chunk.id, response.embeddings[index]);
+        embeddings.set(chunk.id, response.data.data[index].embedding);
       });
       
       logger.info(`Generated ${embeddings.size} embeddings`);

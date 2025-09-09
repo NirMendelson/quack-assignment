@@ -11,16 +11,13 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "next": "14.0.4",
+    "next": "14.2.32",
     "react": "^18",
     "react-dom": "^18",
-    "ai": "^2.2.0",
     "openai": "^4.20.1",
-    "cohere-ai": "^8.0.0",
-    "voyageai": "^0.2.0",
+    "cohere-ai": "^6.0.0",
     "minisearch": "^6.3.0",
     "marked": "^11.1.1",
-    "gray-matter": "^4.0.3",
     "winston": "^3.11.0",
     "dotenv": "^16.3.1",
     "lucide-react": "^0.294.0",
@@ -29,8 +26,7 @@
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
     "@radix-ui/react-slot": "^1.0.2",
-    "express": "^4.18.2",
-    "multer": "^1.4.5-lts.1"
+    "axios": "^1.6.0"
   },
   "devDependencies": {
     "typescript": "^5",

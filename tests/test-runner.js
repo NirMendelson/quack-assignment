@@ -1,5 +1,6 @@
 const fs = require('fs').promises;
 const path = require('path');
+require('dotenv').config();
 const { DocumentProcessor } = require('../server/services/DocumentProcessor');
 const { SearchService } = require('../server/services/SearchService');
 const { AnswerService } = require('../server/services/AnswerService');

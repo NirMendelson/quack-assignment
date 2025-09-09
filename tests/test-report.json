@@ -1,0 +1,120 @@
+{
+  "summary": {
+    "total": 10,
+    "passed": 9,
+    "failed": 1,
+    "successRate": "90%"
+  },
+  "results": [
+    {
+      "question": "How many vacation days do new employees get?",
+      "expectedAnswer": "10 vacation days per year",
+      "actualAnswer": "New employees accrue 10 vacation days per year [c:1 -> New employees accrue 10 vacation days per year].",
+      "shouldFind": true,
+      "found": true,
+      "confidence": 1,
+      "citations": 5,
+      "passed": true,
+      "category": "benefits"
+    },
+    {
+      "question": "What percentage of health insurance premium does the company cover?",
+      "expectedAnswer": "80%",
+      "actualAnswer": "The company covers \"80% of premium costs\" for health insurance for full-time employees [c:1 -> All full-time employees are eligible for health insurance coverage].",
+      "shouldFind": true,
+      "found": true,
+      "confidence": 1,
+      "citations": 5,
+      "passed": true,
+      "category": "benefits"
+    },
+    {
+      "question": "Can I work remotely every day?",
+      "expectedAnswer": "No, remote work is allowed up to 2 days per week",
+      "actualAnswer": "\"Remote work is allowed up to 2 days per week with manager approval\" [c:1 -> Remote work]. Therefore, you cannot work remotely every day based on the provided policy excerpts.",
+      "shouldFind": true,
+      "found": true,
+      "confidence": 1,
+      "citations": 5,
+      "passed": true,
+      "category": "work_schedule"
+    },
+    {
+      "question": "What are the standard office hours?",
+      "expectedAnswer": "9:00 AM to 5:00 PM, Monday through Friday",
+      "actualAnswer": "The standard office hours are \"9:00 AM to 5:00 PM, Monday through Friday.\" [c:1 -> Standard office hours]",
+      "shouldFind": true,
+      "found": true,
+      "confidence": 1,
+      "citations": 5,
+      "passed": true,
+      "category": "work_schedule"
+    },
+    {
+      "question": "How much notice do I need to give before resigning?",
+      "expectedAnswer": "2 weeks written notice",
+      "actualAnswer": "Employees must provide 2 weeks written notice before resigning [c:1 -> Employees must provide 2 weeks written notice before resigning].",
+      "shouldFind": true,
+      "found": true,
+      "confidence": 1,
+      "citations": 5,
+      "passed": true,
+      "category": "termination"
+    },
+    {
+      "question": "What is the company's policy on working from home?",
+      "expectedAnswer": "Remote work is allowed up to 2 days per week with manager approval",
+      "actualAnswer": "I could not find this in the policy.",
+      "shouldFind": true,
+      "found": false,
+      "confidence": 1,
+      "citations": 5,
+      "passed": false,
+      "category": "work_schedule"
+    },
+    {
+      "question": "Do sick days carry over to the next year?",
+      "expectedAnswer": "No, sick days do not accrue and cannot be carried over",
+      "actualAnswer": "Sick days do not accrue and cannot be carried over [c:3 -> Employees receive 5 sick days per year].",
+      "shouldFind": true,
+      "found": true,
+      "confidence": 1,
+      "citations": 5,
+      "passed": true,
+      "category": "benefits"
+    },
+    {
+      "question": "What happens if I violate the confidentiality policy?",
+      "expectedAnswer": "Violation of confidentiality policies may result in immediate termination",
+      "actualAnswer": "If you violate the confidentiality policy, it may result in \"immediate termination\" [c:3 -> Employees must maintain confidentiality]. Additionally, your \"final paycheck will be provided within 30 days of termination\" [c:1 -> Immediate termination may occur].",
+      "shouldFind": true,
+      "found": true,
+      "confidence": 1,
+      "citations": 5,
+      "passed": true,
+      "category": "conduct"
+    },
+    {
+      "question": "What is the company's policy on retirement benefits?",
+      "expectedAnswer": "I could not find this in the policy",
+      "actualAnswer": "I could not find this in the policy.",
+      "shouldFind": false,
+      "found": false,
+      "confidence": 1,
+      "citations": 5,
+      "passed": true,
+      "category": "benefits"
+    },
+    {
+      "question": "Can I bring my pet to work?",
+      "expectedAnswer": "I could not find this in the policy",
+      "actualAnswer": "I could not find this in the policy.",
+      "shouldFind": false,
+      "found": false,
+      "confidence": 1,
+      "citations": 5,
+      "passed": true,
+      "category": "work_schedule"
+    }
+  ]
+}
