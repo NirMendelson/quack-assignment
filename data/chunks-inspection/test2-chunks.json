@@ -1,6 +1,6 @@
 {
   "filename": "test2.md",
-  "totalChunks": 56,
+  "totalChunks": 78,
   "chunksByType": {
     "window": {
       "count": 13,
@@ -358,8 +358,141 @@
       "chunks": []
     },
     "sentence": {
-      "count": 0,
-      "chunks": []
+      "count": 22,
+      "chunks": [
+        {
+          "id": "s_56",
+          "content": "artlist is a platform where people can get music",
+          "position": 0,
+          "originalSentence": "artlist is a platform where people can get music"
+        },
+        {
+          "id": "s_57",
+          "content": "sound effects, footage",
+          "position": 1,
+          "originalSentence": "sound effects, footage"
+        },
+        {
+          "id": "s_58",
+          "content": "and templates, all royalty-free but wait before telling a customer that you have to remember there are different subscription types which can confuse them so pricing starts at 14.99 USD a month for music only if billed annually",
+          "position": 2,
+          "originalSentence": "and templates, all royalty-free but wait before telling a customer that you have to remember there are different subscription types which can confuse them so pricing starts at 14.99 USD a month for music only if billed annually"
+        },
+        {
+          "id": "s_59",
+          "content": "or 29.99 if they take the full package with music + sfx + footage but then there’s also the enterprise plan which has custom pricing depending on company size and usage and customers often ask about licensing which is unlimited for all platforms worldwide including youtube tiktok film tv and podcasts as long as they keep an active subscription downloads made during a valid subscription are licensed forever but if they cancel they can’t download new assets anymore but they still keep rights to the ones they already downloaded and sometimes people think they can share accounts which is not allowed one user per license unless they pay for a team plan the way to use the product is they sign up, log in and go to the catalog page where they can search by genre mood instrument bpm key or duration and if they want to find footage they can filter by shot type people drone slow motion vertical and if they download they get a zip file with WAV or MP3 and metadata for music and MOV or MP4 for video templates come as after effects or premiere files customers often forget to click the download button after adding to favorites so remind them favorites is not the same as downloads and also make sure they understand the difference between commercial license which covers social ads youtube monetization etc and internal license which might come up for enterprise customers support questions often include billing issues like double charges which usually happen when a customer upgrades mid cycle so tell them to check their billing page in settings and refunds are only possible within 14 days if no assets were downloaded and the refund team can be contacted via finance@artlist.io features include curated playlists daily new tracks integration with premiere pro plugin direct download history and unlimited projects use cases vary from indie filmmakers and youtube creators to big agencies so sometimes people ask why their video got a copyright claim the answer is usually that the claim is automated and they should use the license certificate to dispute it which they can generate from their account dashboard under downloads selecting the track they used, also some users confuse artlist with arttlist.",
+          "position": 3,
+          "originalSentence": "or 29.99 if they take the full package with music + sfx + footage but then there’s also the enterprise plan which has custom pricing depending on company size and usage and customers often ask about licensing which is unlimited for all platforms worldwide including youtube tiktok film tv and podcasts as long as they keep an active subscription downloads made during a valid subscription are licensed forever but if they cancel they can’t download new assets anymore but they still keep rights to the ones they already downloaded and sometimes people think they can share accounts which is not allowed one user per license unless they pay for a team plan the way to use the product is they sign up, log in and go to the catalog page where they can search by genre mood instrument bpm key or duration and if they want to find footage they can filter by shot type people drone slow motion vertical and if they download they get a zip file with WAV or MP3 and metadata for music and MOV or MP4 for video templates come as after effects or premiere files customers often forget to click the download button after adding to favorites so remind them favorites is not the same as downloads and also make sure they understand the difference between commercial license which covers social ads youtube monetization etc and internal license which might come up for enterprise customers support questions often include billing issues like double charges which usually happen when a customer upgrades mid cycle so tell them to check their billing page in settings and refunds are only possible within 14 days if no assets were downloaded and the refund team can be contacted via finance@artlist.io features include curated playlists daily new tracks integration with premiere pro plugin direct download history and unlimited projects use cases vary from indie filmmakers and youtube creators to big agencies so sometimes people ask why their video got a copyright claim the answer is usually that the claim is automated and they should use the license certificate to dispute it which they can generate from their account dashboard under downloads selecting the track they used, also some users confuse artlist with arttlist."
+        },
+        {
+          "id": "s_60",
+          "content": "io vs artgrid which is footage only and motionarray which is templates so make sure you guide them to the right product login problems usually are related to wrong google/facebook sign in vs email/password, reset password links expire after 1 hour, customers who want to change plan mid year need to cancel and repurchase because upgrades can’t downgrade mid cycle, students sometimes ask about discounts which exist at 30% off if they prove status via a third party form but it can take up to 7 business days to approve, features roadmap not public but customers sometimes ask so just say new tracks and footage are added daily by a global network of creators, the catalog supports search in multiple languages but tagging works best in english, if customer is confused about downloading stems note that stems are only available on select tracks and marked clearly, common technical issue is download button not working usually solved by clearing cache or trying a different browser chrome works best, maximum download limit doesn’t exist because it’s unlimited but API scraping is blocked so warn them about automation tools, another frequent support case is VAT invoices for EU customers they can add their VAT ID under billing and it will auto adjust future invoices but not past ones, refunds for team accounts are trickier they have to email support@artlist.io directly, audio formats are always 44.",
+          "position": 4,
+          "originalSentence": "io vs artgrid which is footage only and motionarray which is templates so make sure you guide them to the right product login problems usually are related to wrong google/facebook sign in vs email/password, reset password links expire after 1 hour, customers who want to change plan mid year need to cancel and repurchase because upgrades can’t downgrade mid cycle, students sometimes ask about discounts which exist at 30% off if they prove status via a third party form but it can take up to 7 business days to approve, features roadmap not public but customers sometimes ask so just say new tracks and footage are added daily by a global network of creators, the catalog supports search in multiple languages but tagging works best in english, if customer is confused about downloading stems note that stems are only available on select tracks and marked clearly, common technical issue is download button not working usually solved by clearing cache or trying a different browser chrome works best, maximum download limit doesn’t exist because it’s unlimited but API scraping is blocked so warn them about automation tools, another frequent support case is VAT invoices for EU customers they can add their VAT ID under billing and it will auto adjust future invoices but not past ones, refunds for team accounts are trickier they have to email support@artlist.io directly, audio formats are always 44."
+        },
+        {
+          "id": "s_61",
+          "content": "1kHz 24bit WAV or 320kbps MP3, footage is usually 4K ProRes unless otherwise specified, licenses are perpetual which means if they used a song in a film they distributed in theaters and later canceled subscription it’s still covered, customer confusion also comes from difference between royalty-free and copyright-free explain clearly that artlist music is copyrighted but licensed for their use, phone support doesn’t exist everything is via email or chat and expected response time is 24 hours but sometimes up to 48 on weekends, finally if you can’t solve it escalate with ticket priority high for billing, medium for technical, low for general info and remember never promise features not yet released.",
+          "position": 5,
+          "originalSentence": "1kHz 24bit WAV or 320kbps MP3, footage is usually 4K ProRes unless otherwise specified, licenses are perpetual which means if they used a song in a film they distributed in theaters and later canceled subscription it’s still covered, customer confusion also comes from difference between royalty-free and copyright-free explain clearly that artlist music is copyrighted but licensed for their use, phone support doesn’t exist everything is via email or chat and expected response time is 24 hours but sometimes up to 48 on weekends, finally if you can’t solve it escalate with ticket priority high for billing, medium for technical, low for general info and remember never promise features not yet released."
+        },
+        {
+          "id": "s_62",
+          "content": "sometimes customers ask how they can cancel their subscription and it’s not obvious so you need to tell them to log in > profile > billing > cancel subscription but if they don’t see the option it’s usually because they purchased through a reseller like app store or google play and then they need to cancel from there and if they ask whether downloads disappear after cancellation no they keep them forever but they can’t re-download so they should back them up, another common confusion is people asking if they can use artlist tracks on client projects yes they can as long as they have an active subscription at the time of download and each license is broad so it covers client work as well, people also ask if they can credit the artist and it’s not required but always welcome and sometimes there are questions about language support the site is mainly in english but customers can change interface to spanish french german and japanese though search tags still behave best in english, also mobile app exists but it’s limited to browsing playlists and saving favorites you can’t download on mobile yet, regarding payment methods artlist accepts credit cards paypal and some local methods in europe but not crypto if customer asks",
+          "position": 6,
+          "originalSentence": "sometimes customers ask how they can cancel their subscription and it’s not obvious so you need to tell them to log in > profile > billing > cancel subscription but if they don’t see the option it’s usually because they purchased through a reseller like app store or google play and then they need to cancel from there and if they ask whether downloads disappear after cancellation no they keep them forever but they can’t re-download so they should back them up, another common confusion is people asking if they can use artlist tracks on client projects yes they can as long as they have an active subscription at the time of download and each license is broad so it covers client work as well, people also ask if they can credit the artist and it’s not required but always welcome and sometimes there are questions about language support the site is mainly in english but customers can change interface to spanish french german and japanese though search tags still behave best in english, also mobile app exists but it’s limited to browsing playlists and saving favorites you can’t download on mobile yet, regarding payment methods artlist accepts credit cards paypal and some local methods in europe but not crypto if customer asks"
+        },
+        {
+          "id": "s_63",
+          "content": "sometimes schools or nonprofits want to use artlist and in those cases they need a standard subscription because there’s no special nonprofit tier except enterprise deals, another frequent question is about system requirements for editing with downloaded content which basically is irrelevant since files are standard mp3 wav mov formats but you can suggest premiere pro final cut pro or davinci resolve for compatibility, if customers ask about uploading their own music or footage the answer is no unless they apply to become contributors through artlist.",
+          "position": 7,
+          "originalSentence": "sometimes schools or nonprofits want to use artlist and in those cases they need a standard subscription because there’s no special nonprofit tier except enterprise deals, another frequent question is about system requirements for editing with downloaded content which basically is irrelevant since files are standard mp3 wav mov formats but you can suggest premiere pro final cut pro or davinci resolve for compatibility, if customers ask about uploading their own music or footage the answer is no unless they apply to become contributors through artlist."
+        },
+        {
+          "id": "s_64",
+          "content": "io/artist-application and the process takes weeks with review of portfolio",
+          "position": 8,
+          "originalSentence": "io/artist-application and the process takes weeks with review of portfolio"
+        },
+        {
+          "id": "s_65",
+          "content": "sometimes customers want to know if the license covers broadcast tv yes it does unlimited reach no extra fees",
+          "position": 9,
+          "originalSentence": "sometimes customers want to know if the license covers broadcast tv yes it does unlimited reach no extra fees"
+        },
+        {
+          "id": "s_66",
+          "content": "but if they need theatrical distribution for more than 1 million tickets they should check enterprise licensing, podcast producers ask a lot if the license covers spotify apple podcasts etc and the answer is yes unlimited and perpetual, if a church asks about streaming services yes it’s covered as long as they are not redistributing the music itself, troubleshooting playback issues usually comes down to slow internet since previews stream in high quality, another area of questions is whether artlist content can be used in ads the answer is yes global online tv cinema ads included unless excluded by enterprise clause, also some ask if content is exclusive no tracks are licensed non-exclusively so others may use the same music",
+          "position": 10,
+          "originalSentence": "but if they need theatrical distribution for more than 1 million tickets they should check enterprise licensing, podcast producers ask a lot if the license covers spotify apple podcasts etc and the answer is yes unlimited and perpetual, if a church asks about streaming services yes it’s covered as long as they are not redistributing the music itself, troubleshooting playback issues usually comes down to slow internet since previews stream in high quality, another area of questions is whether artlist content can be used in ads the answer is yes global online tv cinema ads included unless excluded by enterprise clause, also some ask if content is exclusive no tracks are licensed non-exclusively so others may use the same music"
+        },
+        {
+          "id": "s_67",
+          "content": "for footage customers often ask if there are model releases included the answer is yes all footage with identifiable people has signed releases and property releases where needed, people also ask about frame rates footage usually comes in 23.98 25 30 50 60 fps but depends on the clip, if customers want to upgrade from music-only to music+sfx+footage the system will prorate but not downgrade mid-cycle, license certificates need to be generated per project not once per account so remind them to do it for each upload to avoid copyright claims, in terms of accessibility the site works with screen readers but not all controls are perfect so if a blind customer complains advise them to use the simplified search view, another set of questions is about team plans where each user gets their own login and license certificate so no sharing",
+          "position": 11,
+          "originalSentence": "for footage customers often ask if there are model releases included the answer is yes all footage with identifiable people has signed releases and property releases where needed, people also ask about frame rates footage usually comes in 23.98 25 30 50 60 fps but depends on the clip, if customers want to upgrade from music-only to music+sfx+footage the system will prorate but not downgrade mid-cycle, license certificates need to be generated per project not once per account so remind them to do it for each upload to avoid copyright claims, in terms of accessibility the site works with screen readers but not all controls are perfect so if a blind customer complains advise them to use the simplified search view, another set of questions is about team plans where each user gets their own login and license certificate so no sharing"
+        },
+        {
+          "id": "s_68",
+          "content": "sometimes customers confuse royalty-free with public domain so clarify again artlist is licensed content, regarding updates new sound effects packs are added weekly customers can filter by category like whoosh hits risers, if a filmmaker wants to distribute on netflix hbo prime video it’s fine no extra cost, technical issue sometimes arises where invoices don’t show in the account this is usually cache or they need to refresh billing page, if a customer asks about exporting metadata they can download a csv from their download history",
+          "position": 12,
+          "originalSentence": "sometimes customers confuse royalty-free with public domain so clarify again artlist is licensed content, regarding updates new sound effects packs are added weekly customers can filter by category like whoosh hits risers, if a filmmaker wants to distribute on netflix hbo prime video it’s fine no extra cost, technical issue sometimes arises where invoices don’t show in the account this is usually cache or they need to refresh billing page, if a customer asks about exporting metadata they can download a csv from their download history"
+        },
+        {
+          "id": "s_69",
+          "content": "some agencies ask about unlimited seats and that’s only enterprise level not regular team, occasionally customers complain about slow downloads which is often due to their ISP but you can suggest using a wired connection",
+          "position": 13,
+          "originalSentence": "some agencies ask about unlimited seats and that’s only enterprise level not regular team, occasionally customers complain about slow downloads which is often due to their ISP but you can suggest using a wired connection"
+        },
+        {
+          "id": "s_70",
+          "content": "and always remind customers that support doesn’t provide custom song recommendations but they can use curated playlists for inspiration and if all else fails escalate to tier 2 support with logs and screenshots.",
+          "position": 14,
+          "originalSentence": "and always remind customers that support doesn’t provide custom song recommendations but they can use curated playlists for inspiration and if all else fails escalate to tier 2 support with logs and screenshots."
+        },
+        {
+          "id": "s_71",
+          "content": "another thing customers sometimes bring up is how often new content is added and the answer is daily for music and sound effects while footage is refreshed weekly and templates depend on contributor submissions, if they ask about localization of the site note that subtitles or translations for preview videos are not provided and the interface is only partially localized but the core browsing experience works globally",
+          "position": 15,
+          "originalSentence": "another thing customers sometimes bring up is how often new content is added and the answer is daily for music and sound effects while footage is refreshed weekly and templates depend on contributor submissions, if they ask about localization of the site note that subtitles or translations for preview videos are not provided and the interface is only partially localized but the core browsing experience works globally"
+        },
+        {
+          "id": "s_72",
+          "content": "sometimes people are concerned about the size of the downloads music files are usually under 100mb but footage clips can be multiple gigabytes especially in 4k prores so they need stable internet, customers may also ask whether they can store downloads in the cloud through artlist and the answer is no they need to manage their own storage but their download history remains available in the account as long as they’re subscribed, technical questions sometimes come up about editing stems and you should tell them only tracks with stems available will display that option and the stems download as separate wav files, in terms of payments customers often ask about renewals which are automatic unless canceled before the renewal date and receipts are sent by email but can also be found under billing in their account, another issue is customers who used an old email address and want to change login credentials they can do this in profile settings but license certificates stay tied to the account not transferable so if they used the wrong email it’s not reversible, people also ask about watermark previews when they don’t have an active subscription previews always have a watermark and cannot be used in production, in terms of enterprise plan questions those often involve legal teams asking for contract copies which support cannot provide directly they need to escalate to enterprise sales, another frequent request is to pause a subscription which is not possible they must cancel and resubscribe later, gift cards or vouchers are not supported so if someone asks the only way is to purchase directly",
+          "position": 16,
+          "originalSentence": "sometimes people are concerned about the size of the downloads music files are usually under 100mb but footage clips can be multiple gigabytes especially in 4k prores so they need stable internet, customers may also ask whether they can store downloads in the cloud through artlist and the answer is no they need to manage their own storage but their download history remains available in the account as long as they’re subscribed, technical questions sometimes come up about editing stems and you should tell them only tracks with stems available will display that option and the stems download as separate wav files, in terms of payments customers often ask about renewals which are automatic unless canceled before the renewal date and receipts are sent by email but can also be found under billing in their account, another issue is customers who used an old email address and want to change login credentials they can do this in profile settings but license certificates stay tied to the account not transferable so if they used the wrong email it’s not reversible, people also ask about watermark previews when they don’t have an active subscription previews always have a watermark and cannot be used in production, in terms of enterprise plan questions those often involve legal teams asking for contract copies which support cannot provide directly they need to escalate to enterprise sales, another frequent request is to pause a subscription which is not possible they must cancel and resubscribe later, gift cards or vouchers are not supported so if someone asks the only way is to purchase directly"
+        },
+        {
+          "id": "s_73",
+          "content": "some creators ask whether artlist integrates with editing software right now the closest is the premiere pro extension plugin that allows direct browsing and importing but otherwise downloads must be done via the website",
+          "position": 17,
+          "originalSentence": "some creators ask whether artlist integrates with editing software right now the closest is the premiere pro extension plugin that allows direct browsing and importing but otherwise downloads must be done via the website"
+        },
+        {
+          "id": "s_74",
+          "content": "sometimes users ask about refunds for partial months which don’t exist because refunds only happen within 14 days and only if no assets were downloaded, another tricky question is when customers download assets for one project but then reuse them in another after cancellation this is not allowed because the license only covers projects made during active subscription, however all projects completed during subscription remain valid forever, customers also ask about whether AI-generated content is part of the library currently no all music and footage is created by human contributors, occasionally people report copyright claims on youtube even when they used a certificate and usually this resolves after they dispute it using the certificate but remind them it can take up to 30 days for the claim to clear, others ask about hardware requirements for playback on older machines in which case just remind them mp3 and wav are standard but 4k prores footage may require strong cpu and gpu, customers may also want to delete their account which can be done in settings but downloaded content licenses remain in force",
+          "position": 18,
+          "originalSentence": "sometimes users ask about refunds for partial months which don’t exist because refunds only happen within 14 days and only if no assets were downloaded, another tricky question is when customers download assets for one project but then reuse them in another after cancellation this is not allowed because the license only covers projects made during active subscription, however all projects completed during subscription remain valid forever, customers also ask about whether AI-generated content is part of the library currently no all music and footage is created by human contributors, occasionally people report copyright claims on youtube even when they used a certificate and usually this resolves after they dispute it using the certificate but remind them it can take up to 30 days for the claim to clear, others ask about hardware requirements for playback on older machines in which case just remind them mp3 and wav are standard but 4k prores footage may require strong cpu and gpu, customers may also want to delete their account which can be done in settings but downloaded content licenses remain in force"
+        },
+        {
+          "id": "s_75",
+          "content": "sometimes agencies ask if they can white-label the license certificates the answer is no certificates always display artlist branding",
+          "position": 19,
+          "originalSentence": "sometimes agencies ask if they can white-label the license certificates the answer is no certificates always display artlist branding"
+        },
+        {
+          "id": "s_76",
+          "content": "some users ask whether they can collaborate with other editors using one subscription they cannot unless each editor has their own license or they get a team plan, a common mix-up is with artgrid (footage only) and motion array (templates marketplace) so support should clarify artlist is music+sound effects primarily with bundles, occasionally customers ask about contributor royalties and payments which is not public and support should not disclose details, if they ask about two-factor authentication for accounts it’s not yet supported but strong passwords are recommended",
+          "position": 20,
+          "originalSentence": "some users ask whether they can collaborate with other editors using one subscription they cannot unless each editor has their own license or they get a team plan, a common mix-up is with artgrid (footage only) and motion array (templates marketplace) so support should clarify artlist is music+sound effects primarily with bundles, occasionally customers ask about contributor royalties and payments which is not public and support should not disclose details, if they ask about two-factor authentication for accounts it’s not yet supported but strong passwords are recommended"
+        },
+        {
+          "id": "s_77",
+          "content": "some people ask whether pricing ever changes and the answer is yes artlist reserves the right to change subscription costs but active subscriptions remain locked until canceled, when people wonder about project-based licenses explain again that every download includes a perpetual license valid for that project, if customers request custom curation or custom music production this is not provided by artlist and should be politely declined, lastly if support cannot resolve an issue remind the customer to provide screenshots invoice numbers and any license certificates to speed up escalation.",
+          "position": 21,
+          "originalSentence": "some people ask whether pricing ever changes and the answer is yes artlist reserves the right to change subscription costs but active subscriptions remain locked until canceled, when people wonder about project-based licenses explain again that every download includes a perpetual license valid for that project, if customers request custom curation or custom music production this is not provided by artlist and should be politely declined, lastly if support cannot resolve an issue remind the customer to provide screenshots invoice numbers and any license certificates to speed up escalation."
+        }
+      ]
     }
   },
   "allChunks": [
@@ -731,6 +864,138 @@
       "id": "sc_55",
       "type": "sentence_context",
       "content": "[Document Content] [Previous: some users ask whether they can collaborate with o...] some people ask whether pricing ever changes and the answer is yes artlist reserves the right to change subscription costs but active subscriptions remain locked until canceled, when people wonder about project-based licenses explain again that every download",
+      "position": 21
+    },
+    {
+      "id": "s_56",
+      "type": "sentence",
+      "content": "artlist is a platform where people can get music",
+      "position": 0
+    },
+    {
+      "id": "s_57",
+      "type": "sentence",
+      "content": "sound effects, footage",
+      "position": 1
+    },
+    {
+      "id": "s_58",
+      "type": "sentence",
+      "content": "and templates, all royalty-free but wait before telling a customer that you have to remember there are different subscription types which can confuse them so pricing starts at 14.99 USD a month for music only if billed annually",
+      "position": 2
+    },
+    {
+      "id": "s_59",
+      "type": "sentence",
+      "content": "or 29.99 if they take the full package with music + sfx + footage but then there’s also the enterprise plan which has custom pricing depending on company size and usage and customers often ask about licensing which is unlimited for all platforms worldwide including youtube tiktok film tv and podcasts as long as they keep an active subscription downloads made during a valid subscription are licensed forever but if they cancel they can’t download new assets anymore but they still keep rights to the ones they already downloaded and sometimes people think they can share accounts which is not allowed one user per license unless they pay for a team plan the way to use the product is they sign up, log in and go to the catalog page where they can search by genre mood instrument bpm key or duration and if they want to find footage they can filter by shot type people drone slow motion vertical and if they download they get a zip file with WAV or MP3 and metadata for music and MOV or MP4 for video templates come as after effects or premiere files customers often forget to click the download button after adding to favorites so remind them favorites is not the same as downloads and also make sure they understand the difference between commercial license which covers social ads youtube monetization etc and internal license which might come up for enterprise customers support questions often include billing issues like double charges which usually happen when a customer upgrades mid cycle so tell them to check their billing page in settings and refunds are only possible within 14 days if no assets were downloaded and the refund team can be contacted via finance@artlist.io features include curated playlists daily new tracks integration with premiere pro plugin direct download history and unlimited projects use cases vary from indie filmmakers and youtube creators to big agencies so sometimes people ask why their video got a copyright claim the answer is usually that the claim is automated and they should use the license certificate to dispute it which they can generate from their account dashboard under downloads selecting the track they used, also some users confuse artlist with arttlist.",
+      "position": 3
+    },
+    {
+      "id": "s_60",
+      "type": "sentence",
+      "content": "io vs artgrid which is footage only and motionarray which is templates so make sure you guide them to the right product login problems usually are related to wrong google/facebook sign in vs email/password, reset password links expire after 1 hour, customers who want to change plan mid year need to cancel and repurchase because upgrades can’t downgrade mid cycle, students sometimes ask about discounts which exist at 30% off if they prove status via a third party form but it can take up to 7 business days to approve, features roadmap not public but customers sometimes ask so just say new tracks and footage are added daily by a global network of creators, the catalog supports search in multiple languages but tagging works best in english, if customer is confused about downloading stems note that stems are only available on select tracks and marked clearly, common technical issue is download button not working usually solved by clearing cache or trying a different browser chrome works best, maximum download limit doesn’t exist because it’s unlimited but API scraping is blocked so warn them about automation tools, another frequent support case is VAT invoices for EU customers they can add their VAT ID under billing and it will auto adjust future invoices but not past ones, refunds for team accounts are trickier they have to email support@artlist.io directly, audio formats are always 44.",
+      "position": 4
+    },
+    {
+      "id": "s_61",
+      "type": "sentence",
+      "content": "1kHz 24bit WAV or 320kbps MP3, footage is usually 4K ProRes unless otherwise specified, licenses are perpetual which means if they used a song in a film they distributed in theaters and later canceled subscription it’s still covered, customer confusion also comes from difference between royalty-free and copyright-free explain clearly that artlist music is copyrighted but licensed for their use, phone support doesn’t exist everything is via email or chat and expected response time is 24 hours but sometimes up to 48 on weekends, finally if you can’t solve it escalate with ticket priority high for billing, medium for technical, low for general info and remember never promise features not yet released.",
+      "position": 5
+    },
+    {
+      "id": "s_62",
+      "type": "sentence",
+      "content": "sometimes customers ask how they can cancel their subscription and it’s not obvious so you need to tell them to log in > profile > billing > cancel subscription but if they don’t see the option it’s usually because they purchased through a reseller like app store or google play and then they need to cancel from there and if they ask whether downloads disappear after cancellation no they keep them forever but they can’t re-download so they should back them up, another common confusion is people asking if they can use artlist tracks on client projects yes they can as long as they have an active subscription at the time of download and each license is broad so it covers client work as well, people also ask if they can credit the artist and it’s not required but always welcome and sometimes there are questions about language support the site is mainly in english but customers can change interface to spanish french german and japanese though search tags still behave best in english, also mobile app exists but it’s limited to browsing playlists and saving favorites you can’t download on mobile yet, regarding payment methods artlist accepts credit cards paypal and some local methods in europe but not crypto if customer asks",
+      "position": 6
+    },
+    {
+      "id": "s_63",
+      "type": "sentence",
+      "content": "sometimes schools or nonprofits want to use artlist and in those cases they need a standard subscription because there’s no special nonprofit tier except enterprise deals, another frequent question is about system requirements for editing with downloaded content which basically is irrelevant since files are standard mp3 wav mov formats but you can suggest premiere pro final cut pro or davinci resolve for compatibility, if customers ask about uploading their own music or footage the answer is no unless they apply to become contributors through artlist.",
+      "position": 7
+    },
+    {
+      "id": "s_64",
+      "type": "sentence",
+      "content": "io/artist-application and the process takes weeks with review of portfolio",
+      "position": 8
+    },
+    {
+      "id": "s_65",
+      "type": "sentence",
+      "content": "sometimes customers want to know if the license covers broadcast tv yes it does unlimited reach no extra fees",
+      "position": 9
+    },
+    {
+      "id": "s_66",
+      "type": "sentence",
+      "content": "but if they need theatrical distribution for more than 1 million tickets they should check enterprise licensing, podcast producers ask a lot if the license covers spotify apple podcasts etc and the answer is yes unlimited and perpetual, if a church asks about streaming services yes it’s covered as long as they are not redistributing the music itself, troubleshooting playback issues usually comes down to slow internet since previews stream in high quality, another area of questions is whether artlist content can be used in ads the answer is yes global online tv cinema ads included unless excluded by enterprise clause, also some ask if content is exclusive no tracks are licensed non-exclusively so others may use the same music",
+      "position": 10
+    },
+    {
+      "id": "s_67",
+      "type": "sentence",
+      "content": "for footage customers often ask if there are model releases included the answer is yes all footage with identifiable people has signed releases and property releases where needed, people also ask about frame rates footage usually comes in 23.98 25 30 50 60 fps but depends on the clip, if customers want to upgrade from music-only to music+sfx+footage the system will prorate but not downgrade mid-cycle, license certificates need to be generated per project not once per account so remind them to do it for each upload to avoid copyright claims, in terms of accessibility the site works with screen readers but not all controls are perfect so if a blind customer complains advise them to use the simplified search view, another set of questions is about team plans where each user gets their own login and license certificate so no sharing",
+      "position": 11
+    },
+    {
+      "id": "s_68",
+      "type": "sentence",
+      "content": "sometimes customers confuse royalty-free with public domain so clarify again artlist is licensed content, regarding updates new sound effects packs are added weekly customers can filter by category like whoosh hits risers, if a filmmaker wants to distribute on netflix hbo prime video it’s fine no extra cost, technical issue sometimes arises where invoices don’t show in the account this is usually cache or they need to refresh billing page, if a customer asks about exporting metadata they can download a csv from their download history",
+      "position": 12
+    },
+    {
+      "id": "s_69",
+      "type": "sentence",
+      "content": "some agencies ask about unlimited seats and that’s only enterprise level not regular team, occasionally customers complain about slow downloads which is often due to their ISP but you can suggest using a wired connection",
+      "position": 13
+    },
+    {
+      "id": "s_70",
+      "type": "sentence",
+      "content": "and always remind customers that support doesn’t provide custom song recommendations but they can use curated playlists for inspiration and if all else fails escalate to tier 2 support with logs and screenshots.",
+      "position": 14
+    },
+    {
+      "id": "s_71",
+      "type": "sentence",
+      "content": "another thing customers sometimes bring up is how often new content is added and the answer is daily for music and sound effects while footage is refreshed weekly and templates depend on contributor submissions, if they ask about localization of the site note that subtitles or translations for preview videos are not provided and the interface is only partially localized but the core browsing experience works globally",
+      "position": 15
+    },
+    {
+      "id": "s_72",
+      "type": "sentence",
+      "content": "sometimes people are concerned about the size of the downloads music files are usually under 100mb but footage clips can be multiple gigabytes especially in 4k prores so they need stable internet, customers may also ask whether they can store downloads in the cloud through artlist and the answer is no they need to manage their own storage but their download history remains available in the account as long as they’re subscribed, technical questions sometimes come up about editing stems and you should tell them only tracks with stems available will display that option and the stems download as separate wav files, in terms of payments customers often ask about renewals which are automatic unless canceled before the renewal date and receipts are sent by email but can also be found under billing in their account, another issue is customers who used an old email address and want to change login credentials they can do this in profile settings but license certificates stay tied to the account not transferable so if they used the wrong email it’s not reversible, people also ask about watermark previews when they don’t have an active subscription previews always have a watermark and cannot be used in production, in terms of enterprise plan questions those often involve legal teams asking for contract copies which support cannot provide directly they need to escalate to enterprise sales, another frequent request is to pause a subscription which is not possible they must cancel and resubscribe later, gift cards or vouchers are not supported so if someone asks the only way is to purchase directly",
+      "position": 16
+    },
+    {
+      "id": "s_73",
+      "type": "sentence",
+      "content": "some creators ask whether artlist integrates with editing software right now the closest is the premiere pro extension plugin that allows direct browsing and importing but otherwise downloads must be done via the website",
+      "position": 17
+    },
+    {
+      "id": "s_74",
+      "type": "sentence",
+      "content": "sometimes users ask about refunds for partial months which don’t exist because refunds only happen within 14 days and only if no assets were downloaded, another tricky question is when customers download assets for one project but then reuse them in another after cancellation this is not allowed because the license only covers projects made during active subscription, however all projects completed during subscription remain valid forever, customers also ask about whether AI-generated content is part of the library currently no all music and footage is created by human contributors, occasionally people report copyright claims on youtube even when they used a certificate and usually this resolves after they dispute it using the certificate but remind them it can take up to 30 days for the claim to clear, others ask about hardware requirements for playback on older machines in which case just remind them mp3 and wav are standard but 4k prores footage may require strong cpu and gpu, customers may also want to delete their account which can be done in settings but downloaded content licenses remain in force",
+      "position": 18
+    },
+    {
+      "id": "s_75",
+      "type": "sentence",
+      "content": "sometimes agencies ask if they can white-label the license certificates the answer is no certificates always display artlist branding",
+      "position": 19
+    },
+    {
+      "id": "s_76",
+      "type": "sentence",
+      "content": "some users ask whether they can collaborate with other editors using one subscription they cannot unless each editor has their own license or they get a team plan, a common mix-up is with artgrid (footage only) and motion array (templates marketplace) so support should clarify artlist is music+sound effects primarily with bundles, occasionally customers ask about contributor royalties and payments which is not public and support should not disclose details, if they ask about two-factor authentication for accounts it’s not yet supported but strong passwords are recommended",
+      "position": 20
+    },
+    {
+      "id": "s_77",
+      "type": "sentence",
+      "content": "some people ask whether pricing ever changes and the answer is yes artlist reserves the right to change subscription costs but active subscriptions remain locked until canceled, when people wonder about project-based licenses explain again that every download includes a perpetual license valid for that project, if customers request custom curation or custom music production this is not provided by artlist and should be politely declined, lastly if support cannot resolve an issue remind the customer to provide screenshots invoice numbers and any license certificates to speed up escalation.",
       "position": 21
     }
   ]

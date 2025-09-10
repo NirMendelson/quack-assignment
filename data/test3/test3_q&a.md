@@ -104,7 +104,9 @@
 ---
 
 ### Q19. Does Canva have built-in text-to-speech functionality?  
-**A:** No information.  
+**A:** No, Canva does not currently have built-in text-to-speech functionality.
+> *“audio features include trimming, adjusting volume, fade in/out, text-to-speech doesn’t exist yet but people ask”*  
+
 
 ---
 
@@ -224,4 +226,6 @@
 ---
 
 ### Q40. Does Canva offer dark mode on desktop?  
-**A:** No information.  
+**A:** No, Canva does not offer dark mode on desktop. Dark mode is only available on the mobile app.  
+> *“Canva has dark mode but only on mobile app, not on desktop web.”*  
+

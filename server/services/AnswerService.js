@@ -17,7 +17,7 @@ class AnswerService {
 
       // Skip reranking - use original search results directly
       console.log(`📊 Using original search results (reranking disabled)...`);
-      const topChunks = searchResults.slice(0, 10);
+      const topChunks = searchResults.slice(0, 5);
       console.log(`📊 Selected top ${topChunks.length} chunks for evidence check`);
       
       // Check if we have sufficient evidence
@@ -136,7 +136,7 @@ class AnswerService {
         chunkIndex: index + 1
       }));
 
-      const prompt = `You are a policy support agent. Answer the user's question STRICTLY based on the provided policy document excerpts.
+      const prompt = `Answer the user's question using ONLY the information from the provided excerpts.
 
 CRITICAL RULES - NO EXCEPTIONS:
 1. ONLY use information that is explicitly stated in the provided excerpts
@@ -144,10 +144,11 @@ CRITICAL RULES - NO EXCEPTIONS:
 3. DO NOT make assumptions or inferences beyond what is directly stated
 4. If information is not in the provided excerpts, respond with: "I could not find this in the policy."
 5. Answer in your own words - do NOT quote the exact text from the excerpts
-6. Include citations in the format [c:chunk_id -> section_name] for key points
+6. Answer straight and to the point, do not add any extra information.
 7. Be precise and factual
-8. If you're unsure, err on the side of saying you couldn't find it
-9. Write naturally and avoid extra spaces before punctuation
+8. Write naturally and avoid extra spaces before punctuation
+9. Start your answer directly - do NOT use phrases like "Based on the policy document" or "According to the policy"
+10. DO NOT include any citation references like [c:chunk_1 -> section] in your answer
 
 Question: ${question}
 
