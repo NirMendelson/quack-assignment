@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-09-10T07:14:55.984Z",
+  "timestamp": "2025-09-10T08:04:13.274Z",
   "summary": {
     "totalTests": 1,
-    "totalQuestions": 1,
-    "correctAnswers": 0,
-    "accuracy": 0,
+    "totalQuestions": 15,
+    "correctAnswers": 15,
+    "accuracy": 1,
     "averageConfidence": 1
   },
   "testResults": [
@@ -12,17 +12,171 @@
       "testDir": "test4",
       "policyFile": "test4.md",
       "qaFile": "test4-q&a.md",
-      "totalQuestions": 1,
+      "totalQuestions": 15,
       "results": [
         {
           "testDir": "test4",
           "questionNumber": 1,
+          "question": "What does a Deployment provide declarative updates for?",
+          "expectedAnswer": "Pods and ReplicaSets.",
+          "actualAnswer": "A Deployment provides declarative updates for Pods and ReplicaSets.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 2,
+          "question": "How does a Deployment move the actual state toward the desired state?",
+          "expectedAnswer": "The controller changes actual to desired at a controlled rate.",
+          "actualAnswer": "A Deployment controller changes the actual state to the desired state at a controlled rate.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 3,
+          "question": "In the nginx example, how many Pods are created and which field controls that?",
+          "expectedAnswer": "Three Pods, controlled by `.spec.replicas`.",
+          "actualAnswer": "In the nginx example, three Pods are created. The `.spec.replicas` field controls how many Pods are created.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 4,
+          "question": "What relationship must `.spec.selector` have to the Pod template labels?",
+          "expectedAnswer": "It must match `.spec.template.metadata.labels`, or the API rejects it.",
+          "actualAnswer": "The `.spec.selector` must match `.spec.template.metadata.labels`, or it will be rejected by the API. The selector defines how the Deployment finds which Pods to manage by selecting labels that are defined in the Pod template.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 5,
+          "question": "What is the naming format for ReplicaSets created by a Deployment?",
+          "expectedAnswer": "`[DEPLOYMENT-NAME]-[HASH]`.",
+          "actualAnswer": "The naming format for ReplicaSets created by a Deployment is `[DEPLOYMENT-NAME]-[HASH]`. This name becomes the basis for the Pods that are created, and the HASH string is the same as the pod-template-hash label on the ReplicaSet.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 6,
+          "question": "Should you modify the `pod-template-hash` label?",
+          "expectedAnswer": "No, do not change it; it prevents overlap between child ReplicaSets.",
+          "actualAnswer": "No, you should not modify the `pod-template-hash` label. This label is added by the Deployment controller to every ReplicaSet that a Deployment creates or adopts, and it ensures that child ReplicaSets of a Deployment do not overlap by using a hash of the PodTemplate as the label value.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 7,
+          "question": "What specifically triggers a Deployment rollout?",
+          "expectedAnswer": "Changing the Deployment’s Pod template (for example, labels or container images).",
+          "actualAnswer": "A Deployment rollout is triggered if and only if the Deployment's Pod template is changed. This includes changes such as updating the labels or container images of the template. Other updates, like scaling the Deployment, do not trigger a rollout.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 8,
+          "question": "Are Deployment label selectors mutable in `apps/v1`?",
+          "expectedAnswer": "No, they are immutable after creation.",
+          "actualAnswer": "No, Deployment label selectors are not mutable in `apps/v1`. They are immutable after the Deployment gets created.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 9,
+          "question": "What are the default values for `maxUnavailable` and `maxSurge` in a RollingUpdate?",
+          "expectedAnswer": "Both default to 25%.",
+          "actualAnswer": "The default value for `maxUnavailable` is 25% and the default value for `maxSurge` is 25%.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 10,
           "question": "What is the default `revisionHistoryLimit` for a Deployment?",
           "expectedAnswer": "10 old ReplicaSets are kept by default.",
-          "actualAnswer": "Transferring to human customer support.",
-          "isCorrect": false,
+          "actualAnswer": "The default `revisionHistoryLimit` for a Deployment is 10.",
+          "isCorrect": true,
           "confidence": 1,
-          "searchResults": 20,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 11,
+          "question": "Which exact Kubernetes version introduced Deployments under `apps/v1` and when was the previous API deprecated?",
+          "expectedAnswer": "No information.",
+          "actualAnswer": "Transferring to human customer support.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 12,
+          "question": "How do you configure `securityContext` settings like `runAsNonRoot` or `fsGroup` for Pods in this Deployment?",
+          "expectedAnswer": "No information.",
+          "actualAnswer": "Transferring to human customer support.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 13,
+          "question": "What RBAC roles or permissions are required to create, update, and roll back Deployments in a cluster?",
+          "expectedAnswer": "No information.",
+          "actualAnswer": "Transferring to human customer support.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 14,
+          "question": "How do you mount a ConfigMap or Secret in the example Deployment to provide environment variables or files?",
+          "expectedAnswer": "No information.",
+          "actualAnswer": "Transferring to human customer support.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test4",
+          "questionNumber": 15,
+          "question": "Does this document describe a blue-green deployment workflow distinct from rolling updates, with concrete steps and commands?",
+          "expectedAnswer": "No information.",
+          "actualAnswer": "Transferring to human customer support.",
+          "isCorrect": true,
+          "confidence": 1,
+          "searchResults": 100,
           "citations": 5
         }
       ]

@@ -23,31 +23,101 @@ class SearchService {
 
       logger.info(`Searching for: ${query}`);
 
-      // Analyze query with generic analyzer
-      const queryAnalysis = this.queryAnalyzer.analyzeQuery(query);
+      // Get candidate pool using hybrid retrieval
+      const candidatePool = await this.getCandidatePool(query, 100);
       
-      // Process query with expansion and variations (legacy)
-      const processedQuery = this.queryProcessor.processQuery(query);
-      
-      // Get results from multiple search strategies
-      const results = await this.hybridSearch(processedQuery, limit);
-      
-      // Apply token bucket filtering
-      const filteredResults = this.applyTokenBucketFiltering(results, queryAnalysis);
-      
-      // Apply domain-specific reranking
-      const rerankedResults = this.rerankResults(filteredResults, processedQuery);
-      
-      // Return top results
-      const finalResults = rerankedResults.slice(0, limit);
-      
-      logger.info(`Found ${finalResults.length} relevant chunks`);
-      return finalResults;
+      logger.info(`Found ${candidatePool.length} candidates for reranking`);
+      return candidatePool;
 
     } catch (error) {
       logger.error('Error in search:', error.message);
       throw error;
     }
+  }
+
+  /**
+   * Get candidate pool using hybrid retrieval (BM25 + embeddings + RRF fusion)
+   */
+  async getCandidatePool(query, poolSize = 100) {
+    try {
+      logger.info(`🔍 Getting candidate pool for: "${query}"`);
+      
+      // 1. BM25 search (exact + keyword)
+      const bm25Results = await this.bm25Search(query, poolSize * 2);
+      logger.info(`📊 BM25 found ${bm25Results.length} results`);
+      
+      // 2. Semantic search
+      const semanticResults = await this.semanticSearch(query, poolSize * 2);
+      logger.info(`🧠 Semantic found ${semanticResults.length} results`);
+      
+      // 3. Exact phrase search (highest priority)
+      const exactResults = await this.exactPhraseSearch(query, poolSize);
+      logger.info(`🎯 Exact found ${exactResults.length} results`);
+      
+      // 4. Apply RRF fusion
+      const fusedResults = this.applyRRFFusion({
+        exact: exactResults,
+        bm25: bm25Results,
+        semantic: semanticResults
+      }, poolSize);
+      
+      logger.info(`🔄 RRF fused to ${fusedResults.length} candidates`);
+      return fusedResults;
+      
+    } catch (error) {
+      logger.error('Error getting candidate pool:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * BM25 search combining exact phrases and keywords
+   */
+  async bm25Search(query, limit) {
+    const keywordIndex = this.documentProcessor.getKeywordIndex();
+    const results = keywordIndex.search(query, { limit });
+    
+    return results.map(result => ({
+      id: result.id,
+      content: result.content,
+      title: result.title,
+      section: result.section,
+      type: result.type,
+      score: result.score,
+      source: 'bm25'
+    }));
+  }
+
+  /**
+   * Apply Reciprocal Rank Fusion (RRF) to combine results
+   */
+  applyRRFFusion(resultSets, poolSize) {
+    const rrfK = 60; // RRF constant
+    const scores = new Map();
+    
+    // Process each result set
+    Object.entries(resultSets).forEach(([source, results]) => {
+      results.forEach((result, index) => {
+        const rrfScore = 1 / (rrfK + index + 1);
+        
+        if (scores.has(result.id)) {
+          const existing = scores.get(result.id);
+          existing.rrfScore += rrfScore;
+          existing.sources[source] = { rank: index + 1, score: result.score };
+        } else {
+          scores.set(result.id, {
+            ...result,
+            rrfScore: rrfScore,
+            sources: { [source]: { rank: index + 1, score: result.score } }
+          });
+        }
+      });
+    });
+    
+    // Sort by RRF score and return top candidates
+    return Array.from(scores.values())
+      .sort((a, b) => b.rrfScore - a.rrfScore)
+      .slice(0, poolSize);
   }
 
   async hybridSearch(processedQuery, limit) {
@@ -86,17 +156,20 @@ class SearchService {
     return Array.from(allResults.values());
   }
 
-  async exactPhraseSearch(processedQuery, limit) {
+  async exactPhraseSearch(query, limit) {
     const chunks = this.documentProcessor.getChunks();
     const results = [];
+    
+    // Extract phrases from query (backticks, quotes, or multi-word terms)
+    const phrases = this.extractPhrases(query);
     
     for (const chunk of chunks) {
       let maxScore = 0;
       let matchedPhrase = '';
       
       // Check each exact phrase
-      processedQuery.exactPhrases.forEach(phrase => {
-        if (chunk.content.toLowerCase().includes(phrase)) {
+      phrases.forEach(phrase => {
+        if (chunk.content.toLowerCase().includes(phrase.toLowerCase())) {
           const score = phrase.split(' ').length * 10; // Longer phrases get higher scores
           if (score > maxScore) {
             maxScore = score;
@@ -113,12 +186,43 @@ class SearchService {
           section: chunk.section,
           type: chunk.type,
           score: maxScore,
-          matchedPhrase: matchedPhrase
+          matchedPhrase: matchedPhrase,
+          source: 'exact'
         });
       }
     }
     
     return results.sort((a, b) => b.score - a.score).slice(0, limit);
+  }
+
+  /**
+   * Extract phrases from query (backticks, quotes, or important terms)
+   */
+  extractPhrases(query) {
+    const phrases = [];
+    
+    // Extract backtick phrases
+    const backtickMatches = query.match(/`([^`]+)`/g);
+    if (backtickMatches) {
+      phrases.push(...backtickMatches.map(match => match.slice(1, -1)));
+    }
+    
+    // Extract quoted phrases
+    const quoteMatches = query.match(/"([^"]+)"/g);
+    if (quoteMatches) {
+      phrases.push(...quoteMatches.map(match => match.slice(1, -1)));
+    }
+    
+    // Extract important multi-word terms (3+ words)
+    const words = query.split(/\s+/);
+    for (let i = 0; i < words.length - 2; i++) {
+      const phrase = words.slice(i, i + 3).join(' ');
+      if (phrase.length > 10) { // Only meaningful phrases
+        phrases.push(phrase);
+      }
+    }
+    
+    return [...new Set(phrases)]; // Remove duplicates
   }
 
   async enhancedKeywordSearch(processedQuery, limit) {

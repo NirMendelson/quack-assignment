@@ -1,4 +1,4 @@
-<!-- ### Q1. What does a Deployment provide declarative updates for?  
+### Q1. What does a Deployment provide declarative updates for?  
 **A:** Pods and ReplicaSets.  
 > *“A Deployment provides declarative updates for Pods and ReplicaSets.”*  
 
@@ -50,12 +50,12 @@
 **A:** Both default to 25%.  
 > *“The default value is 25%.”*  
 
---- -->
+---
 
 ### Q10. What is the default `revisionHistoryLimit` for a Deployment?  
 **A:** 10 old ReplicaSets are kept by default.  
 > *“By default, it is 10.”*  
-<!-- 
+
 ---
 
 ### Q11. Which exact Kubernetes version introduced Deployments under `apps/v1` and when was the previous API deprecated?  
@@ -79,4 +79,4 @@
 ---
 
 ### Q15. Does this document describe a blue-green deployment workflow distinct from rolling updates, with concrete steps and commands?  
-**A:** No information.   -->
+**A:** No information.  

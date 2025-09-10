@@ -274,7 +274,7 @@ EVALUATION CRITERIA:
 2. Completeness: The actual answer should cover the key information from the expected answer
 3. Accuracy: The actual answer should be factually correct
 4. Format Tolerance: Different wording, punctuation, or formatting should not affect correctness
-5. Context Awareness: Consider that "No data about it in the text" and "I could not find this in the policy" are equivalent
+5. Context Awareness: Consider that "No data about it in the text", "I could not find this in the policy", and "Transferring to human customer support." are all equivalent to "No information."
 
 QUESTION: ${question}
 
@@ -286,7 +286,7 @@ Please evaluate if the actual answer is correct. Consider:
 - Are the key facts the same?
 - Is the meaning equivalent?
 - Are both answers saying the same thing in different words?
-- If one says "no data" and the other says "could not find", they are equivalent
+- If one says "no data", "could not find", or "transferring to human support", they are equivalent to "no information"
 
 Respond with ONLY "CORRECT" or "INCORRECT" followed by a brief explanation.`;
 

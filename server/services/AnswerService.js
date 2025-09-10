@@ -1,6 +1,7 @@
 const axios = require('axios');
 const Anthropic = require('@anthropic-ai/sdk');
 const { logger } = require('../utils/logger');
+const RerankService = require('./RerankService');
 
 class AnswerService {
   constructor() {
@@ -8,6 +9,7 @@ class AnswerService {
     this.claude = new Anthropic({
       apiKey: process.env.CLAUDE_API_KEY,
     });
+    this.rerankService = new RerankService(this.cohereApiKey, process.env.VOYAGE_API_KEY);
   }
 
   async generateAnswer(question, searchResults) {
@@ -15,17 +17,26 @@ class AnswerService {
       console.log(`🤖 Generating answer for: "${question}"`);
       logger.info(`Generating answer for question: ${question}`);
 
-      // Skip reranking - use original search results directly
-      console.log(`📊 Using original search results (reranking disabled)...`);
-      const topChunks = searchResults.slice(0, 5);
-      console.log(`📊 Selected top ${topChunks.length} chunks for evidence check`);
+      // Detect if this is a spec-style query (contains code-like terms)
+      const isSpecQuery = this.isSpecQuery(question);
+      console.log(`🔍 Query type: ${isSpecQuery ? 'SPEC' : 'GENERAL'}`);
+
+      // Use reranking service to get top chunks
+      const rerankResult = await this.rerankService.rerankChunks(question, searchResults, isSpecQuery);
+      const topChunks = rerankResult.chunks;
       
-      // Check if we have sufficient evidence
-      console.log(`🔍 Checking if evidence is sufficient...`);
-      const hasEvidence = this.hasSufficientEvidence(topChunks);
+      console.log(`📊 Selected top ${topChunks.length} chunks after reranking`);
       
-      if (!hasEvidence) {
-        console.log(`❌ Insufficient evidence - returning "I could not find this in the policy."`);
+      // Check evidence gate
+      if (!rerankResult.evidenceGate.passed) {
+        console.log(`❌ Evidence gate failed: ${rerankResult.evidenceGate.reason}`);
+        
+        // For spec queries, try retry with heavier keyword weighting
+        if (isSpecQuery && rerankResult.literalHits > 0) {
+          console.log(`🔄 Retrying with literal hits injection...`);
+          // TODO: Implement retry logic with literal hits injection
+        }
+        
         return {
           text: "I could not find this in the policy.",
           citations: [],
@@ -34,8 +45,8 @@ class AnswerService {
         };
       }
       
-      // Generate answer using Claude Sonnet 3
-      console.log(`✅ Sufficient evidence found - generating answer with Claude...`);
+      // Generate answer using Claude
+      console.log(`✅ Evidence gate passed - generating answer with Claude...`);
       const answer = await this.generateAnswerWithClaude(question, topChunks);
       
       console.log(`📝 Generated answer: "${answer.text}"`);
@@ -47,6 +58,21 @@ class AnswerService {
       logger.error('Error generating answer:', error.message);
       throw error;
     }
+  }
+
+  /**
+   * Detect if query is spec-style (contains code-like terms)
+   */
+  isSpecQuery(question) {
+    const specPatterns = [
+      /`[^`]+`/,  // Backticks
+      /\.\w+/,    // Dotted notation
+      /[A-Z][a-z]+[A-Z]/,  // camelCase
+      /[a-z]+_[a-z]+/,     // snake_case
+      /revisionHistoryLimit|spec\.|\.spec/  // Specific terms
+    ];
+    
+    return specPatterns.some(pattern => pattern.test(question));
   }
 
   async rerankResults(question, searchResults) {
@@ -142,13 +168,15 @@ CRITICAL RULES - NO EXCEPTIONS:
 1. ONLY use information that is explicitly stated in the provided excerpts
 2. DO NOT use any information from your training data or general knowledge
 3. DO NOT make assumptions or inferences beyond what is directly stated
-4. If information is not in the provided excerpts, respond with this exact phrase: "Transferring to human customer support."
-5. Answer in your own words - do NOT quote the exact text from the excerpts
-6. Answer straight and to the point, do not add any extra information.
-7. Be precise and factual
-8. Write naturally and avoid extra spaces before punctuation
-9. Start your answer directly - do NOT use phrases like "Based on the policy document" or "According to the policy"
-10. DO NOT include any citation references like [c:chunk_1 -> section] in your answer
+4. If the information needed to answer the question is NOT explicitly stated in the provided excerpts, respond with ONLY this exact phrase: "Transferring to human customer support."
+5. DO NOT provide partial answers, explanations, or technical details if the complete information is not in the excerpts
+6. DO NOT say things like "The document only discusses..." or "There is no mention of..." - just say "Transferring to human customer support."
+7. Answer in your own words - do NOT quote the exact text from the excerpts
+8. Answer straight and to the point, do not add any extra information.
+9. Be precise and factual
+10. Write naturally and avoid extra spaces before punctuation
+11. Start your answer directly - do NOT use phrases like "Based on the policy document" or "According to the policy"
+12. DO NOT include any citation references like [c:chunk_1 -> section] in your answer
 
 Question: ${question}
 
