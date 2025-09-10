@@ -77,7 +77,8 @@ class SearchService {
     const keywordIndex = this.documentProcessor.getKeywordIndex();
     const results = keywordIndex.search(query, { limit });
     
-    return results.map(result => ({
+    // Debug: Log BM25 results for 2FA chunks
+    const bm25Results = results.map(result => ({
       id: result.id,
       content: result.content,
       title: result.title,
@@ -86,6 +87,24 @@ class SearchService {
       score: result.score,
       source: 'bm25'
     }));
+    
+    // Find and log 2FA-related chunks
+    const twoFactorChunks = bm25Results.filter(result => 
+      result.content.toLowerCase().includes('two-factor') || 
+      result.content.toLowerCase().includes('2fa') ||
+      result.id === 'sc_65'
+    );
+    
+    if (twoFactorChunks.length > 0) {
+      console.log(`🔍 BM25 Debug - Found ${twoFactorChunks.length} 2FA-related chunks:`);
+      twoFactorChunks.forEach(chunk => {
+        console.log(`  ${chunk.id}: Score ${chunk.score.toFixed(3)} | "${chunk.content.substring(0, 100)}..."`);
+      });
+    } else {
+      console.log(`🔍 BM25 Debug - No 2FA chunks found in BM25 results`);
+    }
+    
+    return bm25Results;
   }
 
   /**
@@ -104,20 +123,76 @@ class SearchService {
           const existing = scores.get(result.id);
           existing.rrfScore += rrfScore;
           existing.sources[source] = { rank: index + 1, score: result.score };
+          
+          // Debug: Track score changes for 2FA chunks
+          if (result.id === 'sc_65' || result.id === 's_69') {
+            console.log(`🔄 RRF Debug ${result.id}: Adding ${source} - Rank: ${index + 1}, Score: ${result.score}, RRF: ${rrfScore.toFixed(6)}, Total RRF: ${existing.rrfScore.toFixed(6)}`);
+          }
         } else {
-          scores.set(result.id, {
+          const newEntry = {
             ...result,
             rrfScore: rrfScore,
             sources: { [source]: { rank: index + 1, score: result.score } }
-          });
+          };
+          scores.set(result.id, newEntry);
+          
+          // Debug: Track score changes for 2FA chunks
+          if (result.id === 'sc_65' || result.id === 's_69') {
+            console.log(`🔄 RRF Debug ${result.id}: New entry from ${source} - Rank: ${index + 1}, Score: ${result.score}, RRF: ${rrfScore.toFixed(6)}, Final Score: ${newEntry.score?.toFixed(3) || 'undefined'}`);
+          }
         }
       });
     });
     
     // Sort by RRF score and return top candidates
-    return Array.from(scores.values())
-      .sort((a, b) => b.rrfScore - a.rrfScore)
+    const allResults = Array.from(scores.values());
+    
+    // Set RRF score as the primary score for sorting
+    allResults.forEach(result => {
+      result.score = result.rrfScore;
+    });
+    
+    const finalResults = allResults
+      .sort((a, b) => b.score - a.score)
       .slice(0, poolSize);
+    
+    // Debug: Check if score field is being modified during sorting
+    const twoFactorResults = finalResults.filter(result => 
+      result.id === 'sc_65' || result.id === 's_69'
+    );
+    
+    if (twoFactorResults.length > 0) {
+      console.log(`🔄 RRF Final Debug - 2FA chunks after sorting:`);
+      twoFactorResults.forEach(chunk => {
+        const position = finalResults.findIndex(r => r.id === chunk.id) + 1;
+        console.log(`  Position ${position}: ${chunk.id} | RRF Score: ${chunk.rrfScore.toFixed(6)} | Score Field: ${chunk.score?.toFixed(3) || 'undefined'} | Original Score: ${chunk.sources?.bm25?.score?.toFixed(3) || 'undefined'}`);
+      });
+    }
+    
+    // Debug: Log RRF fusion results for 2FA chunks
+    const twoFactorChunks = finalResults.filter(result => 
+      result.content.toLowerCase().includes('two-factor') || 
+      result.content.toLowerCase().includes('2fa') ||
+      result.id === 'sc_65'
+    );
+    
+    if (twoFactorChunks.length > 0) {
+      console.log(`🔄 RRF Fusion Debug - Found ${twoFactorChunks.length} 2FA-related chunks in final results:`);
+      twoFactorChunks.forEach((chunk, index) => {
+        const position = finalResults.findIndex(r => r.id === chunk.id) + 1;
+        console.log(`  Position ${position}: ${chunk.id} | RRF Score: ${chunk.rrfScore.toFixed(6)} | Final Score: ${chunk.score?.toFixed(3) || 'undefined'} | Sources:`, chunk.sources);
+      });
+    } else {
+      console.log(`🔄 RRF Fusion Debug - No 2FA chunks found in final RRF results`);
+    }
+    
+    // Debug: Check if there's any score transformation happening
+    console.log(`🔄 RRF Fusion Debug - Sample of final results scores:`);
+    finalResults.slice(0, 10).forEach((chunk, i) => {
+      console.log(`  ${i + 1}. ${chunk.id}: RRF=${chunk.rrfScore.toFixed(6)}, Final=${chunk.score?.toFixed(3) || 'undefined'}`);
+    });
+    
+    return finalResults;
   }
 
   async hybridSearch(processedQuery, limit) {
@@ -162,6 +237,7 @@ class SearchService {
     
     // Extract phrases from query (backticks, quotes, or multi-word terms)
     const phrases = this.extractPhrases(query);
+    console.log(`🎯 Exact Phrase Debug - Extracted phrases: [${phrases.join(', ')}]`);
     
     for (const chunk of chunks) {
       let maxScore = 0;
@@ -185,14 +261,34 @@ class SearchService {
           title: chunk.title,
           section: chunk.section,
           type: chunk.type,
-          score: maxScore,
+          // keep a small constant so it blends with other sources
+          score: 1.0,                 // <- was words*10; now a tiny base
+          exactScore: maxScore,       // keep detail for debugging if you want
           matchedPhrase: matchedPhrase,
           source: 'exact'
         });
       }
     }
     
-    return results.sort((a, b) => b.score - a.score).slice(0, limit);
+    const exactResults = results.sort((a, b) => b.score - a.score).slice(0, limit);
+    
+    // Debug: Log exact phrase results for 2FA chunks
+    const twoFactorChunks = exactResults.filter(result => 
+      result.content.toLowerCase().includes('two-factor') || 
+      result.content.toLowerCase().includes('2fa') ||
+      result.id === 'sc_65'
+    );
+    
+    if (twoFactorChunks.length > 0) {
+      console.log(`🎯 Exact Phrase Debug - Found ${twoFactorChunks.length} 2FA-related chunks:`);
+      twoFactorChunks.forEach(chunk => {
+        console.log(`  ${chunk.id}: Score ${chunk.score.toFixed(3)} | ExactScore ${chunk.exactScore} | Matched: "${chunk.matchedPhrase}" | "${chunk.content.substring(0, 100)}..."`);
+      });
+    } else {
+      console.log(`🎯 Exact Phrase Debug - No 2FA chunks found in exact phrase results`);
+    }
+    
+    return exactResults;
   }
 
   /**
@@ -348,9 +444,27 @@ class SearchService {
       }
       
       // Sort by similarity and return top results
-      return similarities
+      const semanticResults = similarities
         .sort((a, b) => b.score - a.score)
         .slice(0, limit);
+      
+      // Debug: Log semantic results for 2FA chunks
+      const twoFactorChunks = semanticResults.filter(result => 
+        result.content.toLowerCase().includes('two-factor') || 
+        result.content.toLowerCase().includes('2fa') ||
+        result.id === 'sc_65'
+      );
+      
+      if (twoFactorChunks.length > 0) {
+        console.log(`🧠 Semantic Debug - Found ${twoFactorChunks.length} 2FA-related chunks:`);
+        twoFactorChunks.forEach(chunk => {
+          console.log(`  ${chunk.id}: Score ${chunk.score.toFixed(3)} | "${chunk.content.substring(0, 100)}..."`);
+        });
+      } else {
+        console.log(`🧠 Semantic Debug - No 2FA chunks found in semantic results`);
+      }
+      
+      return semanticResults;
 
     } catch (error) {
       logger.error('Error in semantic search:', error.message);

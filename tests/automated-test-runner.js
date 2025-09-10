@@ -37,7 +37,7 @@ class AutomatedTestRunner {
     console.log(`Found ${testDirs.length} test directories: ${testDirs.join(', ')}\n`);
 
     // For now, only run the second test
-    const testToRun = testDirs[4]; // test5
+    const testToRun = testDirs[0]; // test1
     console.log(`🎯 Running only: ${testToRun} (limited test mode)\n`);
 
     console.log(`📁 Processing ${testToRun}...`);
@@ -207,6 +207,23 @@ class AutomatedTestRunner {
     console.log(`🔎 Searching for relevant content...`);
     const searchResults = await this.searchService.search(question.question, 20);
     console.log(`📊 Found ${searchResults.length} search results`);
+    
+    // Debug: Check for 2FA chunks in search results
+    const twoFactorChunks = searchResults.filter(result => 
+      result.content.toLowerCase().includes('two-factor') || 
+      result.content.toLowerCase().includes('2fa') ||
+      result.id === 'sc_65'
+    );
+    
+    if (twoFactorChunks.length > 0) {
+      console.log(`🔍 Search Results Debug - Found ${twoFactorChunks.length} 2FA-related chunks:`);
+      twoFactorChunks.forEach(chunk => {
+        const position = searchResults.findIndex(r => r.id === chunk.id) + 1;
+        console.log(`  Position ${position}: ${chunk.id} | Score: ${chunk.score?.toFixed(3) || 'undefined'} | RRF Score: ${chunk.rrfScore?.toFixed(6) || 'undefined'} | "${chunk.content.substring(0, 100)}..."`);
+      });
+    } else {
+      console.log(`🔍 Search Results Debug - No 2FA chunks found in search results`);
+    }
     
     // Sort search results by score (highest to lowest) and log them
     const sortedResults = searchResults.sort((a, b) => b.score - a.score);

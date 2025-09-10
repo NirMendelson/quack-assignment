@@ -1,4 +1,4 @@
-### Q1. Within how many days of the original purchase are refunds available?  
+<!-- ### Q1. Within how many days of the original purchase are refunds available?  
 **A:** 14 days.  
 > *“Refunds are available only within **14 days** of the original purchase.”*  
 
@@ -62,12 +62,12 @@
 **A:** No, shipping is not offered at all.  
 > *“Shipping is **not offered at all**, because monday.com is a digital-only product.”*  
 
----
+--- -->
 
 ### Q12. Does monday.com enforce two-factor authentication (2FA) for all users?  
 **A:** No, it is recommended but not enforced.  
 > *“Two-factor authentication (2FA) is recommended but not enforced.”*  
-
+<!-- 
 ---
 
 ### Q13. Does the monday.com policy document mention anything about data retention or how long customer data is stored?  
@@ -81,4 +81,4 @@
 ---
 
 ### Q15. Who is the CEO of Monday.com?
-**A:** No data about it in the text.  
+**A:** No data about it in the text.   -->

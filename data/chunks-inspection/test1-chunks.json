@@ -1,6 +1,6 @@
 {
   "filename": "test1.md",
-  "totalChunks": 90,
+  "totalChunks": 125,
   "chunksByType": {
     "window": {
       "count": 7,
@@ -13,36 +13,36 @@
         },
         {
           "id": "w_9",
-          "content": "Refunds are available only within **14 days** of the original purchase.  \nRefunds are possible only if **no boards were created at all** (literally zero activity).  \nCustomers must also provide **proof of payment** (for example, a receipt). If the account has already renewed, then **no refunds are available**. Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**.  \nFor these requests, customers should contact **finance@monday.fake**.",
+          "content": "Refunds are available only within **14 days** of the original purchase.  \nRefunds are possible only if **no boards were created at all** (literally zero activity).  \nCustomers must also provide **proof of payment** (for example, a receipt). If the account has already renewed, then **no refunds are available**. Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**.  \nFor these requests, customers should contact **finance@monday.fake**. {\n  \"refundPolicy\": {\n    \"window_days\": 14,\n    \"conditions\": [\"no boards created\", \"proof of payment\"],\n    \"exceptions\": \"none\"\n  }\n}",
           "position": 0,
-          "windowSize": 73
+          "windowSize": 99
         },
         {
-          "id": "w_27",
+          "id": "w_43",
           "content": "Customers can cancel their subscription at **any time** in account settings. Cancelling does **not** mean they will receive money back for the current billing cycle. The cancellation only stops billing at the **next renewal date**. If you cancel in the middle of the cycle, billing continues until renewal, then stops. No refunds are issued for unused time in the current cycle.",
           "position": 0,
           "windowSize": 61
         },
         {
-          "id": "w_42",
+          "id": "w_58",
           "content": "Passwords must be **changed every 90 days**. Passwords should **not be shared with coworkers** under any circumstances. If a user forgets their password, the reset process is done through an **email link**. **Two-factor authentication (2FA)** is recommended but not enforced.",
           "position": 0,
           "windowSize": 40
         },
         {
-          "id": "w_54",
-          "content": "Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**. Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated.",
+          "id": "w_70",
+          "content": "Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**. Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated. {\n  \"support\": {\n    \"contact\": \"support@monday.fake\",\n    \"hours\": \"09:00–18:00 UTC\",\n    \"sla\": \"24h–48h response\",\n    \"escalation\": \"automatic after 48h no reply\"\n  }\n}",
           "position": 0,
-          "windowSize": 39
+          "windowSize": 71
         },
         {
-          "id": "w_60",
+          "id": "w_95",
           "content": "If a customer issues a **chargeback** with their bank or credit card provider, their account is **banned immediately and permanently**. There is **no appeal process** for chargeback bans. Shipping is **not offered at all**, because monday.com is a digital-only product. There are no boxes, hardware, or physical shipping involved. Refunds for **team plans** are handled case by case. Contact **finance@monday.fake**.",
           "position": 0,
           "windowSize": 60
         },
         {
-          "id": "w_81",
+          "id": "w_116",
           "content": "**Boards**: The main workspace for tasks and projects. **Team plan**: Bulk license or multi-user management. No other features are explicitly described in this particular policy draft.",
           "position": 0,
           "windowSize": 26
@@ -50,7 +50,7 @@
       ]
     },
     "sentence_window": {
-      "count": 23,
+      "count": 38,
       "chunks": [
         {
           "id": "sw_1",
@@ -65,127 +65,217 @@
           "sentenceCount": 2
         },
         {
-          "id": "sw_10",
+          "id": "sw_11",
           "content": "Refunds are available only within **14 days** of the original purchase. Refunds are possible only if **no boards were created at all** (literally zero activity). Customers must also provide **proof of payment** (for example, a receipt).",
           "position": 0,
           "sentenceCount": 3
         },
         {
-          "id": "sw_11",
+          "id": "sw_12",
           "content": "Refunds are possible only if **no boards were created at all** (literally zero activity). Customers must also provide **proof of payment** (for example, a receipt). If the account has already renewed, then **no refunds are available**.",
           "position": 1,
           "sentenceCount": 3
         },
         {
-          "id": "sw_12",
+          "id": "sw_13",
           "content": "Customers must also provide **proof of payment** (for example, a receipt). If the account has already renewed, then **no refunds are available**. Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**.",
           "position": 2,
           "sentenceCount": 3
         },
         {
-          "id": "sw_13",
+          "id": "sw_14",
           "content": "If the account has already renewed, then **no refunds are available**. Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**. For these requests, customers should contact **finance@monday.fake**.",
           "position": 3,
           "sentenceCount": 3
         },
         {
-          "id": "sw_14",
-          "content": "Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**. For these requests, customers should contact **finance@monday.fake**.",
+          "id": "sw_15",
+          "content": "Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**. For these requests, customers should contact **finance@monday.fake**. {",
           "position": 4,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_16",
+          "content": "For these requests, customers should contact **finance@monday.fake**. { \"refundPolicy\": {",
+          "position": 5,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_17",
+          "content": "{ \"refundPolicy\": { \"window_days\": 14,",
+          "position": 6,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_18",
+          "content": "\"refundPolicy\": { \"window_days\": 14, \"conditions\": [\"no boards created\", \"proof of payment\"],",
+          "position": 7,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_19",
+          "content": "\"window_days\": 14, \"conditions\": [\"no boards created\", \"proof of payment\"], \"exceptions\": \"none\"",
+          "position": 8,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_20",
+          "content": "\"conditions\": [\"no boards created\", \"proof of payment\"], \"exceptions\": \"none\" }",
+          "position": 9,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_21",
+          "content": "\"exceptions\": \"none\" } }",
+          "position": 10,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_22",
+          "content": "} }",
+          "position": 11,
           "sentenceCount": 2
         },
         {
-          "id": "sw_28",
+          "id": "sw_44",
           "content": "Customers can cancel their subscription at **any time** in account settings. Cancelling does **not** mean they will receive money back for the current billing cycle. The cancellation only stops billing at the **next renewal date**.",
           "position": 0,
           "sentenceCount": 3
         },
         {
-          "id": "sw_29",
+          "id": "sw_45",
           "content": "Cancelling does **not** mean they will receive money back for the current billing cycle. The cancellation only stops billing at the **next renewal date**. If you cancel in the middle of the cycle, billing continues until renewal, then stops.",
           "position": 1,
           "sentenceCount": 3
         },
         {
-          "id": "sw_30",
+          "id": "sw_46",
           "content": "The cancellation only stops billing at the **next renewal date**. If you cancel in the middle of the cycle, billing continues until renewal, then stops. No refunds are issued for unused time in the current cycle.",
           "position": 2,
           "sentenceCount": 3
         },
         {
-          "id": "sw_31",
+          "id": "sw_47",
           "content": "If you cancel in the middle of the cycle, billing continues until renewal, then stops. No refunds are issued for unused time in the current cycle.",
           "position": 3,
           "sentenceCount": 2
         },
         {
-          "id": "sw_43",
+          "id": "sw_59",
           "content": "Passwords must be **changed every 90 days**. Passwords should **not be shared with coworkers** under any circumstances. If a user forgets their password, the reset process is done through an **email link**.",
           "position": 0,
           "sentenceCount": 3
         },
         {
-          "id": "sw_44",
+          "id": "sw_60",
           "content": "Passwords should **not be shared with coworkers** under any circumstances. If a user forgets their password, the reset process is done through an **email link**. **Two-factor authentication (2FA)** is recommended but not enforced.",
           "position": 1,
           "sentenceCount": 3
         },
         {
-          "id": "sw_45",
+          "id": "sw_61",
           "content": "If a user forgets their password, the reset process is done through an **email link**. **Two-factor authentication (2FA)** is recommended but not enforced.",
           "position": 2,
           "sentenceCount": 2
         },
         {
-          "id": "sw_55",
-          "content": "Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**. Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated.",
+          "id": "sw_72",
+          "content": "Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**. Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated. {",
           "position": 0,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_73",
+          "content": "Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated. { \"support\": {",
+          "position": 1,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_74",
+          "content": "{ \"support\": { \"contact\": \"support@monday.fake\",",
+          "position": 2,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_75",
+          "content": "\"support\": { \"contact\": \"support@monday.fake\", \"hours\": \"09:00–18:00 UTC\",",
+          "position": 3,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_76",
+          "content": "\"contact\": \"support@monday.fake\", \"hours\": \"09:00–18:00 UTC\", \"sla\": \"24h–48h response\",",
+          "position": 4,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_77",
+          "content": "\"hours\": \"09:00–18:00 UTC\", \"sla\": \"24h–48h response\", \"escalation\": \"automatic after 48h no reply\"",
+          "position": 5,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_78",
+          "content": "\"sla\": \"24h–48h response\", \"escalation\": \"automatic after 48h no reply\" }",
+          "position": 6,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_79",
+          "content": "\"escalation\": \"automatic after 48h no reply\" } }",
+          "position": 7,
+          "sentenceCount": 3
+        },
+        {
+          "id": "sw_80",
+          "content": "} }",
+          "position": 8,
           "sentenceCount": 2
         },
         {
-          "id": "sw_61",
+          "id": "sw_96",
           "content": "If a customer issues a **chargeback** with their bank or credit card provider, their account is **banned immediately and permanently**. There is **no appeal process** for chargeback bans. Shipping is **not offered at all**, because monday.",
           "position": 0,
           "sentenceCount": 3
         },
         {
-          "id": "sw_62",
+          "id": "sw_97",
           "content": "There is **no appeal process** for chargeback bans. Shipping is **not offered at all**, because monday. com is a digital-only product.",
           "position": 1,
           "sentenceCount": 3
         },
         {
-          "id": "sw_63",
+          "id": "sw_98",
           "content": "Shipping is **not offered at all**, because monday. com is a digital-only product. There are no boxes, hardware, or physical shipping involved.",
           "position": 2,
           "sentenceCount": 3
         },
         {
-          "id": "sw_64",
+          "id": "sw_99",
           "content": "com is a digital-only product. There are no boxes, hardware, or physical shipping involved. Refunds for **team plans** are handled case by case.",
           "position": 3,
           "sentenceCount": 3
         },
         {
-          "id": "sw_65",
+          "id": "sw_100",
           "content": "There are no boxes, hardware, or physical shipping involved. Refunds for **team plans** are handled case by case. Contact **finance@monday.fake**.",
           "position": 4,
           "sentenceCount": 3
         },
         {
-          "id": "sw_66",
+          "id": "sw_101",
           "content": "Refunds for **team plans** are handled case by case. Contact **finance@monday.fake**.",
           "position": 5,
           "sentenceCount": 2
         },
         {
-          "id": "sw_82",
+          "id": "sw_117",
           "content": "**Boards**: The main workspace for tasks and projects. **Team plan**: Bulk license or multi-user management. No other features are explicitly described in this particular policy draft.",
           "position": 0,
           "sentenceCount": 3
         },
         {
-          "id": "sw_83",
+          "id": "sw_118",
           "content": "**Team plan**: Bulk license or multi-user management. No other features are explicitly described in this particular policy draft.",
           "position": 1,
           "sentenceCount": 2
@@ -193,7 +283,7 @@
       ]
     },
     "sentence_context": {
-      "count": 30,
+      "count": 39,
       "chunks": [
         {
           "id": "sc_3",
@@ -214,163 +304,217 @@
           "originalSentence": "Someone should clean it up, but here is what we have so far."
         },
         {
-          "id": "sc_15",
+          "id": "sc_23",
           "content": "[Refunds and Billing] Refunds are available only within **14 days** of the original purchase.",
           "position": 0,
           "originalSentence": "Refunds are available only within **14 days** of the original purchase."
         },
         {
-          "id": "sc_16",
+          "id": "sc_24",
           "content": "[Refunds and Billing] [Previous: Refunds are available only within **14 days** of t...] Refunds are possible only if **no boards were created at all** (literally zero activity).",
           "position": 1,
           "originalSentence": "Refunds are possible only if **no boards were created at all** (literally zero activity)."
         },
         {
-          "id": "sc_17",
+          "id": "sc_25",
           "content": "[Refunds and Billing] [Previous: Refunds are possible only if **no boards were crea...] Customers must also provide **proof of payment** (for example, a receipt).",
           "position": 2,
           "originalSentence": "Customers must also provide **proof of payment** (for example, a receipt)."
         },
         {
-          "id": "sc_18",
+          "id": "sc_26",
           "content": "[Refunds and Billing] [Previous: Customers must also provide **proof of payment** (...] If the account has already renewed, then **no refunds are available**.",
           "position": 3,
           "originalSentence": "If the account has already renewed, then **no refunds are available**."
         },
         {
-          "id": "sc_19",
+          "id": "sc_27",
           "content": "[Refunds and Billing] [Previous: If the account has already renewed, then **no refu...] Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**.",
           "position": 4,
           "originalSentence": "Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**."
         },
         {
-          "id": "sc_20",
+          "id": "sc_28",
           "content": "[Refunds and Billing] [Previous: Refunds for **team plans** (bulk license purchases...] For these requests, customers should contact **finance@monday.fake**.",
           "position": 5,
           "originalSentence": "For these requests, customers should contact **finance@monday.fake**."
         },
         {
+          "id": "sc_29",
+          "content": "[Refunds and Billing] \"refundPolicy\": {",
+          "position": 7,
+          "originalSentence": "\"refundPolicy\": {"
+        },
+        {
+          "id": "sc_30",
+          "content": "[Refunds and Billing] \"window_days\": 14,",
+          "position": 8,
+          "originalSentence": "\"window_days\": 14,"
+        },
+        {
+          "id": "sc_31",
+          "content": "[Refunds and Billing] \"conditions\": [\"no boards created\", \"proof of payment\"],",
+          "position": 9,
+          "originalSentence": "\"conditions\": [\"no boards created\", \"proof of payment\"],"
+        },
+        {
           "id": "sc_32",
+          "content": "[Refunds and Billing] [Previous: \"conditions\": [\"no boards created\", \"proof of paym...] \"exceptions\": \"none\"",
+          "position": 10,
+          "originalSentence": "\"exceptions\": \"none\""
+        },
+        {
+          "id": "sc_48",
           "content": "[Subscriptions and Cancellations] Customers can cancel their subscription at **any time** in account settings.",
           "position": 0,
           "originalSentence": "Customers can cancel their subscription at **any time** in account settings."
         },
         {
-          "id": "sc_33",
+          "id": "sc_49",
           "content": "[Subscriptions and Cancellations] [Previous: Customers can cancel their subscription at **any t...] Cancelling does **not** mean they will receive money back for the current billing cycle.",
           "position": 1,
           "originalSentence": "Cancelling does **not** mean they will receive money back for the current billing cycle."
         },
         {
-          "id": "sc_34",
+          "id": "sc_50",
           "content": "[Subscriptions and Cancellations] [Previous: Cancelling does **not** mean they will receive mon...] The cancellation only stops billing at the **next renewal date**.",
           "position": 2,
           "originalSentence": "The cancellation only stops billing at the **next renewal date**."
         },
         {
-          "id": "sc_35",
+          "id": "sc_51",
           "content": "[Subscriptions and Cancellations] [Previous: The cancellation only stops billing at the **next ...] If you cancel in the middle of the cycle, billing continues until renewal, then stops.",
           "position": 3,
           "originalSentence": "If you cancel in the middle of the cycle, billing continues until renewal, then stops."
         },
         {
-          "id": "sc_36",
+          "id": "sc_52",
           "content": "[Subscriptions and Cancellations] [Previous: If you cancel in the middle of the cycle, billing ...] No refunds are issued for unused time in the current cycle.",
           "position": 4,
           "originalSentence": "No refunds are issued for unused time in the current cycle."
         },
         {
-          "id": "sc_46",
+          "id": "sc_62",
           "content": "[Passwords and Security] Passwords must be **changed every 90 days**.",
           "position": 0,
           "originalSentence": "Passwords must be **changed every 90 days**."
         },
         {
-          "id": "sc_47",
+          "id": "sc_63",
           "content": "[Passwords and Security] [Previous: Passwords must be **changed every 90 days**....] Passwords should **not be shared with coworkers** under any circumstances.",
           "position": 1,
           "originalSentence": "Passwords should **not be shared with coworkers** under any circumstances."
         },
         {
-          "id": "sc_48",
+          "id": "sc_64",
           "content": "[Passwords and Security] [Previous: Passwords should **not be shared with coworkers** ...] If a user forgets their password, the reset process is done through an **email link**.",
           "position": 2,
           "originalSentence": "If a user forgets their password, the reset process is done through an **email link**."
         },
         {
-          "id": "sc_49",
+          "id": "sc_65",
           "content": "[Passwords and Security] [Previous: If a user forgets their password, the reset proces...] **Two-factor authentication (2FA)** is recommended but not enforced.",
           "position": 3,
           "originalSentence": "**Two-factor authentication (2FA)** is recommended but not enforced."
         },
         {
-          "id": "sc_56",
+          "id": "sc_81",
           "content": "[Support Information] Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**.",
           "position": 0,
           "originalSentence": "Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**."
         },
         {
-          "id": "sc_57",
+          "id": "sc_82",
           "content": "[Support Information] [Previous: Official support email: **support@monday.fake** St...] Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated.",
           "position": 1,
           "originalSentence": "Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated."
         },
         {
-          "id": "sc_67",
+          "id": "sc_83",
+          "content": "[Support Information] \"support\": {",
+          "position": 3,
+          "originalSentence": "\"support\": {"
+        },
+        {
+          "id": "sc_84",
+          "content": "[Support Information] \"contact\": \"support@monday.fake\",",
+          "position": 4,
+          "originalSentence": "\"contact\": \"support@monday.fake\","
+        },
+        {
+          "id": "sc_85",
+          "content": "[Support Information] [Previous: \"contact\": \"support@monday.fake\",...] \"hours\": \"09:00–18:00 UTC\",",
+          "position": 5,
+          "originalSentence": "\"hours\": \"09:00–18:00 UTC\","
+        },
+        {
+          "id": "sc_86",
+          "content": "[Support Information] [Previous: \"hours\": \"09:00–18:00 UTC\",...] \"sla\": \"24h–48h response\",",
+          "position": 6,
+          "originalSentence": "\"sla\": \"24h–48h response\","
+        },
+        {
+          "id": "sc_87",
+          "content": "[Support Information] [Previous: \"sla\": \"24h–48h response\",...] \"escalation\": \"automatic after 48h no reply\"",
+          "position": 7,
+          "originalSentence": "\"escalation\": \"automatic after 48h no reply\""
+        },
+        {
+          "id": "sc_102",
           "content": "[Special Notes] If a customer issues a **chargeback** with their bank or credit card provider, their account is **banned immediately and permanently**.",
           "position": 0,
           "originalSentence": "If a customer issues a **chargeback** with their bank or credit card provider, their account is **banned immediately and permanently**."
         },
         {
-          "id": "sc_68",
+          "id": "sc_103",
           "content": "[Special Notes] [Previous: If a customer issues a **chargeback** with their b...] There is **no appeal process** for chargeback bans.",
           "position": 1,
           "originalSentence": "There is **no appeal process** for chargeback bans."
         },
         {
-          "id": "sc_69",
+          "id": "sc_104",
           "content": "[Special Notes] [Previous: There is **no appeal process** for chargeback bans...] Shipping is **not offered at all**, because monday.",
           "position": 2,
           "originalSentence": "Shipping is **not offered at all**, because monday."
         },
         {
-          "id": "sc_70",
+          "id": "sc_105",
           "content": "[Special Notes] [Previous: Shipping is **not offered at all**, because monday...] com is a digital-only product.",
           "position": 3,
           "originalSentence": "com is a digital-only product."
         },
         {
-          "id": "sc_71",
+          "id": "sc_106",
           "content": "[Special Notes] [Previous: com is a digital-only product....] There are no boxes, hardware, or physical shipping involved.",
           "position": 4,
           "originalSentence": "There are no boxes, hardware, or physical shipping involved."
         },
         {
-          "id": "sc_72",
+          "id": "sc_107",
           "content": "[Special Notes] [Previous: There are no boxes, hardware, or physical shipping...] Refunds for **team plans** are handled case by case.",
           "position": 5,
           "originalSentence": "Refunds for **team plans** are handled case by case."
         },
         {
-          "id": "sc_73",
+          "id": "sc_108",
           "content": "[Special Notes] [Previous: Refunds for **team plans** are handled case by cas...] Contact **finance@monday.fake**.",
           "position": 6,
           "originalSentence": "Contact **finance@monday.fake**."
         },
         {
-          "id": "sc_84",
+          "id": "sc_119",
           "content": "[Features Mentioned] **Boards**: The main workspace for tasks and projects.",
           "position": 0,
           "originalSentence": "**Boards**: The main workspace for tasks and projects."
         },
         {
-          "id": "sc_85",
+          "id": "sc_120",
           "content": "[Features Mentioned] [Previous: **Boards**: The main workspace for tasks and proje...] **Team plan**: Bulk license or multi-user management.",
           "position": 1,
           "originalSentence": "**Team plan**: Bulk license or multi-user management."
         },
         {
-          "id": "sc_86",
+          "id": "sc_121",
           "content": "[Features Mentioned] [Previous: **Team plan**: Bulk license or multi-user manageme...] No other features are explicitly described in this particular policy draft.",
           "position": 2,
           "originalSentence": "No other features are explicitly described in this particular policy draft."
@@ -382,7 +526,7 @@
       "chunks": []
     },
     "sentence": {
-      "count": 30,
+      "count": 39,
       "chunks": [
         {
           "id": "s_6",
@@ -403,163 +547,217 @@
           "originalSentence": "Someone should clean it up, but here is what we have so far."
         },
         {
-          "id": "s_21",
+          "id": "s_33",
           "content": "Refunds are available only within **14 days** of the original purchase.",
           "position": 0,
           "originalSentence": "Refunds are available only within **14 days** of the original purchase."
         },
         {
-          "id": "s_22",
+          "id": "s_34",
           "content": "Refunds are possible only if **no boards were created at all** (literally zero activity).",
           "position": 1,
           "originalSentence": "Refunds are possible only if **no boards were created at all** (literally zero activity)."
         },
         {
-          "id": "s_23",
+          "id": "s_35",
           "content": "Customers must also provide **proof of payment** (for example, a receipt).",
           "position": 2,
           "originalSentence": "Customers must also provide **proof of payment** (for example, a receipt)."
         },
         {
-          "id": "s_24",
+          "id": "s_36",
           "content": "If the account has already renewed, then **no refunds are available**.",
           "position": 3,
           "originalSentence": "If the account has already renewed, then **no refunds are available**."
         },
         {
-          "id": "s_25",
+          "id": "s_37",
           "content": "Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**.",
           "position": 4,
           "originalSentence": "Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**."
         },
         {
-          "id": "s_26",
+          "id": "s_38",
           "content": "For these requests, customers should contact **finance@monday.fake**.",
           "position": 5,
           "originalSentence": "For these requests, customers should contact **finance@monday.fake**."
         },
         {
-          "id": "s_37",
+          "id": "s_39",
+          "content": "\"refundPolicy\": {",
+          "position": 7,
+          "originalSentence": "\"refundPolicy\": {"
+        },
+        {
+          "id": "s_40",
+          "content": "\"window_days\": 14,",
+          "position": 8,
+          "originalSentence": "\"window_days\": 14,"
+        },
+        {
+          "id": "s_41",
+          "content": "\"conditions\": [\"no boards created\", \"proof of payment\"],",
+          "position": 9,
+          "originalSentence": "\"conditions\": [\"no boards created\", \"proof of payment\"],"
+        },
+        {
+          "id": "s_42",
+          "content": "\"exceptions\": \"none\"",
+          "position": 10,
+          "originalSentence": "\"exceptions\": \"none\""
+        },
+        {
+          "id": "s_53",
           "content": "Customers can cancel their subscription at **any time** in account settings.",
           "position": 0,
           "originalSentence": "Customers can cancel their subscription at **any time** in account settings."
         },
         {
-          "id": "s_38",
+          "id": "s_54",
           "content": "Cancelling does **not** mean they will receive money back for the current billing cycle.",
           "position": 1,
           "originalSentence": "Cancelling does **not** mean they will receive money back for the current billing cycle."
         },
         {
-          "id": "s_39",
+          "id": "s_55",
           "content": "The cancellation only stops billing at the **next renewal date**.",
           "position": 2,
           "originalSentence": "The cancellation only stops billing at the **next renewal date**."
         },
         {
-          "id": "s_40",
+          "id": "s_56",
           "content": "If you cancel in the middle of the cycle, billing continues until renewal, then stops.",
           "position": 3,
           "originalSentence": "If you cancel in the middle of the cycle, billing continues until renewal, then stops."
         },
         {
-          "id": "s_41",
+          "id": "s_57",
           "content": "No refunds are issued for unused time in the current cycle.",
           "position": 4,
           "originalSentence": "No refunds are issued for unused time in the current cycle."
         },
         {
-          "id": "s_50",
+          "id": "s_66",
           "content": "Passwords must be **changed every 90 days**.",
           "position": 0,
           "originalSentence": "Passwords must be **changed every 90 days**."
         },
         {
-          "id": "s_51",
+          "id": "s_67",
           "content": "Passwords should **not be shared with coworkers** under any circumstances.",
           "position": 1,
           "originalSentence": "Passwords should **not be shared with coworkers** under any circumstances."
         },
         {
-          "id": "s_52",
+          "id": "s_68",
           "content": "If a user forgets their password, the reset process is done through an **email link**.",
           "position": 2,
           "originalSentence": "If a user forgets their password, the reset process is done through an **email link**."
         },
         {
-          "id": "s_53",
+          "id": "s_69",
           "content": "**Two-factor authentication (2FA)** is recommended but not enforced.",
           "position": 3,
           "originalSentence": "**Two-factor authentication (2FA)** is recommended but not enforced."
         },
         {
-          "id": "s_58",
+          "id": "s_88",
           "content": "Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**.",
           "position": 0,
           "originalSentence": "Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**."
         },
         {
-          "id": "s_59",
+          "id": "s_89",
           "content": "Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated.",
           "position": 1,
           "originalSentence": "Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated."
         },
         {
-          "id": "s_74",
+          "id": "s_90",
+          "content": "\"support\": {",
+          "position": 3,
+          "originalSentence": "\"support\": {"
+        },
+        {
+          "id": "s_91",
+          "content": "\"contact\": \"support@monday.fake\",",
+          "position": 4,
+          "originalSentence": "\"contact\": \"support@monday.fake\","
+        },
+        {
+          "id": "s_92",
+          "content": "\"hours\": \"09:00–18:00 UTC\",",
+          "position": 5,
+          "originalSentence": "\"hours\": \"09:00–18:00 UTC\","
+        },
+        {
+          "id": "s_93",
+          "content": "\"sla\": \"24h–48h response\",",
+          "position": 6,
+          "originalSentence": "\"sla\": \"24h–48h response\","
+        },
+        {
+          "id": "s_94",
+          "content": "\"escalation\": \"automatic after 48h no reply\"",
+          "position": 7,
+          "originalSentence": "\"escalation\": \"automatic after 48h no reply\""
+        },
+        {
+          "id": "s_109",
           "content": "If a customer issues a **chargeback** with their bank or credit card provider, their account is **banned immediately and permanently**.",
           "position": 0,
           "originalSentence": "If a customer issues a **chargeback** with their bank or credit card provider, their account is **banned immediately and permanently**."
         },
         {
-          "id": "s_75",
+          "id": "s_110",
           "content": "There is **no appeal process** for chargeback bans.",
           "position": 1,
           "originalSentence": "There is **no appeal process** for chargeback bans."
         },
         {
-          "id": "s_76",
+          "id": "s_111",
           "content": "Shipping is **not offered at all**, because monday.",
           "position": 2,
           "originalSentence": "Shipping is **not offered at all**, because monday."
         },
         {
-          "id": "s_77",
+          "id": "s_112",
           "content": "com is a digital-only product.",
           "position": 3,
           "originalSentence": "com is a digital-only product."
         },
         {
-          "id": "s_78",
+          "id": "s_113",
           "content": "There are no boxes, hardware, or physical shipping involved.",
           "position": 4,
           "originalSentence": "There are no boxes, hardware, or physical shipping involved."
         },
         {
-          "id": "s_79",
+          "id": "s_114",
           "content": "Refunds for **team plans** are handled case by case.",
           "position": 5,
           "originalSentence": "Refunds for **team plans** are handled case by case."
         },
         {
-          "id": "s_80",
+          "id": "s_115",
           "content": "Contact **finance@monday.fake**.",
           "position": 6,
           "originalSentence": "Contact **finance@monday.fake**."
         },
         {
-          "id": "s_87",
+          "id": "s_122",
           "content": "**Boards**: The main workspace for tasks and projects.",
           "position": 0,
           "originalSentence": "**Boards**: The main workspace for tasks and projects."
         },
         {
-          "id": "s_88",
+          "id": "s_123",
           "content": "**Team plan**: Bulk license or multi-user management.",
           "position": 1,
           "originalSentence": "**Team plan**: Bulk license or multi-user management."
         },
         {
-          "id": "s_89",
+          "id": "s_124",
           "content": "No other features are explicitly described in this particular policy draft.",
           "position": 2,
           "originalSentence": "No other features are explicitly described in this particular policy draft."
@@ -628,512 +826,735 @@
     {
       "id": "w_9",
       "type": "window",
-      "content": "Refunds are available only within **14 days** of the original purchase.  \nRefunds are possible only if **no boards were created at all** (literally zero activity).  \nCustomers must also provide **proof of payment** (for example, a receipt). If the account has already renewed, then **no refunds are available**. Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**.  \nFor these requests, customers should contact **finance@monday.fake**.",
+      "content": "Refunds are available only within **14 days** of the original purchase.  \nRefunds are possible only if **no boards were created at all** (literally zero activity).  \nCustomers must also provide **proof of payment** (for example, a receipt). If the account has already renewed, then **no refunds are available**. Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**.  \nFor these requests, customers should contact **finance@monday.fake**. {\n  \"refundPolicy\": {\n    \"window_days\": 14,\n    \"conditions\": [\"no boards created\", \"proof of payment\"],\n    \"exceptions\": \"none\"\n  }\n}",
       "position": 0,
-      "windowSize": 73
+      "windowSize": 99
     },
     {
-      "id": "sw_10",
+      "id": "code_10",
+      "type": "code_block",
+      "content": "{\n  \"refundPolicy\": {\n    \"window_days\": 14,\n    \"conditions\": [\"no boards created\", \"proof of payment\"],\n    \"exceptions\": \"none\"\n  }\n}"
+    },
+    {
+      "id": "sw_11",
       "type": "sentence_window",
       "content": "Refunds are available only within **14 days** of the original purchase. Refunds are possible only if **no boards were created at all** (literally zero activity). Customers must also provide **proof of payment** (for example, a receipt).",
       "position": 0,
       "sentenceCount": 3
     },
     {
-      "id": "sw_11",
+      "id": "sw_12",
       "type": "sentence_window",
       "content": "Refunds are possible only if **no boards were created at all** (literally zero activity). Customers must also provide **proof of payment** (for example, a receipt). If the account has already renewed, then **no refunds are available**.",
       "position": 1,
       "sentenceCount": 3
     },
     {
-      "id": "sw_12",
+      "id": "sw_13",
       "type": "sentence_window",
       "content": "Customers must also provide **proof of payment** (for example, a receipt). If the account has already renewed, then **no refunds are available**. Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**.",
       "position": 2,
       "sentenceCount": 3
     },
     {
-      "id": "sw_13",
+      "id": "sw_14",
       "type": "sentence_window",
       "content": "If the account has already renewed, then **no refunds are available**. Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**. For these requests, customers should contact **finance@monday.fake**.",
       "position": 3,
       "sentenceCount": 3
     },
     {
-      "id": "sw_14",
+      "id": "sw_15",
       "type": "sentence_window",
-      "content": "Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**. For these requests, customers should contact **finance@monday.fake**.",
+      "content": "Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**. For these requests, customers should contact **finance@monday.fake**. {",
       "position": 4,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_16",
+      "type": "sentence_window",
+      "content": "For these requests, customers should contact **finance@monday.fake**. { \"refundPolicy\": {",
+      "position": 5,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_17",
+      "type": "sentence_window",
+      "content": "{ \"refundPolicy\": { \"window_days\": 14,",
+      "position": 6,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_18",
+      "type": "sentence_window",
+      "content": "\"refundPolicy\": { \"window_days\": 14, \"conditions\": [\"no boards created\", \"proof of payment\"],",
+      "position": 7,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_19",
+      "type": "sentence_window",
+      "content": "\"window_days\": 14, \"conditions\": [\"no boards created\", \"proof of payment\"], \"exceptions\": \"none\"",
+      "position": 8,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_20",
+      "type": "sentence_window",
+      "content": "\"conditions\": [\"no boards created\", \"proof of payment\"], \"exceptions\": \"none\" }",
+      "position": 9,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_21",
+      "type": "sentence_window",
+      "content": "\"exceptions\": \"none\" } }",
+      "position": 10,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_22",
+      "type": "sentence_window",
+      "content": "} }",
+      "position": 11,
       "sentenceCount": 2
     },
     {
-      "id": "sc_15",
+      "id": "sc_23",
       "type": "sentence_context",
       "content": "[Refunds and Billing] Refunds are available only within **14 days** of the original purchase.",
       "position": 0
     },
     {
-      "id": "sc_16",
+      "id": "sc_24",
       "type": "sentence_context",
       "content": "[Refunds and Billing] [Previous: Refunds are available only within **14 days** of t...] Refunds are possible only if **no boards were created at all** (literally zero activity).",
       "position": 1
     },
     {
-      "id": "sc_17",
+      "id": "sc_25",
       "type": "sentence_context",
       "content": "[Refunds and Billing] [Previous: Refunds are possible only if **no boards were crea...] Customers must also provide **proof of payment** (for example, a receipt).",
       "position": 2
     },
     {
-      "id": "sc_18",
+      "id": "sc_26",
       "type": "sentence_context",
       "content": "[Refunds and Billing] [Previous: Customers must also provide **proof of payment** (...] If the account has already renewed, then **no refunds are available**.",
       "position": 3
     },
     {
-      "id": "sc_19",
+      "id": "sc_27",
       "type": "sentence_context",
       "content": "[Refunds and Billing] [Previous: If the account has already renewed, then **no refu...] Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**.",
       "position": 4
     },
     {
-      "id": "sc_20",
+      "id": "sc_28",
       "type": "sentence_context",
       "content": "[Refunds and Billing] [Previous: Refunds for **team plans** (bulk license purchases...] For these requests, customers should contact **finance@monday.fake**.",
       "position": 5
     },
     {
-      "id": "s_21",
+      "id": "sc_29",
+      "type": "sentence_context",
+      "content": "[Refunds and Billing] \"refundPolicy\": {",
+      "position": 7
+    },
+    {
+      "id": "sc_30",
+      "type": "sentence_context",
+      "content": "[Refunds and Billing] \"window_days\": 14,",
+      "position": 8
+    },
+    {
+      "id": "sc_31",
+      "type": "sentence_context",
+      "content": "[Refunds and Billing] \"conditions\": [\"no boards created\", \"proof of payment\"],",
+      "position": 9
+    },
+    {
+      "id": "sc_32",
+      "type": "sentence_context",
+      "content": "[Refunds and Billing] [Previous: \"conditions\": [\"no boards created\", \"proof of paym...] \"exceptions\": \"none\"",
+      "position": 10
+    },
+    {
+      "id": "s_33",
       "type": "sentence",
       "content": "Refunds are available only within **14 days** of the original purchase.",
       "position": 0
     },
     {
-      "id": "s_22",
+      "id": "s_34",
       "type": "sentence",
       "content": "Refunds are possible only if **no boards were created at all** (literally zero activity).",
       "position": 1
     },
     {
-      "id": "s_23",
+      "id": "s_35",
       "type": "sentence",
       "content": "Customers must also provide **proof of payment** (for example, a receipt).",
       "position": 2
     },
     {
-      "id": "s_24",
+      "id": "s_36",
       "type": "sentence",
       "content": "If the account has already renewed, then **no refunds are available**.",
       "position": 3
     },
     {
-      "id": "s_25",
+      "id": "s_37",
       "type": "sentence",
       "content": "Refunds for **team plans** (bulk license purchases) might be handled on a **case by case basis**.",
       "position": 4
     },
     {
-      "id": "s_26",
+      "id": "s_38",
       "type": "sentence",
       "content": "For these requests, customers should contact **finance@monday.fake**.",
       "position": 5
     },
     {
-      "id": "w_27",
+      "id": "s_39",
+      "type": "sentence",
+      "content": "\"refundPolicy\": {",
+      "position": 7
+    },
+    {
+      "id": "s_40",
+      "type": "sentence",
+      "content": "\"window_days\": 14,",
+      "position": 8
+    },
+    {
+      "id": "s_41",
+      "type": "sentence",
+      "content": "\"conditions\": [\"no boards created\", \"proof of payment\"],",
+      "position": 9
+    },
+    {
+      "id": "s_42",
+      "type": "sentence",
+      "content": "\"exceptions\": \"none\"",
+      "position": 10
+    },
+    {
+      "id": "w_43",
       "type": "window",
       "content": "Customers can cancel their subscription at **any time** in account settings. Cancelling does **not** mean they will receive money back for the current billing cycle. The cancellation only stops billing at the **next renewal date**. If you cancel in the middle of the cycle, billing continues until renewal, then stops. No refunds are issued for unused time in the current cycle.",
       "position": 0,
       "windowSize": 61
     },
     {
-      "id": "sw_28",
+      "id": "sw_44",
       "type": "sentence_window",
       "content": "Customers can cancel their subscription at **any time** in account settings. Cancelling does **not** mean they will receive money back for the current billing cycle. The cancellation only stops billing at the **next renewal date**.",
       "position": 0,
       "sentenceCount": 3
     },
     {
-      "id": "sw_29",
+      "id": "sw_45",
       "type": "sentence_window",
       "content": "Cancelling does **not** mean they will receive money back for the current billing cycle. The cancellation only stops billing at the **next renewal date**. If you cancel in the middle of the cycle, billing continues until renewal, then stops.",
       "position": 1,
       "sentenceCount": 3
     },
     {
-      "id": "sw_30",
+      "id": "sw_46",
       "type": "sentence_window",
       "content": "The cancellation only stops billing at the **next renewal date**. If you cancel in the middle of the cycle, billing continues until renewal, then stops. No refunds are issued for unused time in the current cycle.",
       "position": 2,
       "sentenceCount": 3
     },
     {
-      "id": "sw_31",
+      "id": "sw_47",
       "type": "sentence_window",
       "content": "If you cancel in the middle of the cycle, billing continues until renewal, then stops. No refunds are issued for unused time in the current cycle.",
       "position": 3,
       "sentenceCount": 2
     },
     {
-      "id": "sc_32",
+      "id": "sc_48",
       "type": "sentence_context",
       "content": "[Subscriptions and Cancellations] Customers can cancel their subscription at **any time** in account settings.",
       "position": 0
     },
     {
-      "id": "sc_33",
+      "id": "sc_49",
       "type": "sentence_context",
       "content": "[Subscriptions and Cancellations] [Previous: Customers can cancel their subscription at **any t...] Cancelling does **not** mean they will receive money back for the current billing cycle.",
       "position": 1
     },
     {
-      "id": "sc_34",
+      "id": "sc_50",
       "type": "sentence_context",
       "content": "[Subscriptions and Cancellations] [Previous: Cancelling does **not** mean they will receive mon...] The cancellation only stops billing at the **next renewal date**.",
       "position": 2
     },
     {
-      "id": "sc_35",
+      "id": "sc_51",
       "type": "sentence_context",
       "content": "[Subscriptions and Cancellations] [Previous: The cancellation only stops billing at the **next ...] If you cancel in the middle of the cycle, billing continues until renewal, then stops.",
       "position": 3
     },
     {
-      "id": "sc_36",
+      "id": "sc_52",
       "type": "sentence_context",
       "content": "[Subscriptions and Cancellations] [Previous: If you cancel in the middle of the cycle, billing ...] No refunds are issued for unused time in the current cycle.",
       "position": 4
     },
     {
-      "id": "s_37",
+      "id": "s_53",
       "type": "sentence",
       "content": "Customers can cancel their subscription at **any time** in account settings.",
       "position": 0
     },
     {
-      "id": "s_38",
+      "id": "s_54",
       "type": "sentence",
       "content": "Cancelling does **not** mean they will receive money back for the current billing cycle.",
       "position": 1
     },
     {
-      "id": "s_39",
+      "id": "s_55",
       "type": "sentence",
       "content": "The cancellation only stops billing at the **next renewal date**.",
       "position": 2
     },
     {
-      "id": "s_40",
+      "id": "s_56",
       "type": "sentence",
       "content": "If you cancel in the middle of the cycle, billing continues until renewal, then stops.",
       "position": 3
     },
     {
-      "id": "s_41",
+      "id": "s_57",
       "type": "sentence",
       "content": "No refunds are issued for unused time in the current cycle.",
       "position": 4
     },
     {
-      "id": "w_42",
+      "id": "w_58",
       "type": "window",
       "content": "Passwords must be **changed every 90 days**. Passwords should **not be shared with coworkers** under any circumstances. If a user forgets their password, the reset process is done through an **email link**. **Two-factor authentication (2FA)** is recommended but not enforced.",
       "position": 0,
       "windowSize": 40
     },
     {
-      "id": "sw_43",
+      "id": "sw_59",
       "type": "sentence_window",
       "content": "Passwords must be **changed every 90 days**. Passwords should **not be shared with coworkers** under any circumstances. If a user forgets their password, the reset process is done through an **email link**.",
       "position": 0,
       "sentenceCount": 3
     },
     {
-      "id": "sw_44",
+      "id": "sw_60",
       "type": "sentence_window",
       "content": "Passwords should **not be shared with coworkers** under any circumstances. If a user forgets their password, the reset process is done through an **email link**. **Two-factor authentication (2FA)** is recommended but not enforced.",
       "position": 1,
       "sentenceCount": 3
     },
     {
-      "id": "sw_45",
+      "id": "sw_61",
       "type": "sentence_window",
       "content": "If a user forgets their password, the reset process is done through an **email link**. **Two-factor authentication (2FA)** is recommended but not enforced.",
       "position": 2,
       "sentenceCount": 2
     },
     {
-      "id": "sc_46",
+      "id": "sc_62",
       "type": "sentence_context",
       "content": "[Passwords and Security] Passwords must be **changed every 90 days**.",
       "position": 0
     },
     {
-      "id": "sc_47",
+      "id": "sc_63",
       "type": "sentence_context",
       "content": "[Passwords and Security] [Previous: Passwords must be **changed every 90 days**....] Passwords should **not be shared with coworkers** under any circumstances.",
       "position": 1
     },
     {
-      "id": "sc_48",
+      "id": "sc_64",
       "type": "sentence_context",
       "content": "[Passwords and Security] [Previous: Passwords should **not be shared with coworkers** ...] If a user forgets their password, the reset process is done through an **email link**.",
       "position": 2
     },
     {
-      "id": "sc_49",
+      "id": "sc_65",
       "type": "sentence_context",
       "content": "[Passwords and Security] [Previous: If a user forgets their password, the reset proces...] **Two-factor authentication (2FA)** is recommended but not enforced.",
       "position": 3
     },
     {
-      "id": "s_50",
+      "id": "s_66",
       "type": "sentence",
       "content": "Passwords must be **changed every 90 days**.",
       "position": 0
     },
     {
-      "id": "s_51",
+      "id": "s_67",
       "type": "sentence",
       "content": "Passwords should **not be shared with coworkers** under any circumstances.",
       "position": 1
     },
     {
-      "id": "s_52",
+      "id": "s_68",
       "type": "sentence",
       "content": "If a user forgets their password, the reset process is done through an **email link**.",
       "position": 2
     },
     {
-      "id": "s_53",
+      "id": "s_69",
       "type": "sentence",
       "content": "**Two-factor authentication (2FA)** is recommended but not enforced.",
       "position": 3
     },
     {
-      "id": "w_54",
+      "id": "w_70",
       "type": "window",
-      "content": "Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**. Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated.",
+      "content": "Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**. Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated. {\n  \"support\": {\n    \"contact\": \"support@monday.fake\",\n    \"hours\": \"09:00–18:00 UTC\",\n    \"sla\": \"24h–48h response\",\n    \"escalation\": \"automatic after 48h no reply\"\n  }\n}",
       "position": 0,
-      "windowSize": 39
+      "windowSize": 71
     },
     {
-      "id": "sw_55",
+      "id": "code_71",
+      "type": "code_block",
+      "content": "{\n  \"support\": {\n    \"contact\": \"support@monday.fake\",\n    \"hours\": \"09:00–18:00 UTC\",\n    \"sla\": \"24h–48h response\",\n    \"escalation\": \"automatic after 48h no reply\"\n  }\n}"
+    },
+    {
+      "id": "sw_72",
       "type": "sentence_window",
-      "content": "Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**. Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated.",
+      "content": "Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**. Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated. {",
       "position": 0,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_73",
+      "type": "sentence_window",
+      "content": "Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated. { \"support\": {",
+      "position": 1,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_74",
+      "type": "sentence_window",
+      "content": "{ \"support\": { \"contact\": \"support@monday.fake\",",
+      "position": 2,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_75",
+      "type": "sentence_window",
+      "content": "\"support\": { \"contact\": \"support@monday.fake\", \"hours\": \"09:00–18:00 UTC\",",
+      "position": 3,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_76",
+      "type": "sentence_window",
+      "content": "\"contact\": \"support@monday.fake\", \"hours\": \"09:00–18:00 UTC\", \"sla\": \"24h–48h response\",",
+      "position": 4,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_77",
+      "type": "sentence_window",
+      "content": "\"hours\": \"09:00–18:00 UTC\", \"sla\": \"24h–48h response\", \"escalation\": \"automatic after 48h no reply\"",
+      "position": 5,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_78",
+      "type": "sentence_window",
+      "content": "\"sla\": \"24h–48h response\", \"escalation\": \"automatic after 48h no reply\" }",
+      "position": 6,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_79",
+      "type": "sentence_window",
+      "content": "\"escalation\": \"automatic after 48h no reply\" } }",
+      "position": 7,
+      "sentenceCount": 3
+    },
+    {
+      "id": "sw_80",
+      "type": "sentence_window",
+      "content": "} }",
+      "position": 8,
       "sentenceCount": 2
     },
     {
-      "id": "sc_56",
+      "id": "sc_81",
       "type": "sentence_context",
       "content": "[Support Information] Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**.",
       "position": 0
     },
     {
-      "id": "sc_57",
+      "id": "sc_82",
       "type": "sentence_context",
       "content": "[Support Information] [Previous: Official support email: **support@monday.fake** St...] Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated.",
       "position": 1
     },
     {
-      "id": "s_58",
+      "id": "sc_83",
+      "type": "sentence_context",
+      "content": "[Support Information] \"support\": {",
+      "position": 3
+    },
+    {
+      "id": "sc_84",
+      "type": "sentence_context",
+      "content": "[Support Information] \"contact\": \"support@monday.fake\",",
+      "position": 4
+    },
+    {
+      "id": "sc_85",
+      "type": "sentence_context",
+      "content": "[Support Information] [Previous: \"contact\": \"support@monday.fake\",...] \"hours\": \"09:00–18:00 UTC\",",
+      "position": 5
+    },
+    {
+      "id": "sc_86",
+      "type": "sentence_context",
+      "content": "[Support Information] [Previous: \"hours\": \"09:00–18:00 UTC\",...] \"sla\": \"24h–48h response\",",
+      "position": 6
+    },
+    {
+      "id": "sc_87",
+      "type": "sentence_context",
+      "content": "[Support Information] [Previous: \"sla\": \"24h–48h response\",...] \"escalation\": \"automatic after 48h no reply\"",
+      "position": 7
+    },
+    {
+      "id": "s_88",
       "type": "sentence",
       "content": "Official support email: **support@monday.fake** Standard SLA: **24–48 hours** response time If no answer is received within 48 hours, the request is **automatically escalated**.",
       "position": 0
     },
     {
-      "id": "s_59",
+      "id": "s_89",
       "type": "sentence",
       "content": "Customer service hours: **09:00–18:00 UTC** Old documents sometimes state hours as 08:00–17:00, but those are outdated.",
       "position": 1
     },
     {
-      "id": "w_60",
+      "id": "s_90",
+      "type": "sentence",
+      "content": "\"support\": {",
+      "position": 3
+    },
+    {
+      "id": "s_91",
+      "type": "sentence",
+      "content": "\"contact\": \"support@monday.fake\",",
+      "position": 4
+    },
+    {
+      "id": "s_92",
+      "type": "sentence",
+      "content": "\"hours\": \"09:00–18:00 UTC\",",
+      "position": 5
+    },
+    {
+      "id": "s_93",
+      "type": "sentence",
+      "content": "\"sla\": \"24h–48h response\",",
+      "position": 6
+    },
+    {
+      "id": "s_94",
+      "type": "sentence",
+      "content": "\"escalation\": \"automatic after 48h no reply\"",
+      "position": 7
+    },
+    {
+      "id": "w_95",
       "type": "window",
       "content": "If a customer issues a **chargeback** with their bank or credit card provider, their account is **banned immediately and permanently**. There is **no appeal process** for chargeback bans. Shipping is **not offered at all**, because monday.com is a digital-only product. There are no boxes, hardware, or physical shipping involved. Refunds for **team plans** are handled case by case. Contact **finance@monday.fake**.",
       "position": 0,
       "windowSize": 60
     },
     {
-      "id": "sw_61",
+      "id": "sw_96",
       "type": "sentence_window",
       "content": "If a customer issues a **chargeback** with their bank or credit card provider, their account is **banned immediately and permanently**. There is **no appeal process** for chargeback bans. Shipping is **not offered at all**, because monday.",
       "position": 0,
       "sentenceCount": 3
     },
     {
-      "id": "sw_62",
+      "id": "sw_97",
       "type": "sentence_window",
       "content": "There is **no appeal process** for chargeback bans. Shipping is **not offered at all**, because monday. com is a digital-only product.",
       "position": 1,
       "sentenceCount": 3
     },
     {
-      "id": "sw_63",
+      "id": "sw_98",
       "type": "sentence_window",
       "content": "Shipping is **not offered at all**, because monday. com is a digital-only product. There are no boxes, hardware, or physical shipping involved.",
       "position": 2,
       "sentenceCount": 3
     },
     {
-      "id": "sw_64",
+      "id": "sw_99",
       "type": "sentence_window",
       "content": "com is a digital-only product. There are no boxes, hardware, or physical shipping involved. Refunds for **team plans** are handled case by case.",
       "position": 3,
       "sentenceCount": 3
     },
     {
-      "id": "sw_65",
+      "id": "sw_100",
       "type": "sentence_window",
       "content": "There are no boxes, hardware, or physical shipping involved. Refunds for **team plans** are handled case by case. Contact **finance@monday.fake**.",
       "position": 4,
       "sentenceCount": 3
     },
     {
-      "id": "sw_66",
+      "id": "sw_101",
       "type": "sentence_window",
       "content": "Refunds for **team plans** are handled case by case. Contact **finance@monday.fake**.",
       "position": 5,
       "sentenceCount": 2
     },
     {
-      "id": "sc_67",
+      "id": "sc_102",
       "type": "sentence_context",
       "content": "[Special Notes] If a customer issues a **chargeback** with their bank or credit card provider, their account is **banned immediately and permanently**.",
       "position": 0
     },
     {
-      "id": "sc_68",
+      "id": "sc_103",
       "type": "sentence_context",
       "content": "[Special Notes] [Previous: If a customer issues a **chargeback** with their b...] There is **no appeal process** for chargeback bans.",
       "position": 1
     },
     {
-      "id": "sc_69",
+      "id": "sc_104",
       "type": "sentence_context",
       "content": "[Special Notes] [Previous: There is **no appeal process** for chargeback bans...] Shipping is **not offered at all**, because monday.",
       "position": 2
     },
     {
-      "id": "sc_70",
+      "id": "sc_105",
       "type": "sentence_context",
       "content": "[Special Notes] [Previous: Shipping is **not offered at all**, because monday...] com is a digital-only product.",
       "position": 3
     },
     {
-      "id": "sc_71",
+      "id": "sc_106",
       "type": "sentence_context",
       "content": "[Special Notes] [Previous: com is a digital-only product....] There are no boxes, hardware, or physical shipping involved.",
       "position": 4
     },
     {
-      "id": "sc_72",
+      "id": "sc_107",
       "type": "sentence_context",
       "content": "[Special Notes] [Previous: There are no boxes, hardware, or physical shipping...] Refunds for **team plans** are handled case by case.",
       "position": 5
     },
     {
-      "id": "sc_73",
+      "id": "sc_108",
       "type": "sentence_context",
       "content": "[Special Notes] [Previous: Refunds for **team plans** are handled case by cas...] Contact **finance@monday.fake**.",
       "position": 6
     },
     {
-      "id": "s_74",
+      "id": "s_109",
       "type": "sentence",
       "content": "If a customer issues a **chargeback** with their bank or credit card provider, their account is **banned immediately and permanently**.",
       "position": 0
     },
     {
-      "id": "s_75",
+      "id": "s_110",
       "type": "sentence",
       "content": "There is **no appeal process** for chargeback bans.",
       "position": 1
     },
     {
-      "id": "s_76",
+      "id": "s_111",
       "type": "sentence",
       "content": "Shipping is **not offered at all**, because monday.",
       "position": 2
     },
     {
-      "id": "s_77",
+      "id": "s_112",
       "type": "sentence",
       "content": "com is a digital-only product.",
       "position": 3
     },
     {
-      "id": "s_78",
+      "id": "s_113",
       "type": "sentence",
       "content": "There are no boxes, hardware, or physical shipping involved.",
       "position": 4
     },
     {
-      "id": "s_79",
+      "id": "s_114",
       "type": "sentence",
       "content": "Refunds for **team plans** are handled case by case.",
       "position": 5
     },
     {
-      "id": "s_80",
+      "id": "s_115",
       "type": "sentence",
       "content": "Contact **finance@monday.fake**.",
       "position": 6
     },
     {
-      "id": "w_81",
+      "id": "w_116",
       "type": "window",
       "content": "**Boards**: The main workspace for tasks and projects. **Team plan**: Bulk license or multi-user management. No other features are explicitly described in this particular policy draft.",
       "position": 0,
       "windowSize": 26
     },
     {
-      "id": "sw_82",
+      "id": "sw_117",
       "type": "sentence_window",
       "content": "**Boards**: The main workspace for tasks and projects. **Team plan**: Bulk license or multi-user management. No other features are explicitly described in this particular policy draft.",
       "position": 0,
       "sentenceCount": 3
     },
     {
-      "id": "sw_83",
+      "id": "sw_118",
       "type": "sentence_window",
       "content": "**Team plan**: Bulk license or multi-user management. No other features are explicitly described in this particular policy draft.",
       "position": 1,
       "sentenceCount": 2
     },
     {
-      "id": "sc_84",
+      "id": "sc_119",
       "type": "sentence_context",
       "content": "[Features Mentioned] **Boards**: The main workspace for tasks and projects.",
       "position": 0
     },
     {
-      "id": "sc_85",
+      "id": "sc_120",
       "type": "sentence_context",
       "content": "[Features Mentioned] [Previous: **Boards**: The main workspace for tasks and proje...] **Team plan**: Bulk license or multi-user management.",
       "position": 1
     },
     {
-      "id": "sc_86",
+      "id": "sc_121",
       "type": "sentence_context",
       "content": "[Features Mentioned] [Previous: **Team plan**: Bulk license or multi-user manageme...] No other features are explicitly described in this particular policy draft.",
       "position": 2
     },
     {
-      "id": "s_87",
+      "id": "s_122",
       "type": "sentence",
       "content": "**Boards**: The main workspace for tasks and projects.",
       "position": 0
     },
     {
-      "id": "s_88",
+      "id": "s_123",
       "type": "sentence",
       "content": "**Team plan**: Bulk license or multi-user management.",
       "position": 1
     },
     {
-      "id": "s_89",
+      "id": "s_124",
       "type": "sentence",
       "content": "No other features are explicitly described in this particular policy draft.",
       "position": 2

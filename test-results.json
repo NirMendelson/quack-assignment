@@ -1,27 +1,27 @@
 {
-  "timestamp": "2025-09-10T10:42:24.462Z",
+  "timestamp": "2025-09-10T12:01:48.153Z",
   "summary": {
     "totalTests": 1,
     "totalQuestions": 1,
-    "correctAnswers": 1,
-    "accuracy": 1,
-    "averageConfidence": 1
+    "correctAnswers": 0,
+    "accuracy": 0,
+    "averageConfidence": 0.045695986676459875
   },
   "testResults": [
     {
-      "testDir": "test5",
-      "policyFile": "test5.md",
-      "qaFile": "test5_q&a.md",
+      "testDir": "test1",
+      "policyFile": "test1.md",
+      "qaFile": "test1_q&a.md",
       "totalQuestions": 1,
       "results": [
         {
-          "testDir": "test5",
+          "testDir": "test1",
           "questionNumber": 1,
-          "question": "Which flag should you use with `open()` to create a file only if it does not already exist?",
-          "expectedAnswer": "Use the `'wx'` flag.",
-          "actualAnswer": "You should use the `'x'` flag with `open()` to create a file only if it does not already exist. This is the exclusive flag that will fail if the path already exists.",
-          "isCorrect": true,
-          "confidence": 1,
+          "question": "Does monday.com enforce two-factor authentication (2FA) for all users?",
+          "expectedAnswer": "No, it is recommended but not enforced.",
+          "actualAnswer": "Transferring to human customer support.",
+          "isCorrect": false,
+          "confidence": 0.045695986676459875,
           "searchResults": 100,
           "citations": 5
         }

@@ -177,7 +177,25 @@ class RerankService {
    */
   async rerankWithCohere(query, chunks) {
     try {
+      console.log(`\n🔄 COHERE RERANKING INPUT:`);
+      console.log(`📝 Query: "${query}"`);
+      console.log(`📊 Input chunks: ${chunks.length}`);
+      
+      // Log input chunks with their original scores
+      console.log(`\n📋 INPUT CHUNKS (before Cohere):`);
+      chunks.forEach((chunk, i) => {
+        const originalScore = chunk.score || chunk.rrfScore || 'N/A';
+        const content = chunk.truncatedContent || chunk.content;
+        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | Original Score: ${originalScore} | "${content.substring(0, 100)}..."`);
+      });
+      
       const texts = chunks.map(chunk => chunk.truncatedContent || chunk.content);
+      
+      console.log(`\n📤 Sending to Cohere API:`);
+      console.log(`  - Model: rerank-english-v3.0`);
+      console.log(`  - Query: "${query}"`);
+      console.log(`  - Documents: ${texts.length}`);
+      console.log(`  - Top K: ${Math.min(10, chunks.length)}`);
       
       const response = await axios.post('https://api.cohere.ai/v1/rerank', {
         model: 'rerank-english-v3.0',
@@ -191,36 +209,59 @@ class RerankService {
         }
       });
 
+      console.log(`\n📥 Cohere API Response:`);
+      console.log(`  - Status: ${response.status}`);
+      console.log(`  - Results: ${response.data.results.length}`);
+
       const rerankedChunks = response.data.results.map(result => {
         const chunk = chunks[result.index];
         let rerankScore = result.relevance_score;
+        
+        console.log(`\n🔍 Processing Cohere result ${result.index + 1}:`);
+        console.log(`  - Chunk ID: ${chunk.id}`);
+        console.log(`  - Cohere Score: ${result.relevance_score}`);
+        console.log(`  - Content: "${(chunk.truncatedContent || chunk.content).substring(0, 100)}..."`);
         
         // Boost score for exact matches of quoted terms from the query
         const content = chunk.truncatedContent || chunk.content;
         const quotedTerms = query.match(/`([^`]+)`/g) || [];
         
         if (quotedTerms.length > 0) {
+          console.log(`  - Checking quoted terms: [${quotedTerms.join(', ')}]`);
           // Look for exact matches of quoted terms in the content
           for (const quotedTerm of quotedTerms) {
             const cleanTerm = quotedTerm.replace(/`/g, '');
             if (content.includes(quotedTerm)) {
               rerankScore += 0.1; // Boost for exact quoted term match
+              console.log(`    ✅ Found exact quoted term "${quotedTerm}" - boosting by 0.1`);
             }
             // Also check for variations (with/without quotes)
             if (content.includes(`'${cleanTerm}'`) || content.includes(`"${cleanTerm}"`)) {
               rerankScore += 0.05; // Smaller boost for quoted variations
+              console.log(`    ✅ Found quoted variation "${cleanTerm}" - boosting by 0.05`);
             }
           }
         }
         
+        const finalScore = Math.min(1.0, rerankScore);
+        console.log(`  - Final Score: ${finalScore} (capped at 1.0)`);
+        
         return {
           ...chunk,
-          rerankScore: Math.min(1.0, rerankScore) // Cap at 1.0
+          rerankScore: finalScore
         };
+      });
+
+      console.log(`\n📊 COHERE RERANKING OUTPUT:`);
+      console.log(`📋 RERANKED CHUNKS (after Cohere):`);
+      rerankedChunks.forEach((chunk, i) => {
+        const originalScore = chunk.score || chunk.rrfScore || 'N/A';
+        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | Original: ${originalScore} | Cohere: ${chunk.rerankScore?.toFixed(3)} | "${(chunk.truncatedContent || chunk.content).substring(0, 100)}..."`);
       });
 
       return rerankedChunks;
     } catch (error) {
+      console.error('❌ Cohere rerank error:', error.response?.data || error.message);
       logger.error('Cohere rerank error:', error.response?.data || error.message);
       throw error;
     }
@@ -316,37 +357,72 @@ class RerankService {
     const remaining = [];
     
     for (const chunk of candidates) {
-      const hasExactMatch = allTerms.some(term => {
+      let hasExactMatch = false;
+      let matchedTerm = '';
+      
+      // Debug: Check specific 2FA chunks
+      if (chunk.id === 'sc_65' || chunk.id === 's_69' || chunk.content.toLowerCase().includes('two-factor')) {
+        console.log(`🔍 Debug ${chunk.id}: Checking terms against content: "${chunk.content.substring(0, 100)}..."`);
+        console.log(`🔍 Debug ${chunk.id}: All terms to check: [${allTerms.join(', ')}]`);
+      }
+      
+      for (const term of allTerms) {
+        let termMatched = false;
+        
         // Check for quoted versions
         if (chunk.content.includes(`'${term}'`) || 
             chunk.content.includes(`"${term}"`) ||
             chunk.content.includes(`\`${term}\``)) {
-          return true;
+          termMatched = true;
+          if (chunk.id === 'sc_65' || chunk.id === 's_69') {
+            console.log(`  ✅ ${chunk.id}: Found quoted term "${term}"`);
+          }
         }
         
         // For function calls like 'open()', also check for unquoted versions
         if (term.includes('()')) {
           const unquotedTerm = term.replace(/[()]/g, '');
           if (chunk.content.includes(unquotedTerm)) {
-            return true;
+            termMatched = true;
+            if (chunk.id === 'sc_65' || chunk.id === 's_69') {
+              console.log(`  ✅ ${chunk.id}: Found unquoted function term "${unquotedTerm}"`);
+            }
           }
         }
         
         // For single words that might be flags, check if they appear as quoted flags
         if (term.length <= 5 && !term.includes('(') && /^[a-zA-Z]+$/.test(term)) {
           if (chunk.content.includes(`'${term}'`)) {
-            return true;
+            termMatched = true;
+            if (chunk.id === 'sc_65' || chunk.id === 's_69') {
+              console.log(`  ✅ ${chunk.id}: Found quoted flag term "${term}"`);
+            }
           }
         }
         
-        return false;
-      });
+        // Check for direct term inclusion (case-insensitive)
+        if (chunk.content.toLowerCase().includes(term.toLowerCase())) {
+          termMatched = true;
+          if (chunk.id === 'sc_65' || chunk.id === 's_69') {
+            console.log(`  ✅ ${chunk.id}: Found direct term "${term}" (case-insensitive)`);
+          }
+        }
+        
+        if (termMatched) {
+          hasExactMatch = true;
+          matchedTerm = term;
+          break; // Found a match, no need to check other terms
+        }
+      }
       
       if (hasExactMatch) {
         exactMatches.push(chunk);
-        console.log(`🎯 Exact match found: ${chunk.id} - "${chunk.content.substring(0, 100)}..."`);
+        console.log(`🎯 Exact match found: ${chunk.id} - Matched term: "${matchedTerm}" - "${chunk.content.substring(0, 100)}..."`);
       } else {
         remaining.push(chunk);
+        if (chunk.id === 'sc_65' || chunk.id === 's_69') {
+          console.log(`❌ No exact match for ${chunk.id} - "${chunk.content.substring(0, 100)}..."`);
+        }
       }
     }
     
@@ -369,114 +445,97 @@ class RerankService {
    */
   async rerankChunks(query, searchResults, isSpecQuery = false) {
     try {
-      logger.info(`🔄 Starting rerank pipeline for query: "${query}"`);
+      console.log(`\n🚀 RERANKING PIPELINE START`);
+      console.log(`📝 Query: "${query}"`);
+      console.log(`📊 Input search results: ${searchResults.length}`);
+      console.log(`🔍 Query type: ${isSpecQuery ? 'SPEC' : 'GENERAL'}`);
+      
+      // Log input search results
+      console.log(`\n📋 INPUT SEARCH RESULTS (top 10):`);
+      searchResults.slice(0, 10).forEach((chunk, i) => {
+        const score = chunk.score || chunk.rrfScore || 'N/A';
+        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | Score: ${score} | "${chunk.content.substring(0, 100)}..."`);
+      });
       
       // Extract key terms
       const keyTerms = this.extractKeyTerms(query);
-      logger.info(`📝 Key terms: ${keyTerms.join(', ')}`);
+      console.log(`\n📝 Extracted key terms: [${keyTerms.join(', ')}]`);
       
       // Deduplicate candidates
       const dedupedCandidates = this.deduplicateChunks(searchResults);
-      logger.info(`🔧 Deduplicated: ${searchResults.length} → ${dedupedCandidates.length} chunks`);
+      console.log(`\n🔧 Deduplication: ${searchResults.length} → ${dedupedCandidates.length} chunks`);
       
       // Find literal hits
       const literalHits = dedupedCandidates.filter(chunk => 
         this.containsLiteral(chunk.content, keyTerms)
       );
-      logger.info(`🎯 Found ${literalHits.length} literal hits`);
+      console.log(`\n🎯 Literal hits found: ${literalHits.length}`);
+      if (literalHits.length > 0) {
+        console.log(`📋 Literal hits (top 5):`);
+        literalHits.slice(0, 5).forEach((chunk, i) => {
+          console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | "${chunk.content.substring(0, 100)}..."`);
+        });
+      }
       
       // Apply diversity constraints
       const diverseCandidates = this.applyDiversityConstraints(dedupedCandidates, literalHits);
-      logger.info(`🎨 Applied diversity: ${diverseCandidates.length} candidates`);
+      console.log(`\n🎨 Diversity constraints applied: ${diverseCandidates.length} candidates`);
       
-      // Pre-filter for exact matches
-      const { exactMatches, remaining } = this.preFilterExactMatches(query, diverseCandidates);
+      // Log diversity results
+      console.log(`📋 Diverse candidates (top 10):`);
+      diverseCandidates.slice(0, 10).forEach((chunk, i) => {
+        const score = chunk.score || chunk.rrfScore || 'N/A';
+        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | Score: ${score} | "${chunk.content.substring(0, 100)}..."`);
+      });
       
-      // Truncate chunks around hits
-      const truncatedExactMatches = exactMatches.map(chunk => ({
+      // Truncate all chunks around hits for better Cohere processing
+      const truncatedChunks = diverseCandidates.map(chunk => ({
         ...chunk,
         truncatedContent: this.truncateAroundHit(chunk.content, keyTerms)
       }));
       
-      const truncatedRemaining = remaining.map(chunk => ({
-        ...chunk,
-        truncatedContent: this.truncateAroundHit(chunk.content, keyTerms)
-      }));
+      console.log(`\n🔧 Truncation completed: ${truncatedChunks.length} chunks`);
       
-      console.log(`🔧 Truncated: ${truncatedExactMatches.length} exact matches, ${truncatedRemaining.length} remaining`);
+      // Rerank all chunks with Cohere
+      console.log(`\n🔄 Starting Cohere reranking...`);
+      const rerankedChunks = await this.rerankWithCohere(query, truncatedChunks);
+      console.log(`✅ Cohere reranking completed: ${rerankedChunks.length} chunks`);
       
-      // Rerank both groups separately
-      let rerankedExactMatches = [];
-      let rerankedRemaining = [];
+      // Take top 5 from Cohere results
+      const topK = rerankedChunks.slice(0, 5);
       
-      if (truncatedExactMatches.length > 0) {
-        console.log(`🔄 Reranking ${truncatedExactMatches.length} exact matches with Cohere...`);
-        rerankedExactMatches = await this.rerankWithCohere(query, truncatedExactMatches);
-        console.log(`🔄 Reranked ${rerankedExactMatches.length} exact matches`);
-        
-        // Log top exact matches after reranking
-        console.log(`🎯 Top exact matches after reranking:`);
-        rerankedExactMatches.slice(0, 3).forEach((chunk, i) => {
-          console.log(`  ${i + 1}. [${chunk.type}] Score: ${chunk.rerankScore?.toFixed(3)} - "${chunk.content.substring(0, 100)}..."`);
-        });
-      }
-      
-      if (truncatedRemaining.length > 0) {
-        console.log(`🔄 Reranking ${truncatedRemaining.length} remaining chunks with Cohere...`);
-        rerankedRemaining = await this.rerankWithCohere(query, truncatedRemaining);
-        console.log(`🔄 Reranked ${rerankedRemaining.length} remaining chunks`);
-        
-        // Log top remaining matches after reranking
-        console.log(`🎯 Top remaining matches after reranking:`);
-        rerankedRemaining.slice(0, 3).forEach((chunk, i) => {
-          console.log(`  ${i + 1}. [${chunk.type}] Score: ${chunk.rerankScore?.toFixed(3)} - "${chunk.content.substring(0, 100)}..."`);
-        });
-      }
-      
-      // Combine results: exact matches first, then remaining
-      const allReranked = [...rerankedExactMatches, ...rerankedRemaining];
-      
-      // Take top 5, ensuring at least 2 exact matches if available
-      let topK;
-      if (exactMatches.length >= 2) {
-        // Take up to 3 exact matches, then fill with remaining
-        const exactCount = Math.min(3, rerankedExactMatches.length);
-        const remainingCount = Math.min(5 - exactCount, rerankedRemaining.length);
-        topK = [
-          ...rerankedExactMatches.slice(0, exactCount),
-          ...rerankedRemaining.slice(0, remainingCount)
-        ];
-        console.log(`🎯 Using ${exactCount} exact matches + ${remainingCount} remaining = ${topK.length} total`);
-      } else {
-        // Take top 5 from combined results
-        topK = allReranked.slice(0, 5);
-        console.log(`🎯 Using top 5 from combined results (${exactMatches.length} exact matches available)`);
-      }
-      
-      console.log(`🔄 Final top ${topK.length} chunks: ${rerankedExactMatches.length} exact + ${topK.length - rerankedExactMatches.length} remaining`);
+      console.log(`\n🎯 FINAL TOP 5 CHUNKS (after Cohere):`);
+      topK.forEach((chunk, i) => {
+        const originalScore = chunk.score || chunk.rrfScore || 'N/A';
+        const cohereScore = chunk.rerankScore?.toFixed(3) || 'N/A';
+        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | Original: ${originalScore} | Cohere: ${cohereScore} | "${chunk.content.substring(0, 100)}..."`);
+      });
       
       // Check evidence gate
       const gateResult = this.checkEvidenceGate(topK, query, isSpecQuery);
+      console.log(`\n🔍 Evidence gate: ${gateResult.passed ? 'PASSED' : 'FAILED'} (${gateResult.reason})`);
       
       // Log detailed results
-      logger.info(`🔍 Evidence gate: ${gateResult.passed ? 'PASSED' : 'FAILED'} (${gateResult.reason})`);
-      
+      console.log(`\n📊 FINAL RERANKING RESULTS:`);
       for (let i = 0; i < topK.length; i++) {
         const chunk = topK[i];
         const hasLiteral = this.containsLiteral(chunk.content, keyTerms);
-        const isExactMatch = exactMatches.some(exact => exact.id === chunk.id);
-        logger.info(`  ${i + 1}. [${chunk.type}] Score: ${chunk.rerankScore?.toFixed(3) || 'N/A'} | Literal: ${hasLiteral} | Exact: ${isExactMatch} | ${chunk.content.substring(0, 100)}...`);
+        const originalScore = chunk.score || chunk.rrfScore || 'N/A';
+        const cohereScore = chunk.rerankScore?.toFixed(3) || 'N/A';
+        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | Original: ${originalScore} | Cohere: ${cohereScore} | Literal: ${hasLiteral} | "${chunk.content.substring(0, 100)}..."`);
       }
+      
+      console.log(`\n🏁 RERANKING PIPELINE COMPLETE`);
       
       return {
         chunks: topK,
         evidenceGate: gateResult,
         literalHits: literalHits.length,
-        totalCandidates: diverseCandidates.length,
-        exactMatches: exactMatches.length
+        totalCandidates: diverseCandidates.length
       };
       
     } catch (error) {
+      console.error('❌ Rerank pipeline error:', error);
       logger.error('Rerank pipeline error:', error);
       throw error;
     }
