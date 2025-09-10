@@ -37,7 +37,7 @@ class AutomatedTestRunner {
     console.log(`Found ${testDirs.length} test directories: ${testDirs.join(', ')}\n`);
 
     // For now, only run the second test
-    const testToRun = testDirs[3]; // test4
+    const testToRun = testDirs[4]; // test5
     console.log(`🎯 Running only: ${testToRun} (limited test mode)\n`);
 
     console.log(`📁 Processing ${testToRun}...`);
