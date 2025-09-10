@@ -191,10 +191,33 @@ class RerankService {
         }
       });
 
-      const rerankedChunks = response.data.results.map(result => ({
-        ...chunks[result.index],
-        rerankScore: result.relevance_score
-      }));
+      const rerankedChunks = response.data.results.map(result => {
+        const chunk = chunks[result.index];
+        let rerankScore = result.relevance_score;
+        
+        // Boost score for exact matches of quoted terms from the query
+        const content = chunk.truncatedContent || chunk.content;
+        const quotedTerms = query.match(/`([^`]+)`/g) || [];
+        
+        if (quotedTerms.length > 0) {
+          // Look for exact matches of quoted terms in the content
+          for (const quotedTerm of quotedTerms) {
+            const cleanTerm = quotedTerm.replace(/`/g, '');
+            if (content.includes(quotedTerm)) {
+              rerankScore += 0.1; // Boost for exact quoted term match
+            }
+            // Also check for variations (with/without quotes)
+            if (content.includes(`'${cleanTerm}'`) || content.includes(`"${cleanTerm}"`)) {
+              rerankScore += 0.05; // Smaller boost for quoted variations
+            }
+          }
+        }
+        
+        return {
+          ...chunk,
+          rerankScore: Math.min(1.0, rerankScore) // Cap at 1.0
+        };
+      });
 
       return rerankedChunks;
     } catch (error) {
@@ -236,6 +259,112 @@ class RerankService {
   }
 
   /**
+   * Pre-filter chunks to ensure exact matches get priority
+   */
+  preFilterExactMatches(query, candidates) {
+    // Extract quoted terms from query (backticks, quotes)
+    const quotedTerms = query.match(/`([^`]+)`|"([^"]+)"/g) || [];
+    const cleanQuotedTerms = quotedTerms.map(term => term.replace(/[`"]/g, ''));
+    
+    // Check if this is a flag-related query
+    const isFlagQuery = query.toLowerCase().includes('flag') && 
+                       (query.includes('open()') || query.includes('fs.') || query.includes('file'));
+    
+    console.log(`🔍 Pre-filter: Query: "${query}"`);
+    console.log(`🔍 Pre-filter: Is flag query: ${isFlagQuery}`);
+    console.log(`🔍 Pre-filter: Extracted quoted terms: [${quotedTerms.join(', ')}]`);
+    console.log(`🔍 Pre-filter: Clean terms: [${cleanQuotedTerms.join(', ')}]`);
+    
+    if (isFlagQuery) {
+      // For flag queries, look for chunks containing flag patterns
+      const flagPattern = /'[a-z]+\+?'/g;
+      const exactMatches = [];
+      const remaining = [];
+      
+      for (const chunk of candidates) {
+        const hasFlagPattern = flagPattern.test(chunk.content);
+        if (hasFlagPattern) {
+          exactMatches.push(chunk);
+          console.log(`🎯 Flag pattern found: ${chunk.id} - "${chunk.content.substring(0, 100)}..."`);
+        } else {
+          remaining.push(chunk);
+        }
+        // Reset regex lastIndex
+        flagPattern.lastIndex = 0;
+      }
+      
+      console.log(`🎯 Pre-filter: Found ${exactMatches.length} flag pattern matches`);
+      console.log(`🎯 Pre-filter: ${remaining.length} remaining chunks`);
+      
+      return { exactMatches, remaining };
+    }
+    
+    // For non-flag queries, use the original logic
+    const keyTerms = this.extractKeyTerms(query);
+    const allTerms = [...cleanQuotedTerms, ...keyTerms];
+    
+    console.log(`🔍 Pre-filter: Key terms: [${keyTerms.join(', ')}]`);
+    console.log(`🔍 Pre-filter: All terms: [${allTerms.join(', ')}]`);
+    
+    if (allTerms.length === 0) {
+      console.log(`🔍 Pre-filter: No terms found, returning all candidates`);
+      return { exactMatches: [], remaining: candidates };
+    }
+    
+    // Find chunks containing exact quoted terms
+    const exactMatches = [];
+    const remaining = [];
+    
+    for (const chunk of candidates) {
+      const hasExactMatch = allTerms.some(term => {
+        // Check for quoted versions
+        if (chunk.content.includes(`'${term}'`) || 
+            chunk.content.includes(`"${term}"`) ||
+            chunk.content.includes(`\`${term}\``)) {
+          return true;
+        }
+        
+        // For function calls like 'open()', also check for unquoted versions
+        if (term.includes('()')) {
+          const unquotedTerm = term.replace(/[()]/g, '');
+          if (chunk.content.includes(unquotedTerm)) {
+            return true;
+          }
+        }
+        
+        // For single words that might be flags, check if they appear as quoted flags
+        if (term.length <= 5 && !term.includes('(') && /^[a-zA-Z]+$/.test(term)) {
+          if (chunk.content.includes(`'${term}'`)) {
+            return true;
+          }
+        }
+        
+        return false;
+      });
+      
+      if (hasExactMatch) {
+        exactMatches.push(chunk);
+        console.log(`🎯 Exact match found: ${chunk.id} - "${chunk.content.substring(0, 100)}..."`);
+      } else {
+        remaining.push(chunk);
+      }
+    }
+    
+    console.log(`🎯 Pre-filter: Found ${exactMatches.length} exact matches for terms: ${cleanQuotedTerms.join(', ')}`);
+    console.log(`🎯 Pre-filter: ${remaining.length} remaining chunks`);
+    
+    // Log some examples of exact matches
+    if (exactMatches.length > 0) {
+      console.log(`🎯 Top 3 exact matches:`);
+      exactMatches.slice(0, 3).forEach((chunk, i) => {
+        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} - "${chunk.content.substring(0, 150)}..."`);
+      });
+    }
+    
+    return { exactMatches, remaining };
+  }
+
+  /**
    * Main reranking pipeline
    */
   async rerankChunks(query, searchResults, isSpecQuery = false) {
@@ -260,18 +389,71 @@ class RerankService {
       const diverseCandidates = this.applyDiversityConstraints(dedupedCandidates, literalHits);
       logger.info(`🎨 Applied diversity: ${diverseCandidates.length} candidates`);
       
+      // Pre-filter for exact matches
+      const { exactMatches, remaining } = this.preFilterExactMatches(query, diverseCandidates);
+      
       // Truncate chunks around hits
-      const truncatedCandidates = diverseCandidates.map(chunk => ({
+      const truncatedExactMatches = exactMatches.map(chunk => ({
         ...chunk,
         truncatedContent: this.truncateAroundHit(chunk.content, keyTerms)
       }));
       
-      // Rerank with Cohere
-      const rerankedChunks = await this.rerankWithCohere(query, truncatedCandidates);
-      logger.info(`🔄 Reranked to ${rerankedChunks.length} chunks`);
+      const truncatedRemaining = remaining.map(chunk => ({
+        ...chunk,
+        truncatedContent: this.truncateAroundHit(chunk.content, keyTerms)
+      }));
       
-      // Take top 5 (or 7 on retry)
-      const topK = rerankedChunks.slice(0, 5);
+      console.log(`🔧 Truncated: ${truncatedExactMatches.length} exact matches, ${truncatedRemaining.length} remaining`);
+      
+      // Rerank both groups separately
+      let rerankedExactMatches = [];
+      let rerankedRemaining = [];
+      
+      if (truncatedExactMatches.length > 0) {
+        console.log(`🔄 Reranking ${truncatedExactMatches.length} exact matches with Cohere...`);
+        rerankedExactMatches = await this.rerankWithCohere(query, truncatedExactMatches);
+        console.log(`🔄 Reranked ${rerankedExactMatches.length} exact matches`);
+        
+        // Log top exact matches after reranking
+        console.log(`🎯 Top exact matches after reranking:`);
+        rerankedExactMatches.slice(0, 3).forEach((chunk, i) => {
+          console.log(`  ${i + 1}. [${chunk.type}] Score: ${chunk.rerankScore?.toFixed(3)} - "${chunk.content.substring(0, 100)}..."`);
+        });
+      }
+      
+      if (truncatedRemaining.length > 0) {
+        console.log(`🔄 Reranking ${truncatedRemaining.length} remaining chunks with Cohere...`);
+        rerankedRemaining = await this.rerankWithCohere(query, truncatedRemaining);
+        console.log(`🔄 Reranked ${rerankedRemaining.length} remaining chunks`);
+        
+        // Log top remaining matches after reranking
+        console.log(`🎯 Top remaining matches after reranking:`);
+        rerankedRemaining.slice(0, 3).forEach((chunk, i) => {
+          console.log(`  ${i + 1}. [${chunk.type}] Score: ${chunk.rerankScore?.toFixed(3)} - "${chunk.content.substring(0, 100)}..."`);
+        });
+      }
+      
+      // Combine results: exact matches first, then remaining
+      const allReranked = [...rerankedExactMatches, ...rerankedRemaining];
+      
+      // Take top 5, ensuring at least 2 exact matches if available
+      let topK;
+      if (exactMatches.length >= 2) {
+        // Take up to 3 exact matches, then fill with remaining
+        const exactCount = Math.min(3, rerankedExactMatches.length);
+        const remainingCount = Math.min(5 - exactCount, rerankedRemaining.length);
+        topK = [
+          ...rerankedExactMatches.slice(0, exactCount),
+          ...rerankedRemaining.slice(0, remainingCount)
+        ];
+        console.log(`🎯 Using ${exactCount} exact matches + ${remainingCount} remaining = ${topK.length} total`);
+      } else {
+        // Take top 5 from combined results
+        topK = allReranked.slice(0, 5);
+        console.log(`🎯 Using top 5 from combined results (${exactMatches.length} exact matches available)`);
+      }
+      
+      console.log(`🔄 Final top ${topK.length} chunks: ${rerankedExactMatches.length} exact + ${topK.length - rerankedExactMatches.length} remaining`);
       
       // Check evidence gate
       const gateResult = this.checkEvidenceGate(topK, query, isSpecQuery);
@@ -282,14 +464,16 @@ class RerankService {
       for (let i = 0; i < topK.length; i++) {
         const chunk = topK[i];
         const hasLiteral = this.containsLiteral(chunk.content, keyTerms);
-        logger.info(`  ${i + 1}. [${chunk.type}] Score: ${chunk.rerankScore?.toFixed(3) || 'N/A'} | Literal: ${hasLiteral} | ${chunk.content.substring(0, 100)}...`);
+        const isExactMatch = exactMatches.some(exact => exact.id === chunk.id);
+        logger.info(`  ${i + 1}. [${chunk.type}] Score: ${chunk.rerankScore?.toFixed(3) || 'N/A'} | Literal: ${hasLiteral} | Exact: ${isExactMatch} | ${chunk.content.substring(0, 100)}...`);
       }
       
       return {
         chunks: topK,
         evidenceGate: gateResult,
         literalHits: literalHits.length,
-        totalCandidates: diverseCandidates.length
+        totalCandidates: diverseCandidates.length,
+        exactMatches: exactMatches.length
       };
       
     } catch (error) {

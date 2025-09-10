@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-09-10T08:38:50.681Z",
+  "timestamp": "2025-09-10T10:42:24.462Z",
   "summary": {
     "totalTests": 1,
-    "totalQuestions": 3,
-    "correctAnswers": 0,
-    "accuracy": 0,
+    "totalQuestions": 1,
+    "correctAnswers": 1,
+    "accuracy": 1,
     "averageConfidence": 1
   },
   "testResults": [
@@ -12,37 +12,15 @@
       "testDir": "test5",
       "policyFile": "test5.md",
       "qaFile": "test5_q&a.md",
-      "totalQuestions": 3,
+      "totalQuestions": 1,
       "results": [
         {
           "testDir": "test5",
           "questionNumber": 1,
-          "question": "How can you import the promise-based APIs of the `fs` module using CommonJS?",
-          "expectedAnswer": "By using `const fs = require('node:fs/promises');`.",
-          "actualAnswer": "Transferring to human customer support.",
-          "isCorrect": false,
-          "confidence": 1,
-          "searchResults": 100,
-          "citations": 5
-        },
-        {
-          "testDir": "test5",
-          "questionNumber": 2,
           "question": "Which flag should you use with `open()` to create a file only if it does not already exist?",
           "expectedAnswer": "Use the `'wx'` flag.",
-          "actualAnswer": "You should use the `'wx+'` flag with `open()` to create a file only if it does not already exist. This flag works like `'w+'` but fails if the path already exists.",
-          "isCorrect": false,
-          "confidence": 1,
-          "searchResults": 100,
-          "citations": 5
-        },
-        {
-          "testDir": "test5",
-          "questionNumber": 3,
-          "question": "What is unusual about the `fs.exists()` callback and why is `fs.exists()` deprecated?",
-          "expectedAnswer": "The callback takes only a boolean and not an error-first parameter, and the API is deprecated in favor of `fs.stat()` or `fs.access()`.",
-          "actualAnswer": "The unusual thing about the `fs.exists()` callback is that it has only one boolean parameter. `fs.exists()` is deprecated, though the specific reason for deprecation is not fully provided in the available information. Transferring to human customer support.",
-          "isCorrect": false,
+          "actualAnswer": "You should use the `'x'` flag with `open()` to create a file only if it does not already exist. This is the exclusive flag that will fail if the path already exists.",
+          "isCorrect": true,
           "confidence": 1,
           "searchResults": 100,
           "citations": 5

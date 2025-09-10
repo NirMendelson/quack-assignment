@@ -70,17 +70,19 @@ class DocumentProcessor {
           title: token.text,
           level: token.depth,
           content: [],
-          sentences: []
+          sentences: [],
+          codeBlocks: []
         };
         sections.push(currentSection);
-      } else if (token.type === 'paragraph' || token.type === 'list') {
+      } else if (token.type === 'paragraph' || token.type === 'list' || token.type === 'code') {
         // If no section exists yet, create a default one
         if (!currentSection) {
           currentSection = {
             title: 'Document Content',
             level: 1,
             content: [],
-            sentences: []
+            sentences: [],
+            codeBlocks: []
           };
           sections.push(currentSection);
         }
@@ -95,6 +97,19 @@ class DocumentProcessor {
           currentSection.content.push(listText);
           const sentences = this.splitIntoSentences(listText);
           currentSection.sentences.push(...sentences);
+        } else if (token.type === 'code') {
+          // Preserve code blocks with their language and raw content
+          const codeBlock = {
+            language: token.lang || 'text',
+            content: token.text,
+            raw: token.raw
+          };
+          currentSection.codeBlocks.push(codeBlock);
+          // Also add to content for general search
+          currentSection.content.push(token.text);
+          // Split code into lines for better chunking
+          const codeLines = this.splitCodeIntoLines(token.text);
+          currentSection.sentences.push(...codeLines);
         }
       }
     }
@@ -134,6 +149,16 @@ class DocumentProcessor {
     return finalSentences;
   }
 
+  splitCodeIntoLines(codeText) {
+    // Split code into individual lines, preserving important single-line statements
+    const lines = codeText.split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0) // Keep all non-empty lines
+      .map(line => line.replace(/\s+/g, ' ')); // Normalize whitespace but preserve structure
+    
+    return lines;
+  }
+
   createChunks(sections) {
     const chunks = [];
     let chunkId = 0;
@@ -148,6 +173,13 @@ class DocumentProcessor {
           chunks.push(...windowedChunks);
           chunkId += windowedChunks.length;
         }
+      }
+      
+      // Add code block chunks (preserve all code blocks)
+      if (section.codeBlocks && section.codeBlocks.length > 0) {
+        const codeChunks = this.createCodeBlockChunks(section, chunkId);
+        chunks.push(...codeChunks);
+        chunkId += codeChunks.length;
       }
       
       // Add sentence-level chunks with context
@@ -368,6 +400,47 @@ class DocumentProcessor {
         throw error;
       }
     }
+  }
+
+  createCodeBlockChunks(section, startId) {
+    const chunks = [];
+    let chunkId = startId;
+    
+    for (const codeBlock of section.codeBlocks) {
+      // Create a chunk for the entire code block
+      chunks.push({
+        id: `code_${chunkId++}`,
+        content: codeBlock.content,
+        title: section.title,
+        type: 'code_block',
+        section: section.title,
+        level: section.level,
+        language: codeBlock.language,
+        raw: codeBlock.raw
+      });
+      
+      // Create individual line chunks for short code blocks (like import statements)
+      if (codeBlock.content.split('\n').length <= 5) {
+        const lines = codeBlock.content.split('\n')
+          .map(line => line.trim())
+          .filter(line => line.length > 0);
+        
+        for (const line of lines) {
+          chunks.push({
+            id: `code_line_${chunkId++}`,
+            content: line,
+            title: section.title,
+            type: 'code_line',
+            section: section.title,
+            level: section.level,
+            language: codeBlock.language,
+            raw: line
+          });
+        }
+      }
+    }
+    
+    return chunks;
   }
 
   buildKeywordIndex(chunks) {

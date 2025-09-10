@@ -208,8 +208,9 @@ class AutomatedTestRunner {
     const searchResults = await this.searchService.search(question.question, 20);
     console.log(`📊 Found ${searchResults.length} search results`);
     
-    // Log search results details
-    searchResults.forEach((result, index) => {
+    // Sort search results by score (highest to lowest) and log them
+    const sortedResults = searchResults.sort((a, b) => b.score - a.score);
+    sortedResults.forEach((result, index) => {
       console.log(`  ${index + 1}. [${result.type}] ${result.id} Score: ${result.score.toFixed(3)} | "${result.content.substring(0, 100)}..."`);
     });
     
@@ -227,18 +228,43 @@ class AutomatedTestRunner {
       };
     }
 
-    // Skip reranking - use original search results directly
-    console.log(`📊 Using original search results (reranking disabled)...`);
-    console.log(`📊 Using top ${Math.min(5, searchResults.length)} results`);
+    // Use reranking to improve search results
+    console.log(`🔄 Reranking search results...`);
+    console.log(`🔍 Debug: searchResults type: ${typeof searchResults}, length: ${searchResults?.length}`);
+    console.log(`🔍 Debug: searchResults[0]:`, searchResults[0]);
     
-    // Log original results
-    searchResults.slice(0, 5).forEach((result, index) => {
-      console.log(`  ${index + 1}. [${result.type}] Score: ${result.score.toFixed(3)} | "${result.content.substring(0, 100)}..."`);
+    const rerankResult = await this.answerService.rerankService.rerankChunks(question.question, searchResults);
+    console.log(`🔍 Debug: rerankResult type: ${typeof rerankResult}`);
+    console.log(`🔍 Debug: rerankResult.chunks type: ${typeof rerankResult.chunks}`);
+    console.log(`🔍 Debug: rerankResult.chunks.length:`, rerankResult.chunks?.length);
+    
+    const rerankedResults = rerankResult.chunks;
+    
+    if (!Array.isArray(rerankedResults)) {
+      console.log(`❌ Error: rerankedResults is not an array, it's: ${typeof rerankedResults}`);
+      console.log(`🔍 Debug: rerankedResults value:`, JSON.stringify(rerankedResults, null, 2));
+      return {
+        testDir,
+        questionNumber,
+        question: question.question,
+        expectedAnswer: question.expectedAnswer,
+        actualAnswer: "Reranking failed - results not an array",
+        isCorrect: false,
+        confidence: 0,
+        searchResults: searchResults.length
+      };
+    }
+    
+    console.log(`📊 Using top ${Math.min(5, rerankedResults.length)} results after reranking`);
+    
+    // Log reranked results
+    rerankedResults.slice(0, 5).forEach((result, index) => {
+      console.log(`  ${index + 1}. [${result.type}] Score: ${result.rerankScore?.toFixed(3) || result.score?.toFixed(3)} | "${result.content.substring(0, 100)}..."`);
     });
     
     // Generate answer
     console.log(`🤖 Generating answer...`);
-    const answer = await this.answerService.generateAnswer(question.question, searchResults);
+    const answer = await this.answerService.generateAnswer(question.question, rerankedResults);
     console.log(`📝 Generated answer: "${answer.text}"`);
     console.log(`🎯 Confidence: ${answer.confidence}`);
     console.log(`📚 Citations: ${answer.citations?.length || 0}`);

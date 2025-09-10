@@ -2,7 +2,7 @@
 **A:** Interacting with the file system in a way modeled on standard POSIX functions.  
 > *“The `node:fs` module enables interacting with the file system in a way modeled on standard POSIX functions.”*  
 
---- -->
+---
 
 ### Q2. How can you import the promise-based APIs of the `fs` module using CommonJS?  
 **A:** By using `const fs = require('node:fs/promises');`.  
@@ -10,7 +10,7 @@
 
 ---
 
-<!-- ### Q3. What is the first argument always reserved for in a callback-based API?  
+### Q3. What is the first argument always reserved for in a callback-based API?  
 **A:** An exception.  
 > *“The first argument is always reserved for an exception.”*  
 
@@ -132,7 +132,7 @@
 
 ### Q24. What is the default file system flag used by `fs.appendFile`?  
 **A:** `'a'` (append).  
-> *“`flag` {string} … **Default:** `'a'`.”*   -->
+> *“`flag` {string} … **Default:** `'a'`.”*  
 
 ---
 
@@ -141,7 +141,7 @@
 > *“**The parameters for this callback are not consistent with other Node.js callbacks.** … The `fs.exists()` callback has only one boolean parameter.”*  
 > *“Deprecated: Use `fs.stat()` or `fs.access()` instead.”*  
 
-<!-- ### Q26. What does `fs.fsync(fd, callback)` request, and what does the callback receive on success?  
+### Q26. What does `fs.fsync(fd, callback)` request, and what does the callback receive on success?  
 **A:** It requests that all data for the open file descriptor be flushed to the storage device; the callback receives no arguments other than a possible exception.  
 > *“Request that all data for the open file descriptor is flushed to the storage device… No arguments other than a possible exception are given to the completion callback.”*  
 
