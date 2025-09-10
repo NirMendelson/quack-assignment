@@ -316,31 +316,57 @@ class DocumentProcessor {
       
       logger.info(`Generating embeddings for ${chunks.length} chunks`);
       
-      const texts = chunks.map(chunk => chunk.content);
-      
-      // Use Voyage AI REST API
-      const response = await axios.post('https://api.voyageai.com/v1/embeddings', {
-        input: texts,
-        model: 'voyage-3-large',
-        input_type: 'document'
-      }, {
-        headers: {
-          'Authorization': `Bearer ${this.voyageApiKey}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
+      const BATCH_SIZE = 900; // Safe limit below Voyage AI's 1000 limit
       const embeddings = new Map();
-      chunks.forEach((chunk, index) => {
-        embeddings.set(chunk.id, response.data.data[index].embedding);
-      });
+      
+      // Process chunks in batches
+      for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
+        const batch = chunks.slice(i, i + BATCH_SIZE);
+        const texts = batch.map(chunk => chunk.content);
+        
+        logger.info(`Processing batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(chunks.length / BATCH_SIZE)} (${batch.length} chunks)`);
+        
+        // Use Voyage AI REST API
+        const response = await axios.post('https://api.voyageai.com/v1/embeddings', {
+          input: texts,
+          model: 'voyage-3-large',
+          input_type: 'document'
+        }, {
+          headers: {
+            'Authorization': `Bearer ${this.voyageApiKey}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        // Map embeddings back to chunks
+        batch.forEach((chunk, index) => {
+          embeddings.set(chunk.id, response.data.data[index].embedding);
+        });
+        
+        // Add a small delay between batches to avoid rate limiting
+        if (i + BATCH_SIZE < chunks.length) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+      }
       
       logger.info(`Generated ${embeddings.size} embeddings`);
       return embeddings;
       
     } catch (error) {
-      logger.error('Error generating embeddings:', error.message);
-      throw error;
+      // Extract and log the actual API error message from Voyage AI BEFORE Winston logs it
+      if (error.response && error.response.data) {
+        console.log('🔍 Voyage AI API Error Response:', error.response.data);
+        console.log('🔍 Status:', error.response.status, error.response.statusText);
+        
+        // Create a clean error with just the important info
+        const cleanError = new Error(`Voyage AI API Error: ${JSON.stringify(error.response.data)}`);
+        cleanError.status = error.response.status;
+        cleanError.responseData = error.response.data;
+        throw cleanError;
+      } else {
+        console.log('🔍 No response data in error, original error:', error.message);
+        throw error;
+      }
     }
   }
 

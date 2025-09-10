@@ -1,17 +1,31 @@
 {
-  "timestamp": "2025-09-10T06:57:30.371Z",
+  "timestamp": "2025-09-10T07:14:55.984Z",
   "summary": {
     "totalTests": 1,
-    "totalQuestions": 0,
+    "totalQuestions": 1,
     "correctAnswers": 0,
     "accuracy": 0,
-    "averageConfidence": 0
+    "averageConfidence": 1
   },
   "testResults": [
     {
       "testDir": "test4",
-      "error": "Request failed with status code 400",
-      "results": []
+      "policyFile": "test4.md",
+      "qaFile": "test4-q&a.md",
+      "totalQuestions": 1,
+      "results": [
+        {
+          "testDir": "test4",
+          "questionNumber": 1,
+          "question": "What is the default `revisionHistoryLimit` for a Deployment?",
+          "expectedAnswer": "10 old ReplicaSets are kept by default.",
+          "actualAnswer": "Transferring to human customer support.",
+          "isCorrect": false,
+          "confidence": 1,
+          "searchResults": 20,
+          "citations": 5
+        }
+      ]
     }
   ]
 }
