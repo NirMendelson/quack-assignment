@@ -1,27 +1,181 @@
 {
-  "timestamp": "2025-09-10T12:01:48.153Z",
+  "timestamp": "2025-09-10T12:07:32.795Z",
   "summary": {
     "totalTests": 1,
-    "totalQuestions": 1,
-    "correctAnswers": 0,
-    "accuracy": 0,
-    "averageConfidence": 0.045695986676459875
+    "totalQuestions": 15,
+    "correctAnswers": 15,
+    "accuracy": 1,
+    "averageConfidence": 0.07604358018519282
   },
   "testResults": [
     {
       "testDir": "test1",
       "policyFile": "test1.md",
       "qaFile": "test1_q&a.md",
-      "totalQuestions": 1,
+      "totalQuestions": 15,
       "results": [
         {
           "testDir": "test1",
           "questionNumber": 1,
+          "question": "Within how many days of the original purchase are refunds available?",
+          "expectedAnswer": "14 days.",
+          "actualAnswer": "Refunds are available within 14 days of the original purchase.",
+          "isCorrect": true,
+          "confidence": 0.08894288727313582,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 2,
+          "question": "Under what condition are refunds possible besides being within the 14-day window?",
+          "expectedAnswer": "Only if no boards were created and proof of payment is provided.",
+          "actualAnswer": "Refunds are possible if no boards were created at all (literally zero activity) and customers provide proof of payment such as a receipt. However, if the account has already renewed, no refunds are available. For team plans, refunds might be handled on a case by case basis.",
+          "isCorrect": true,
+          "confidence": 0.06262120156238174,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 3,
+          "question": "Are refunds offered if the account has already renewed?",
+          "expectedAnswer": "No refunds are available after renewal.",
+          "actualAnswer": "No, refunds are not offered if the account has already renewed. However, refunds for team plans (bulk license purchases) might be handled on a case by case basis, and customers should contact finance@monday.fake for these requests.",
+          "isCorrect": true,
+          "confidence": 0.09460565947768683,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 4,
+          "question": "How are refunds for team plans handled?",
+          "expectedAnswer": "On a case-by-case basis by contacting finance@monday.fake.",
+          "actualAnswer": "Refunds for team plans are handled case by case. You should contact finance@monday.fake for assistance with team plan refunds.",
+          "isCorrect": true,
+          "confidence": 0.06315935160500749,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 5,
+          "question": "What happens when a customer cancels their subscription mid-cycle?",
+          "expectedAnswer": "Billing continues until the renewal date, and then stops. No refund is issued for unused time.",
+          "actualAnswer": "When a customer cancels their subscription mid-cycle, billing continues until the next renewal date, then stops. They will not receive a refund for the unused time in the current billing cycle.",
+          "isCorrect": true,
+          "confidence": 0.061766124598097515,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 6,
+          "question": "How often must passwords be changed?",
+          "expectedAnswer": "Every 90 days.",
+          "actualAnswer": "Passwords must be changed every 90 days.",
+          "isCorrect": true,
+          "confidence": 0.06352408491091728,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 7,
+          "question": "What is the official support email address?",
+          "expectedAnswer": "support@monday.fake.",
+          "actualAnswer": "The official support email address is support@monday.fake.",
+          "isCorrect": true,
+          "confidence": 0.092541300046987,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 8,
+          "question": "What happens if support does not reply within 48 hours?",
+          "expectedAnswer": "The request is automatically escalated.",
+          "actualAnswer": "If support does not reply within 48 hours, the request is automatically escalated.",
+          "isCorrect": true,
+          "confidence": 0.06278904405186411,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 9,
+          "question": "What are the official customer service hours listed in the document?",
+          "expectedAnswer": "09:00–18:00 UTC.",
+          "actualAnswer": "The official customer service hours are 09:00–18:00 UTC.",
+          "isCorrect": true,
+          "confidence": 0.09519288727313582,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 10,
+          "question": "What happens if a customer issues a chargeback?",
+          "expectedAnswer": "Their account is banned immediately and permanently, with no appeal.",
+          "actualAnswer": "If a customer issues a chargeback with their bank or credit card provider, their account gets banned immediately and permanently. There is no appeal process for chargeback bans.",
+          "isCorrect": true,
+          "confidence": 0.09528612736637591,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 11,
+          "question": "Does monday.com provide physical shipping of boxes or hardware?",
+          "expectedAnswer": "No, shipping is not offered at all.",
+          "actualAnswer": "No, monday.com does not provide physical shipping of boxes or hardware. Monday.com is a digital-only product with no physical components or shipping services.",
+          "isCorrect": true,
+          "confidence": 0.06303983797505744,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 12,
           "question": "Does monday.com enforce two-factor authentication (2FA) for all users?",
           "expectedAnswer": "No, it is recommended but not enforced.",
+          "actualAnswer": "No, monday.com does not enforce two-factor authentication for all users. Two-factor authentication is recommended but not enforced.",
+          "isCorrect": true,
+          "confidence": 0.09528612736637591,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 13,
+          "question": "Does the monday.com policy document mention anything about data retention or how long customer data is stored?",
+          "expectedAnswer": "No data about it in the text.",
           "actualAnswer": "Transferring to human customer support.",
-          "isCorrect": false,
-          "confidence": 0.045695986676459875,
+          "isCorrect": true,
+          "confidence": 0.08179737577979825,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 14,
+          "question": "Are there any details in the policy draft about integrations with third-party applications or APIs?",
+          "expectedAnswer": "No data about it in the text.",
+          "actualAnswer": "Transferring to human customer support.",
+          "isCorrect": true,
+          "confidence": 0.06182163006567305,
+          "searchResults": 100,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 15,
+          "question": "Who is the CEO of Monday.com?",
+          "expectedAnswer": "No data about it in the text.",
+          "actualAnswer": "Transferring to human customer support.",
+          "isCorrect": true,
+          "confidence": 0.058280063425398244,
           "searchResults": 100,
           "citations": 5
         }

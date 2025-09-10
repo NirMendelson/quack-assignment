@@ -488,27 +488,13 @@ class RerankService {
         console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | Score: ${score} | "${chunk.content.substring(0, 100)}..."`);
       });
       
-      // Truncate all chunks around hits for better Cohere processing
-      const truncatedChunks = diverseCandidates.map(chunk => ({
-        ...chunk,
-        truncatedContent: this.truncateAroundHit(chunk.content, keyTerms)
-      }));
+      // Use RRF results directly - no reranking needed
+      const topK = diverseCandidates.slice(0, 5);
       
-      console.log(`\n🔧 Truncation completed: ${truncatedChunks.length} chunks`);
-      
-      // Rerank all chunks with Cohere
-      console.log(`\n🔄 Starting Cohere reranking...`);
-      const rerankedChunks = await this.rerankWithCohere(query, truncatedChunks);
-      console.log(`✅ Cohere reranking completed: ${rerankedChunks.length} chunks`);
-      
-      // Take top 5 from Cohere results
-      const topK = rerankedChunks.slice(0, 5);
-      
-      console.log(`\n🎯 FINAL TOP 5 CHUNKS (after Cohere):`);
+      console.log(`\n🎯 FINAL TOP 5 CHUNKS (using RRF results directly):`);
       topK.forEach((chunk, i) => {
-        const originalScore = chunk.score || chunk.rrfScore || 'N/A';
-        const cohereScore = chunk.rerankScore?.toFixed(3) || 'N/A';
-        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | Original: ${originalScore} | Cohere: ${cohereScore} | "${chunk.content.substring(0, 100)}..."`);
+        const score = chunk.score || chunk.rrfScore || 'N/A';
+        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | RRF Score: ${score} | "${chunk.content.substring(0, 100)}..."`);
       });
       
       // Check evidence gate
@@ -520,9 +506,8 @@ class RerankService {
       for (let i = 0; i < topK.length; i++) {
         const chunk = topK[i];
         const hasLiteral = this.containsLiteral(chunk.content, keyTerms);
-        const originalScore = chunk.score || chunk.rrfScore || 'N/A';
-        const cohereScore = chunk.rerankScore?.toFixed(3) || 'N/A';
-        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | Original: ${originalScore} | Cohere: ${cohereScore} | Literal: ${hasLiteral} | "${chunk.content.substring(0, 100)}..."`);
+        const score = chunk.score || chunk.rrfScore || 'N/A';
+        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | RRF Score: ${score} | Literal: ${hasLiteral} | "${chunk.content.substring(0, 100)}..."`);
       }
       
       console.log(`\n🏁 RERANKING PIPELINE COMPLETE`);
