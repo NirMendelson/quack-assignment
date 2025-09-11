@@ -1,4 +1,4 @@
-### Q1. What should a customer do if they receive a copyright claim on a video using Artlist music?  
+<!-- ### Q1. What should a customer do if they receive a copyright claim on a video using Artlist music?  
 **A:** The claim is usually automated, and the customer should use the license certificate to dispute it.
 > *“sometimes people ask why their video got a copyright claim the answer is usually that the claim is automated and they should use the license certificate to dispute it which they can generate from their account dashboard under downloads selecting the track they used”*
 
@@ -66,13 +66,13 @@
 **A:** Footage usually comes in 23.98, 25, 30, 50, or 60 fps, depending on the clip.  
 > *“people also ask about frame rates footage usually comes in 23.98 25 30 50 60 fps but depends on the clip”*
 
----
+--- -->
 
 ### Q13. How should customers handle copyright claims on projects?  
 **A:** They need to generate a license certificate per project, not once per account.  
 > *“license certificates need to be generated per project not once per account so remind them to do it for each upload to avoid copyright claims”*
 
----
+<!-- ---
 
 ### Q14. Does Artlist support accessibility for blind users?  
 **A:** The site works with screen readers, but not all controls are perfect. Blind customers should use the simplified search view.  
@@ -166,4 +166,4 @@
 ---
 
 ### Q30. Does Artlist have a built-in collaboration workspace where multiple users can edit playlists together in real time?  
-**A:** No information.  
+**A:** No information.   -->

@@ -40,7 +40,7 @@ class TestRunner {
     console.log(`Found ${testDirs.length} test directories: ${testDirs.join(', ')}\n`);
 
     // For now, only run the first test (test1) to limit execution time
-    const testToRun = testDirs[0]; // test1
+    const testToRun = testDirs[1]; // test2
     console.log(`🎯 Running only: ${testToRun} (limited test mode)\n`);
 
     console.log(`📁 Processing ${testToRun}...`);
@@ -101,7 +101,7 @@ class TestRunner {
         console.log(`    Q${i + 1}: ${question.question.substring(0, 60)}...`);
         
         try {
-          const result = await this.questionProcessor.testQuestion(question, testDir, i + 1);
+          const result = await this.questionProcessor.testQuestion(question, testDir, i + 1, qaContent);
           testResults.push(result);
         } catch (error) {
           console.log(`    ❌ Error: ${error.message}`);

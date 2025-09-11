@@ -4,16 +4,63 @@ class QuestionProcessor {
     this.answerService = answerService;
   }
 
-  async testQuestion(question, testDir, questionNumber) {
+  // Helper methods for robust text processing
+  normalizeSmartQuotes(s) {
+    if (!s) return '';
+    return s
+      // real smart quotes to straight
+      .replace(/[“”]/g, '"')
+      .replace(/[‘’]/g, "'")
+      // em/en dashes → hyphen
+      .replace(/[\u2012\u2013\u2014\u2015]/g, '-')
+      // non-breaking and thin spaces → normal space
+      .replace(/[\u00A0\u2000-\u200B\u202F\u205F\u3000]/g, ' ');
+  }
+  
+  stripOuterQuotesAndItalics(s) {
+    if (!s) return '';
+    let t = s.trim();
+    // strip italics
+    t = t.replace(/^\*+/, '').replace(/\*+$/, '');
+    // strip BOTH straight and smart quotes at ends
+    t = t.replace(/^[“”"]+/, '').replace(/[“”"]+$/, '');
+    return t.trim();
+  }
+  
+  normalizeForMatch(s) {
+    if (!s) return '';
+    return this.stripOuterQuotesAndItalics(this.normalizeSmartQuotes(s))
+      .toLowerCase()
+      .replace(/\*\*/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+  
+
+  stripMarkdownQuote(line) {
+    let t = line.replace(/^>\s*/, '');
+    t = this.normalizeSmartQuotes(t).trim();
+    t = t.replace(/^\*+/, '').replace(/\*+$/, '').trim();
+    t = t.replace(/^"+/, '').replace(/"+$/, '').trim();
+    t = t.replace(/^`+/, '').replace(/`+$/, '').trim();
+    return t;
+  }
+
+  async testQuestion(question, testDir, questionNumber, qaContent = null) {
     // Test a single question by searching, generating answer, and evaluating correctness
     console.log(`\n🔍 Q${questionNumber}: "${question.question}"`);
     console.log(`📝 Expected: "${question.expectedAnswer}"`);
+    if (question.quotedText) {
+      console.log(`💬 Quote: "${question.quotedText}"`);
+    } else {
+      console.log(`💬 Quote: Not found`);
+    }
     
     // Search for relevant content using the search service
     const searchResults = await this.searchService.search(question.question, 20);
     
     // Find which chunks contain the expected answer
-    const answerChunks = this.findAllAnswerChunks(question.expectedAnswer, searchResults);
+    const answerChunks = this.findAllAnswerChunks(question.expectedAnswer, searchResults, question.quotedText);
     const answerChunk = answerChunks.length > 0 ? answerChunks[0] : null;
     
     // Show top 20 chunks and score calculations
@@ -58,26 +105,40 @@ class QuestionProcessor {
     };
   }
 
-  findAllAnswerChunks(expectedAnswer, chunks) {
-    // First, try to find the exact quoted text from the Q&A file
-    const quotedText = this.extractQuotedText(expectedAnswer);
+  findAllAnswerChunks(expectedAnswer, chunks, quotedText = null) {
+    // First, try to find the quoted text (this is what actually exists in chunks)
     if (quotedText) {
       const exactMatches = this.findChunksWithText(chunks, quotedText);
       if (exactMatches.length > 0) {
-        return exactMatches; // Return all exact matches
+        return exactMatches;
       }
       
-      // If no exact match, try half-quotes
-      const halfQuotes = this.splitIntoHalves(quotedText);
-      for (const half of halfQuotes) {
+      // Try half-quotes of the quoted text
+      const quotedHalves = this.splitIntoHalves(quotedText);
+      for (const half of quotedHalves) {
         const halfMatches = this.findChunksWithText(chunks, half);
         if (halfMatches.length > 0) {
-          return halfMatches; // Return all half-matches
+          return halfMatches;
         }
       }
     }
     
-    // Fallback to keyword matching
+    // Fallback: try to find the expected answer text directly
+    const expectedMatches = this.findChunksWithText(chunks, expectedAnswer);
+    if (expectedMatches.length > 0) {
+      return expectedMatches;
+    }
+    
+    // Try half-quotes of the expected answer
+    const expectedHalves = this.splitIntoHalves(expectedAnswer);
+    for (const half of expectedHalves) {
+      const halfMatches = this.findChunksWithText(chunks, half);
+      if (halfMatches.length > 0) {
+        return halfMatches;
+      }
+    }
+    
+    // Final fallback to keyword matching
     const answerKeywords = this.extractKeywords(expectedAnswer.toLowerCase());
     const keywordMatches = [];
     
@@ -101,9 +162,26 @@ class QuestionProcessor {
     return answerChunks.length > 0 ? answerChunks[0] : null;
   }
 
+  extractQuotedTextFromQA(expectedAnswer, qaContent) {
+    if (!qaContent) return null;
+    const lines = this.normalizeSmartQuotes(qaContent).split('\n');
+    let idx = lines.findIndex(l => this.normalizeSmartQuotes(l).includes(this.normalizeSmartQuotes(expectedAnswer)));
+    if (idx === -1) return null;
+
+    // collect up to 5 subsequent blockquote lines as one quote blob
+    const pieces = [];
+    for (let i = idx; i < Math.min(idx + 8, lines.length); i++) {
+      const t = this.normalizeSmartQuotes(lines[i]).trim();
+      if (t.startsWith('>')) pieces.push(this.stripMarkdownQuote(t));
+    }
+    const joined = pieces.join(' ').trim();
+    return joined || null;
+  }
+
   extractQuotedText(expectedAnswer) {
-    // Look for text in quotes or backticks in the expected answer
-    const quoteMatch = expectedAnswer.match(/> \*"([^"]+)"\*/);
+    // Look for text in quotes with asterisks (more flexible pattern)
+    // Pattern: > *"text"* (the quoted text is between the quotes)
+    const quoteMatch = expectedAnswer.match(/>\s*\*\s*[""]([^""]+)[""]\s*\*/);
     if (quoteMatch) {
       return quoteMatch[1].trim();
     }
@@ -118,7 +196,7 @@ class QuestionProcessor {
   }
 
   splitIntoHalves(text) {
-    const words = text.split(/\s+/);
+    const words = this.normalizeSmartQuotes(text).trim().split(/\s+/);
     const midPoint = Math.floor(words.length / 2);
     
     return [
@@ -128,13 +206,14 @@ class QuestionProcessor {
   }
 
   findChunksWithText(chunks, searchText) {
-    const normalizedSearchText = searchText.toLowerCase().replace(/\*\*/g, '').trim();
-    
+    const needle = this.normalizeForMatch(searchText);
+  
     return chunks.filter(chunk => {
-      const normalizedChunkText = chunk.content.toLowerCase().replace(/\*\*/g, '').trim();
-      return normalizedChunkText.includes(normalizedSearchText);
+      const hay = this.normalizeForMatch(chunk.content);
+      return hay.includes(needle);
     });
   }
+  
 
   explainRatingCalculation(searchResults, answerChunk, answerChunks) {
     // Show top 20 chunks and score calculations
@@ -164,20 +243,26 @@ class QuestionProcessor {
       if (topAnswerChunk.sources) {
         Object.entries(topAnswerChunk.sources).forEach(([source, data]) => {
           const rrfK = 60;
-          const rrfScore = 1 / (rrfK + data.rank);
-          console.log(`  - ${source}: score ${data.score.toFixed(3)}, rank ${data.rank} → RRF ${rrfScore.toFixed(6)}`);
+          if (source === 'exact') {
+            console.log(`  - ${source}: bonus ${data.bonusApplied.toFixed(6)}`);
+          } else if (data.score !== undefined && data.rank !== undefined) {
+            const rrfScore = 1 / (rrfK + data.rank);
+            console.log(`  - ${source}: score ${data.score.toFixed(3)}, rank ${data.rank} → RRF ${rrfScore.toFixed(6)}`);
+          } else {
+            console.log(`  - ${source}: data structure:`, data);
+          }
         });
         
-        const totalRrf = Object.values(topAnswerChunk.sources).reduce((sum, data) => {
+        const totalRrf = Object.entries(topAnswerChunk.sources).reduce((sum, [source, data]) => {
           const rrfK = 60;
-          return sum + (1 / (rrfK + data.rank));
+          if (source === 'exact') {
+            return sum + data.bonusApplied;
+          } else {
+            return sum + (1 / (rrfK + data.rank));
+          }
         }, 0);
         
-        if (topAnswerChunk.exactPhraseBonus) {
-          console.log(`  - Final: ${totalRrf.toFixed(6)} + ${topAnswerChunk.exactPhraseBonus.toFixed(6)} = ${topAnswerChunk.score.toFixed(6)} (total rank ${answerRank})`);
-        } else {
-          console.log(`  - Final RRF Score: ${topAnswerChunk.score.toFixed(6)} (total rank ${answerRank})`);
-        }
+        console.log(`  - Final RRF Score: ${topAnswerChunk.score.toFixed(6)} (total rank ${answerRank})`);
       }
     }
     
@@ -194,77 +279,100 @@ class QuestionProcessor {
         if (topNonAnswerChunk.sources) {
           Object.entries(topNonAnswerChunk.sources).forEach(([source, data]) => {
             const rrfK = 60;
-            const rrfScore = 1 / (rrfK + data.rank);
-            console.log(`  - ${source}: score ${data.score.toFixed(3)}, rank ${data.rank} → RRF ${rrfScore.toFixed(6)}`);
+            if (source === 'exact') {
+              console.log(`  - ${source}: bonus ${data.bonusApplied.toFixed(6)}`);
+            } else if (data.score !== undefined && data.rank !== undefined) {
+              const rrfScore = 1 / (rrfK + data.rank);
+              console.log(`  - ${source}: score ${data.score.toFixed(3)}, rank ${data.rank} → RRF ${rrfScore.toFixed(6)}`);
+            } else {
+              console.log(`  - ${source}: data structure:`, data);
+            }
           });
           
-          const totalRrf = Object.values(topNonAnswerChunk.sources).reduce((sum, data) => {
+          const totalRrf = Object.entries(topNonAnswerChunk.sources).reduce((sum, [source, data]) => {
             const rrfK = 60;
-            return sum + (1 / (rrfK + data.rank));
+            if (source === 'exact') {
+              return sum + data.bonusApplied;
+            } else {
+              return sum + (1 / (rrfK + data.rank));
+            }
           }, 0);
           
-          if (topNonAnswerChunk.exactPhraseBonus) {
-            console.log(`  - Final: ${totalRrf.toFixed(6)} + ${topNonAnswerChunk.exactPhraseBonus.toFixed(6)} = ${topNonAnswerChunk.score.toFixed(6)} (total rank ${nonAnswerRank})`);
-          } else {
-            console.log(`  - Final RRF Score: ${topNonAnswerChunk.score.toFixed(6)} (total rank ${nonAnswerRank})`);
-          }
+          console.log(`  - Final RRF Score: ${topNonAnswerChunk.score.toFixed(6)} (total rank ${nonAnswerRank})`);
         }
       }
     }
   }
 
   parseQAFile(content) {
-    // Parse the Q&A markdown file to extract questions and expected answers
     const questions = [];
     const lines = content.split('\n');
     let currentQuestion = null;
     let currentAnswer = null;
+    let currentQuotedText = null;
     let inAnswer = false;
     let inComment = false;
 
-    for (const line of lines) {
+    for (const rawLine of lines) {
+      const line = this.normalizeSmartQuotes(rawLine);
       const trimmed = line.trim();
-      
-      // Check for comment start/end
-      if (trimmed.includes('<!--')) {
-        inComment = true;
-      }
-      if (trimmed.includes('-->')) {
-        inComment = false;
-        continue; // Skip the rest of this line
-      }
-      
-      // Skip if we're inside a comment
-      if (inComment) {
+
+      // comments
+      if (trimmed.includes('<!--')) { inComment = true; continue; }
+      if (trimmed.includes('-->'))   { inComment = false; continue; }
+      if (inComment) continue;
+
+      // separator ends current quote capture
+      if (trimmed === '---') {
+        inAnswer = false;
         continue;
       }
-      
+
       if (trimmed.startsWith('### Q')) {
-        // Save previous question if exists
+        // flush previous
         if (currentQuestion && currentAnswer) {
           questions.push({
             question: currentQuestion,
-            expectedAnswer: currentAnswer
+            expectedAnswer: currentAnswer.trim(),
+            quotedText: currentQuotedText ? currentQuotedText.trim() : null
           });
         }
-        
-        // Start new question
+        // start new
         currentQuestion = trimmed.replace(/^### Q\d+\.\s*/, '');
         currentAnswer = '';
+        currentQuotedText = null;
         inAnswer = false;
-      } else if (trimmed.startsWith('**A:**')) {
+        continue;
+      }
+
+      if (trimmed.startsWith('**A:**')) {
         inAnswer = true;
         currentAnswer = trimmed.replace('**A:**', '').trim();
-      } else if (inAnswer && trimmed && !trimmed.startsWith('>') && !trimmed.startsWith('---')) {
+        continue;
+      }
+
+      // accumulate multi-line answer until separator or next section
+      if (inAnswer && trimmed && !trimmed.startsWith('>')) {
         currentAnswer += ' ' + trimmed;
+        continue;
+      }
+
+      // capture any blockquote lines after the answer as quote text
+      if (inAnswer && trimmed.startsWith('>')) {
+        const piece = this.stripMarkdownQuote(trimmed);
+        if (piece) {
+          currentQuotedText = currentQuotedText ? `${currentQuotedText} ${piece}` : piece;
+        }
+        continue;
       }
     }
 
-    // Add the last question
+    // flush last
     if (currentQuestion && currentAnswer) {
       questions.push({
         question: currentQuestion,
-        expectedAnswer: currentAnswer
+        expectedAnswer: currentAnswer.trim(),
+        quotedText: currentQuotedText ? currentQuotedText.trim() : null
       });
     }
 
