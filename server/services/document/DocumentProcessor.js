@@ -1,9 +1,9 @@
-const fs = require('fs').promises;
-const path = require('path');
-const { logger } = require('../../utils/logger');
-const { MarkdownParser } = require('./MarkdownParser');
-const { ChunkingService } = require('./ChunkingService');
-const { IndexingService } = require('./IndexingService');
+import fs from 'fs/promises';
+import path from 'path';
+import { logger } from '../../utils/logger.js';
+import { MarkdownParser } from './MarkdownParser.js';
+import { ChunkingService } from './ChunkingService.js';
+import { IndexingService } from './IndexingService.js';
 
 class DocumentProcessor {
   constructor() {
@@ -115,4 +115,4 @@ class DocumentProcessor {
   }
 }
 
-module.exports = { DocumentProcessor };
+export { DocumentProcessor };

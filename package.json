@@ -2,6 +2,7 @@
   "name": "quack-policy-agent",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,8 +13,10 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^2.0.15",
     "@anthropic-ai/sdk": "^0.61.0",
     "@radix-ui/react-slot": "^1.0.2",
+    "ai": "^5.0.40",
     "axios": "^1.6.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",

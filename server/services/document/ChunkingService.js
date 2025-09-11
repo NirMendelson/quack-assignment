@@ -1,5 +1,5 @@
-const natural = require('natural');
-const { logger } = require('../../utils/logger');
+import natural from 'natural';
+import { logger } from '../../utils/logger.js';
 
 class ChunkingService {
   constructor() {
@@ -132,4 +132,4 @@ class ChunkingService {
   }
 }
 
-module.exports = { ChunkingService };
+export { ChunkingService };

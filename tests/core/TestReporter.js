@@ -1,5 +1,5 @@
-const fs = require('fs').promises;
-const path = require('path');
+import fs from 'fs/promises';
+import path from 'path';
 
 class TestReporter {
   async generateReport(testResults) {
@@ -73,5 +73,5 @@ class TestReporter {
   }
 }
 
-module.exports = { TestReporter };
+export { TestReporter };
 

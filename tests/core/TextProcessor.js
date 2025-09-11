@@ -140,4 +140,4 @@ class TextProcessor {
   }
 }
 
-module.exports = { TextProcessor };
+export { TextProcessor };

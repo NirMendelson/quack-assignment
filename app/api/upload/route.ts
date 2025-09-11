@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { DocumentProcessor } from '../../../server/services/DocumentProcessor'
-import { logger } from '../../../server/utils/logger'
+import { DocumentProcessor } from '../../../server/services/DocumentProcessor.js'
+import { logger } from '../../../server/utils/logger.js'
 
 const documentProcessor = new DocumentProcessor()
 

@@ -1,4 +1,4 @@
-const { logger } = require('../../utils/logger');
+import { logger } from '../../utils/logger.js';
 
 class RRFusionService {
   constructor() {
@@ -53,4 +53,4 @@ class RRFusionService {
   }
 }
 
-module.exports = { RRFusionService };
+export { RRFusionService };

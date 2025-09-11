@@ -1,8 +1,8 @@
-const { logger } = require('../../utils/logger');
-const { BM25SearchService } = require('./BM25SearchService');
-const { SemanticSearchService } = require('./SemanticSearchService');
-const { ExactPhraseSearchService } = require('./ExactPhraseSearchService');
-const { RRFusionService } = require('./RRFusionService');
+import { logger } from '../../utils/logger.js';
+import { BM25SearchService } from './BM25SearchService.js';
+import { SemanticSearchService } from './SemanticSearchService.js';
+import { ExactPhraseSearchService } from './ExactPhraseSearchService.js';
+import { RRFusionService } from './RRFusionService.js';
 
 class SearchOrchestrator {
   constructor() {
@@ -76,4 +76,4 @@ class SearchOrchestrator {
   }
 }
 
-module.exports = { SearchOrchestrator };
+export { SearchOrchestrator };

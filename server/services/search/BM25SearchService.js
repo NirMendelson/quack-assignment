@@ -1,4 +1,4 @@
-const { logger } = require('../../utils/logger');
+import { logger } from '../../utils/logger.js';
 
 class BM25SearchService {
   constructor() {
@@ -27,4 +27,4 @@ class BM25SearchService {
   }
 }
 
-module.exports = { BM25SearchService };
+export { BM25SearchService };

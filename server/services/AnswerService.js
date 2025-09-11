@@ -1,12 +1,18 @@
-const axios = require('axios');
-const Anthropic = require('@anthropic-ai/sdk');
-const { logger } = require('../utils/logger');
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+import { logger } from '../utils/logger.js';
 
 class AnswerService {
   constructor() {
-    this.claude = new Anthropic({
-      apiKey: process.env.CLAUDE_API_KEY,
-    });
+    // Check both possible environment variable names
+    const apiKey = process.env.ANTHROPIC_API_KEY ?? process.env.CLAUDE_API_KEY ?? '';
+    
+    if (!apiKey) {
+      throw new Error('Missing Anthropic API key. Set ANTHROPIC_API_KEY or CLAUDE_API_KEY environment variable');
+    }
+
+    // Use a valid Anthropic model id for the Vercel AI adapter
+    this.model = anthropic('claude-sonnet-4-20250514', { apiKey });
   }
 
   async generateAnswer(question, searchResults) {
@@ -116,19 +122,14 @@ ${context}
 
 Answer:`;
 
-      const response = await this.claude.messages.create({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 500,
+      const response = await generateText({
+        model: this.model,
+        maxTokens: 500,
         temperature: 0, // Deterministic responses
-        messages: [
-          {
-            role: 'user',
-            content: prompt
-          }
-        ]
+        prompt: prompt
       });
 
-      let answerText = response.content[0].text.trim();
+      let answerText = response.text.trim();
       
       // Clean up spacing issues
       answerText = answerText
@@ -153,10 +154,16 @@ Answer:`;
       };
 
     } catch (error) {
-      logger.error('Error generating answer with Claude:', error.message);
+      logger.error('Error generating answer with Claude via Vercel AI SDK:', {
+        name: error.name,
+        message: error.message,
+        status: error.status,
+        cause: error.cause ? String(error.cause) : undefined,
+        data: error.data ? '[present]' : '[none]',
+      });
       throw error;
     }
   }
 }
 
-module.exports = { AnswerService };
+export { AnswerService };

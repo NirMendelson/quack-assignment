@@ -1,8 +1,8 @@
-const axios = require('axios');
-const MiniSearch = require('minisearch');
-const fs = require('fs').promises;
-const path = require('path');
-const { logger } = require('../../utils/logger');
+import axios from 'axios';
+import MiniSearch from 'minisearch';
+import fs from 'fs/promises';
+import path from 'path';
+import { logger } from '../../utils/logger.js';
 
 class IndexingService {
   constructor() {
@@ -168,4 +168,4 @@ class IndexingService {
   }
 }
 
-module.exports = { IndexingService };
+export { IndexingService };

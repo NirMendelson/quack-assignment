@@ -1,12 +1,12 @@
-const { TextProcessor } = require('./TextProcessor');
-const { AnswerEvaluator } = require('./AnswerEvaluator');
+import { TextProcessor } from './TextProcessor.js';
+import { AnswerEvaluator } from './AnswerEvaluator.js';
 
 class QuestionProcessor {
   constructor(searchService, answerService) {
     this.searchService = searchService;
     this.answerService = answerService;
     this.textProcessor = new TextProcessor();
-    this.answerEvaluator = new AnswerEvaluator(answerService);
+    this.answerEvaluator = new AnswerEvaluator();
   }
 
   async testQuestion(question, testDir, questionNumber, qaContent = null) {
@@ -302,4 +302,4 @@ class QuestionProcessor {
   }
 }
 
-module.exports = { QuestionProcessor };
+export { QuestionProcessor };

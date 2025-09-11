@@ -1,6 +1,17 @@
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
+
 class AnswerEvaluator {
-  constructor(answerService) {
-    this.answerService = answerService;
+  constructor() {
+    // Check both possible environment variable names
+    const apiKey = process.env.ANTHROPIC_API_KEY ?? process.env.CLAUDE_API_KEY ?? '';
+    
+    if (!apiKey) {
+      throw new Error('Missing Anthropic API key. Set ANTHROPIC_API_KEY or CLAUDE_API_KEY environment variable');
+    }
+
+    // Use a valid Anthropic model id for the Vercel AI adapter
+    this.model = anthropic('claude-3-5-sonnet-20241022', { apiKey });
   }
 
   async evaluateAnswerWithLLM(expected, actual, question) {
@@ -34,19 +45,14 @@ Please evaluate if the actual answer is correct. Consider:
 
 Respond with ONLY "CORRECT" or "INCORRECT" followed by a brief explanation.`;
 
-      const response = await this.answerService.claude.messages.create({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 100,
+      const response = await generateText({
+        model: this.model,
+        maxTokens: 100,
         temperature: 0,
-        messages: [
-          {
-            role: 'user',
-            content: `You are an expert evaluator for policy Q&A systems. Be fair and consider semantic equivalence.\n\n${prompt}`
-          }
-        ]
+        prompt: `You are an expert evaluator for policy Q&A systems. Be fair and consider semantic equivalence.\n\n${prompt}`
       });
 
-      const evaluation = response.content[0].text.trim();
+      const evaluation = response.text.trim();
       const isCorrect = evaluation.startsWith('CORRECT');
       
       return isCorrect;
@@ -110,4 +116,4 @@ Respond with ONLY "CORRECT" or "INCORRECT" followed by a brief explanation.`;
   }
 }
 
-module.exports = { AnswerEvaluator };
+export { AnswerEvaluator };

@@ -1,4 +1,4 @@
-const { SearchOrchestrator } = require('./search/SearchOrchestrator');
+import { SearchOrchestrator } from './search/SearchOrchestrator.js';
 
 class SearchService {
   constructor() {
@@ -14,4 +14,4 @@ class SearchService {
   }
 }
 
-module.exports = { SearchService };
+export { SearchService };

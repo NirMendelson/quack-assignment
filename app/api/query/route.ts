@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { DocumentProcessor } from '../../../server/services/DocumentProcessor'
-import { SearchService } from '../../../server/services/SearchService'
-import { AnswerService } from '../../../server/services/AnswerService'
-import { logger } from '../../../server/utils/logger'
+import { DocumentProcessor } from '../../../server/services/DocumentProcessor.js'
+import { SearchService } from '../../../server/services/SearchService.js'
+import { AnswerService } from '../../../server/services/AnswerService.js'
+import { logger } from '../../../server/utils/logger.js'
 
 // Initialize services
 const documentProcessor = new DocumentProcessor()

@@ -1,7 +1,7 @@
 // Load environment variables first
-require('dotenv').config();
+import 'dotenv/config';
 
-const { TestRunner } = require('./core/TestRunner');
+import { TestRunner } from './core/TestRunner.js';
 
 // Run the tests
 async function main() {

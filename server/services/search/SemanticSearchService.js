@@ -1,5 +1,5 @@
-const axios = require('axios');
-const { logger } = require('../../utils/logger');
+import axios from 'axios';
+import { logger } from '../../utils/logger.js';
 
 class SemanticSearchService {
   constructor() {
@@ -82,4 +82,4 @@ class SemanticSearchService {
   }
 }
 
-module.exports = { SemanticSearchService };
+export { SemanticSearchService };

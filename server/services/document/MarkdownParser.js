@@ -1,5 +1,5 @@
-const { marked } = require('marked');
-const { logger } = require('../../utils/logger');
+import { marked } from 'marked';
+import { logger } from '../../utils/logger.js';
 
 class MarkdownParser {
   constructor() {
@@ -127,4 +127,4 @@ class MarkdownParser {
   }
 }
 
-module.exports = { MarkdownParser };
+export { MarkdownParser };

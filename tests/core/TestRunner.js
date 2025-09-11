@@ -1,11 +1,11 @@
-const fs = require('fs').promises;
-const path = require('path');
-const { DocumentProcessor } = require('../../server/services/DocumentProcessor');
-const { SearchService } = require('../../server/services/SearchService');
-const { AnswerService } = require('../../server/services/AnswerService');
-const { QuestionProcessor } = require('./QuestionProcessor');
-const { TestReporter } = require('./TestReporter');
-const { logger } = require('../../server/utils/logger');
+import fs from 'fs/promises';
+import path from 'path';
+import { DocumentProcessor } from '../../server/services/DocumentProcessor.js';
+import { SearchService } from '../../server/services/SearchService.js';
+import { AnswerService } from '../../server/services/AnswerService.js';
+import { QuestionProcessor } from './QuestionProcessor.js';
+import { TestReporter } from './TestReporter.js';
+import { logger } from '../../server/utils/logger.js';
 
 class TestRunner {
   constructor() {
@@ -152,4 +152,4 @@ class TestRunner {
   }
 }
 
-module.exports = { TestRunner };
+export { TestRunner };
