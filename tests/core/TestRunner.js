@@ -40,7 +40,7 @@ class TestRunner {
     console.log(`Found ${testDirs.length} test directories: ${testDirs.join(', ')}\n`);
 
     // For now, only run the first test (test1) to limit execution time
-    const testToRun = testDirs[1]; // test2
+    const testToRun = testDirs[2]; // test3
     console.log(`🎯 Running only: ${testToRun} (limited test mode)\n`);
 
     console.log(`📁 Processing ${testToRun}...`);
