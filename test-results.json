@@ -1,28 +1,50 @@
 {
-  "timestamp": "2025-09-11T11:24:16.610Z",
+  "timestamp": "2025-09-11T13:43:56.402Z",
   "summary": {
     "totalTests": 1,
-    "totalQuestions": 1,
-    "correctAnswers": 1,
+    "totalQuestions": 3,
+    "correctAnswers": 3,
     "accuracy": 1,
-    "averageConfidence": 0.10352408491091729
+    "averageConfidence": 0.0836468878813758
   },
   "testResults": [
     {
       "testDir": "test1",
       "policyFile": "test1.md",
       "qaFile": "test1_q&a.md",
-      "totalQuestions": 1,
+      "totalQuestions": 3,
       "results": [
         {
           "testDir": "test1",
           "questionNumber": 1,
-          "question": "Within how many days of the original purchase are refunds available?",
-          "expectedAnswer": "14 days.",
-          "actualAnswer": "Refunds are available within 14 days of the original purchase.",
+          "question": "How much does Canva Pro cost monthly and yearly?",
+          "expectedAnswer": "Canva Pro is about $12.99 per month, or $119.99 if billed yearly.",
+          "actualAnswer": "Canva Pro costs $12.99 per month if you pay monthly, or $119.99 per year if you pay yearly.",
           "isCorrect": true,
-          "confidence": 0.10352408491091729,
-          "searchResults": 82,
+          "confidence": 0.08306319775885365,
+          "searchResults": 31,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 2,
+          "question": "Are education accounts free?",
+          "expectedAnswer": "Yes, teachers and students can apply for free Pro features through Canva for Education.",
+          "actualAnswer": "Yes, education accounts are free. Teachers and students get Pro features but they need to apply.",
+          "isCorrect": true,
+          "confidence": 0.07478855232755861,
+          "searchResults": 31,
+          "citations": 5
+        },
+        {
+          "testDir": "test1",
+          "questionNumber": 3,
+          "question": "Can nonprofits get Canva Pro for free?",
+          "expectedAnswer": "Yes, nonprofits can get Canva Pro free forever if they qualify by applying.",
+          "actualAnswer": "Yes, nonprofits can get Canva Pro free forever if they qualify. They need to fill out a special nonprofit form, though sometimes they get denied if they don't meet eligibility requirements.",
+          "isCorrect": true,
+          "confidence": 0.09308891355771512,
+          "searchResults": 31,
           "citations": 5
         }
       ]

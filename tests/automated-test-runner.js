@@ -14,8 +14,7 @@ async function main() {
   }
 }
 
-if (require.main === module) {
-  main();
-}
+// Run the main function
+main();
 
-module.exports = { TestRunner };
+export { TestRunner };
