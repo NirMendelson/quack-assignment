@@ -1,49 +1,12 @@
+const { TextProcessor } = require('./TextProcessor');
+const { AnswerEvaluator } = require('./AnswerEvaluator');
+
 class QuestionProcessor {
   constructor(searchService, answerService) {
     this.searchService = searchService;
     this.answerService = answerService;
-  }
-
-  // Helper methods for robust text processing
-  normalizeSmartQuotes(s) {
-    if (!s) return '';
-    return s
-      // real smart quotes to straight
-      .replace(/[“”]/g, '"')
-      .replace(/[‘’]/g, "'")
-      // em/en dashes → hyphen
-      .replace(/[\u2012\u2013\u2014\u2015]/g, '-')
-      // non-breaking and thin spaces → normal space
-      .replace(/[\u00A0\u2000-\u200B\u202F\u205F\u3000]/g, ' ');
-  }
-  
-  stripOuterQuotesAndItalics(s) {
-    if (!s) return '';
-    let t = s.trim();
-    // strip italics
-    t = t.replace(/^\*+/, '').replace(/\*+$/, '');
-    // strip BOTH straight and smart quotes at ends
-    t = t.replace(/^[“”"]+/, '').replace(/[“”"]+$/, '');
-    return t.trim();
-  }
-  
-  normalizeForMatch(s) {
-    if (!s) return '';
-    return this.stripOuterQuotesAndItalics(this.normalizeSmartQuotes(s))
-      .toLowerCase()
-      .replace(/\*\*/g, '')
-      .replace(/\s+/g, ' ')
-      .trim();
-  }
-  
-
-  stripMarkdownQuote(line) {
-    let t = line.replace(/^>\s*/, '');
-    t = this.normalizeSmartQuotes(t).trim();
-    t = t.replace(/^\*+/, '').replace(/\*+$/, '').trim();
-    t = t.replace(/^"+/, '').replace(/"+$/, '').trim();
-    t = t.replace(/^`+/, '').replace(/`+$/, '').trim();
-    return t;
+    this.textProcessor = new TextProcessor();
+    this.answerEvaluator = new AnswerEvaluator(answerService);
   }
 
   async testQuestion(question, testDir, questionNumber, qaContent = null) {
@@ -86,10 +49,10 @@ class QuestionProcessor {
     console.log(`🎯 Confidence: ${(answer.confidence * 100).toFixed(1)}%`);
     
     // Clean up citations from the answer text
-    const cleanAnswer = this.cleanAnswerText(answer.text);
+    const cleanAnswer = this.textProcessor.cleanAnswerText(answer.text);
     
     // Evaluate correctness using LLM
-    const isCorrect = await this.evaluateAnswerWithLLM(question.expectedAnswer, cleanAnswer, question.question);
+    const isCorrect = await this.answerEvaluator.evaluateAnswerWithLLM(question.expectedAnswer, cleanAnswer, question.question);
     console.log(`⚖️ Evaluation: ${isCorrect ? '✅ CORRECT' : '❌ INCORRECT'}`);
     
     return {
@@ -108,15 +71,15 @@ class QuestionProcessor {
   findAllAnswerChunks(expectedAnswer, chunks, quotedText = null) {
     // First, try to find the quoted text (this is what actually exists in chunks)
     if (quotedText) {
-      const exactMatches = this.findChunksWithText(chunks, quotedText);
+      const exactMatches = this.textProcessor.findChunksWithText(chunks, quotedText);
       if (exactMatches.length > 0) {
         return exactMatches;
       }
       
       // Try half-quotes of the quoted text
-      const quotedHalves = this.splitIntoHalves(quotedText);
+      const quotedHalves = this.textProcessor.splitIntoHalves(quotedText);
       for (const half of quotedHalves) {
-        const halfMatches = this.findChunksWithText(chunks, half);
+        const halfMatches = this.textProcessor.findChunksWithText(chunks, half);
         if (halfMatches.length > 0) {
           return halfMatches;
         }
@@ -124,22 +87,22 @@ class QuestionProcessor {
     }
     
     // Fallback: try to find the expected answer text directly
-    const expectedMatches = this.findChunksWithText(chunks, expectedAnswer);
+    const expectedMatches = this.textProcessor.findChunksWithText(chunks, expectedAnswer);
     if (expectedMatches.length > 0) {
       return expectedMatches;
     }
     
     // Try half-quotes of the expected answer
-    const expectedHalves = this.splitIntoHalves(expectedAnswer);
+    const expectedHalves = this.textProcessor.splitIntoHalves(expectedAnswer);
     for (const half of expectedHalves) {
-      const halfMatches = this.findChunksWithText(chunks, half);
+      const halfMatches = this.textProcessor.findChunksWithText(chunks, half);
       if (halfMatches.length > 0) {
         return halfMatches;
       }
     }
     
     // Final fallback to keyword matching
-    const answerKeywords = this.extractKeywords(expectedAnswer.toLowerCase());
+    const answerKeywords = this.textProcessor.extractKeywords(expectedAnswer.toLowerCase());
     const keywordMatches = [];
     
     for (const chunk of chunks) {
@@ -161,59 +124,6 @@ class QuestionProcessor {
     const answerChunks = this.findAllAnswerChunks(expectedAnswer, chunks);
     return answerChunks.length > 0 ? answerChunks[0] : null;
   }
-
-  extractQuotedTextFromQA(expectedAnswer, qaContent) {
-    if (!qaContent) return null;
-    const lines = this.normalizeSmartQuotes(qaContent).split('\n');
-    let idx = lines.findIndex(l => this.normalizeSmartQuotes(l).includes(this.normalizeSmartQuotes(expectedAnswer)));
-    if (idx === -1) return null;
-
-    // collect up to 5 subsequent blockquote lines as one quote blob
-    const pieces = [];
-    for (let i = idx; i < Math.min(idx + 8, lines.length); i++) {
-      const t = this.normalizeSmartQuotes(lines[i]).trim();
-      if (t.startsWith('>')) pieces.push(this.stripMarkdownQuote(t));
-    }
-    const joined = pieces.join(' ').trim();
-    return joined || null;
-  }
-
-  extractQuotedText(expectedAnswer) {
-    // Look for text in quotes with asterisks (more flexible pattern)
-    // Pattern: > *"text"* (the quoted text is between the quotes)
-    const quoteMatch = expectedAnswer.match(/>\s*\*\s*[""]([^""]+)[""]\s*\*/);
-    if (quoteMatch) {
-      return quoteMatch[1].trim();
-    }
-    
-    // Look for text in backticks
-    const backtickMatch = expectedAnswer.match(/`([^`]+)`/);
-    if (backtickMatch) {
-      return backtickMatch[1].trim();
-    }
-    
-    return null;
-  }
-
-  splitIntoHalves(text) {
-    const words = this.normalizeSmartQuotes(text).trim().split(/\s+/);
-    const midPoint = Math.floor(words.length / 2);
-    
-    return [
-      words.slice(0, midPoint).join(' '),
-      words.slice(midPoint).join(' ')
-    ];
-  }
-
-  findChunksWithText(chunks, searchText) {
-    const needle = this.normalizeForMatch(searchText);
-  
-    return chunks.filter(chunk => {
-      const hay = this.normalizeForMatch(chunk.content);
-      return hay.includes(needle);
-    });
-  }
-  
 
   explainRatingCalculation(searchResults, answerChunk, answerChunks) {
     // Show top 20 chunks and score calculations
@@ -244,7 +154,13 @@ class QuestionProcessor {
         Object.entries(topAnswerChunk.sources).forEach(([source, data]) => {
           const rrfK = 60;
           if (source === 'exact') {
-            console.log(`  - ${source}: bonus ${data.bonusApplied.toFixed(6)}`);
+            if (data.bonusApplied !== undefined) {
+              console.log(`  - ${source}: bonus ${data.bonusApplied.toFixed(6)}`);
+            } else if (data.bonus !== undefined) {
+              console.log(`  - ${source}: bonus ${data.bonus.toFixed(6)}`);
+            } else {
+              console.log(`  - ${source}: data structure:`, data);
+            }
           } else if (data.score !== undefined && data.rank !== undefined) {
             const rrfScore = 1 / (rrfK + data.rank);
             console.log(`  - ${source}: score ${data.score.toFixed(3)}, rank ${data.rank} → RRF ${rrfScore.toFixed(6)}`);
@@ -256,7 +172,7 @@ class QuestionProcessor {
         const totalRrf = Object.entries(topAnswerChunk.sources).reduce((sum, [source, data]) => {
           const rrfK = 60;
           if (source === 'exact') {
-            return sum + data.bonusApplied;
+            return sum + (data.bonusApplied || data.bonus || 0);
           } else {
             return sum + (1 / (rrfK + data.rank));
           }
@@ -280,7 +196,13 @@ class QuestionProcessor {
           Object.entries(topNonAnswerChunk.sources).forEach(([source, data]) => {
             const rrfK = 60;
             if (source === 'exact') {
-              console.log(`  - ${source}: bonus ${data.bonusApplied.toFixed(6)}`);
+              if (data.bonusApplied !== undefined) {
+                console.log(`  - ${source}: bonus ${data.bonusApplied.toFixed(6)}`);
+              } else if (data.bonus !== undefined) {
+                console.log(`  - ${source}: bonus ${data.bonus.toFixed(6)}`);
+              } else {
+                console.log(`  - ${source}: data structure:`, data);
+              }
             } else if (data.score !== undefined && data.rank !== undefined) {
               const rrfScore = 1 / (rrfK + data.rank);
               console.log(`  - ${source}: score ${data.score.toFixed(3)}, rank ${data.rank} → RRF ${rrfScore.toFixed(6)}`);
@@ -292,7 +214,7 @@ class QuestionProcessor {
           const totalRrf = Object.entries(topNonAnswerChunk.sources).reduce((sum, [source, data]) => {
             const rrfK = 60;
             if (source === 'exact') {
-              return sum + data.bonusApplied;
+              return sum + (data.bonusApplied || data.bonus || 0);
             } else {
               return sum + (1 / (rrfK + data.rank));
             }
@@ -314,7 +236,7 @@ class QuestionProcessor {
     let inComment = false;
 
     for (const rawLine of lines) {
-      const line = this.normalizeSmartQuotes(rawLine);
+      const line = this.textProcessor.normalizeSmartQuotes(rawLine);
       const trimmed = line.trim();
 
       // comments
@@ -359,7 +281,7 @@ class QuestionProcessor {
 
       // capture any blockquote lines after the answer as quote text
       if (inAnswer && trimmed.startsWith('>')) {
-        const piece = this.stripMarkdownQuote(trimmed);
+        const piece = this.textProcessor.stripMarkdownQuote(trimmed);
         if (piece) {
           currentQuotedText = currentQuotedText ? `${currentQuotedText} ${piece}` : piece;
         }
@@ -377,122 +299,6 @@ class QuestionProcessor {
     }
 
     return questions;
-  }
-
-  async evaluateAnswerWithLLM(expected, actual, question) {
-    // Use Claude to evaluate if the generated answer matches the expected answer
-    try {
-      const prompt = `You are an expert evaluator for policy Q&A systems. Your task is to determine if the actual answer correctly addresses the question and matches the expected answer.
-
-EVALUATION CRITERIA:
-1. Semantic Equivalence: The actual answer should convey the same meaning as the expected answer
-2. Completeness: The actual answer should cover the key information from the expected answer
-3. Accuracy: The actual answer should be factually correct
-4. Format Tolerance: Different wording, punctuation, or formatting should not affect correctness
-5. Context Awareness: These responses are ALL EQUIVALENT when indicating no data is available:
-   - "No data about it in the text"
-   - "I could not find this in the policy"
-   - "Transferring to human customer support"
-   - "I could not find this information"
-   - Any response indicating the information is not available in the policy
-
-QUESTION: ${question}
-
-EXPECTED ANSWER: ${expected}
-
-ACTUAL ANSWER: ${actual}
-
-Please evaluate if the actual answer is correct. Consider:
-- Are the key facts the same?
-- Is the meaning equivalent?
-- Are both answers saying the same thing in different words?
-- If both indicate "no data available" in any form, they are equivalent
-
-Respond with ONLY "CORRECT" or "INCORRECT" followed by a brief explanation.`;
-
-      const response = await this.answerService.claude.messages.create({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 100,
-        temperature: 0,
-        messages: [
-          {
-            role: 'user',
-            content: `You are an expert evaluator for policy Q&A systems. Be fair and consider semantic equivalence.\n\n${prompt}`
-          }
-        ]
-      });
-
-      const evaluation = response.content[0].text.trim();
-      const isCorrect = evaluation.startsWith('CORRECT');
-      
-      return isCorrect;
-
-    } catch (error) {
-      console.log(`    Evaluation error: ${error.message}`);
-      // Fallback to simple keyword matching if LLM fails
-      return this.evaluateAnswerFallback(expected, actual);
-    }
-  }
-
-  evaluateAnswerFallback(expected, actual) {
-    // Fallback evaluation using simple keyword matching when LLM evaluation fails
-    const expectedKeywords = this.extractKeywords(expected.toLowerCase());
-    const actualKeywords = this.extractKeywords(actual.toLowerCase());
-    
-    // Check if key information is present
-    const keyInfoPresent = expectedKeywords.some(keyword => 
-      actualKeywords.some(actualKeyword => 
-        actualKeyword.includes(keyword) || keyword.includes(actualKeyword)
-      )
-    );
-    
-    // Check for contradictory information
-    const contradictory = this.checkContradiction(expected, actual);
-    
-    return keyInfoPresent && !contradictory;
-  }
-
-  extractKeywords(text) {
-    // Extract meaningful keywords from text for matching
-    return text
-      .replace(/[^\w\s]/g, ' ')
-      .split(/\s+/)
-      .filter(word => word.length > 3)
-      .map(word => word.toLowerCase());
-  }
-
-  checkContradiction(expected, actual) {
-    // Check for contradictory information between expected and actual answers
-    const contradictions = [
-      ['yes', 'no'],
-      ['can', 'cannot'],
-      ['allowed', 'not allowed'],
-      ['available', 'not available'],
-      ['possible', 'not possible']
-    ];
-    
-    for (const [pos, neg] of contradictions) {
-      const expectedHasPos = expected.toLowerCase().includes(pos);
-      const actualHasNeg = actual.toLowerCase().includes(neg);
-      const expectedHasNeg = expected.toLowerCase().includes(neg);
-      const actualHasPos = actual.toLowerCase().includes(pos);
-      
-      if ((expectedHasPos && actualHasNeg) || (expectedHasNeg && actualHasPos)) {
-        return true;
-      }
-    }
-    
-    return false;
-  }
-
-  cleanAnswerText(text) {
-    // Remove citation patterns and formatting from the generated answer
-    return text.replace(/\[c:\d+\s*->[^\]]+\]/g, '')
-      // Remove bold markers around quoted text
-      .replace(/\*\*([^*]+)\*\*/g, '$1')
-      // Clean up extra spaces
-      .replace(/\s+/g, ' ')
-      .trim();
   }
 }
 

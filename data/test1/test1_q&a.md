@@ -2,7 +2,7 @@
 **A:** 14 days.  
 > *“Refunds are available only within **14 days** of the original purchase.”*  
 
----
+<!-- ---
 
 ### Q2. Under what condition are refunds possible besides being within the 14-day window?  
 **A:** Only if no boards were created and proof of payment is provided.  
@@ -81,4 +81,4 @@
 ---
 
 ### Q15. Who is the CEO of Monday.com?
-**A:** No data about it in the text.  
+**A:** No data about it in the text.   -->

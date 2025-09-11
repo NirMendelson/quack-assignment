@@ -1,15 +1,12 @@
 const axios = require('axios');
 const Anthropic = require('@anthropic-ai/sdk');
 const { logger } = require('../utils/logger');
-const RerankService = require('./RerankService');
 
 class AnswerService {
   constructor() {
-    this.cohereApiKey = process.env.COHERE_API_KEY;
     this.claude = new Anthropic({
       apiKey: process.env.CLAUDE_API_KEY,
     });
-    this.rerankService = new RerankService(this.cohereApiKey, process.env.VOYAGE_API_KEY);
   }
 
   async generateAnswer(question, searchResults) {
@@ -48,50 +45,6 @@ class AnswerService {
     return specPatterns.some(pattern => pattern.test(question));
   }
 
-  async rerankResults(question, searchResults) {
-    try {
-      if (searchResults.length === 0) {
-        return [];
-      }
-
-      // Prepare documents for reranking
-      const documents = searchResults.map(result => ({
-        text: result.content,
-        id: result.id
-      }));
-
-      // Use Cohere Rerank via REST API
-      const rerankResponse = await axios.post('https://api.cohere.ai/v1/rerank', {
-        model: 'rerank-english-v3.0',
-        query: question,
-        documents: documents.map(doc => doc.text),
-        top_n: Math.min(5, documents.length)
-      }, {
-        headers: {
-          'Authorization': `Bearer ${this.cohereApiKey}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      // Map reranked results back to original format
-      const rerankedResults = rerankResponse.data.results.map((result, index) => {
-        const originalResult = searchResults.find(r => r.id === documents[result.index].id);
-        return {
-          ...originalResult,
-          rerankScore: result.relevance_score,
-          score: result.relevance_score // Use rerank score as final score
-        };
-      });
-
-      logger.info(`Reranked ${searchResults.length} results to ${rerankedResults.length} top results`);
-      return rerankedResults;
-
-    } catch (error) {
-      logger.error('Error reranking results:', error.message);
-      // Fallback to original results if reranking fails
-      return searchResults.slice(0, 5);
-    }
-  }
 
   hasSufficientEvidence(chunks) {
     console.log(`🔍 Checking evidence sufficiency for ${chunks.length} chunks`);
