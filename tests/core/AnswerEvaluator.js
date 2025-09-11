@@ -11,7 +11,7 @@ class AnswerEvaluator {
     }
 
     // Use a valid Anthropic model id for the Vercel AI adapter
-    this.model = anthropic('claude-3-5-sonnet-20241022', { apiKey });
+    this.model = anthropic('claude-sonnet-4-20250514', { apiKey });
   }
 
   async evaluateAnswerWithLLM(expected, actual, question) {
