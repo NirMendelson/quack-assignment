@@ -17,39 +17,12 @@ class AnswerService {
       console.log(`🤖 Generating answer for: "${question}"`);
       logger.info(`Generating answer for question: ${question}`);
 
-      // Detect if this is a spec-style query (contains code-like terms)
-      const isSpecQuery = this.isSpecQuery(question);
-      console.log(`🔍 Query type: ${isSpecQuery ? 'SPEC' : 'GENERAL'}`);
-
-      // Use reranking service to get top chunks
-      const rerankResult = await this.rerankService.rerankChunks(question, searchResults, isSpecQuery);
-      const topChunks = rerankResult.chunks;
-      
-      console.log(`📊 Selected top ${topChunks.length} chunks after reranking`);
-      
-      // Check evidence gate
-      if (!rerankResult.evidenceGate.passed) {
-        console.log(`❌ Evidence gate failed: ${rerankResult.evidenceGate.reason}`);
-        
-        // For spec queries, try retry with heavier keyword weighting
-        if (isSpecQuery && rerankResult.literalHits > 0) {
-          console.log(`🔄 Retrying with literal hits injection...`);
-          // TODO: Implement retry logic with literal hits injection
-        }
-        
-        return {
-          text: "I could not find this in the policy.",
-          citations: [],
-          confidence: 0,
-          chunks: topChunks
-        };
-      }
+      // Use top 5 search results directly (no reranking needed)
+      const topChunks = searchResults.slice(0, 5);
       
       // Generate answer using Claude
-      console.log(`✅ Evidence gate passed - generating answer with Claude...`);
       const answer = await this.generateAnswerWithClaude(question, topChunks);
       
-      console.log(`📝 Generated answer: "${answer.text}"`);
       logger.info('Answer generated successfully');
       return answer;
 
@@ -172,7 +145,7 @@ CRITICAL RULES - NO EXCEPTIONS:
 5. DO NOT provide partial answers, explanations, or technical details if the complete information is not in the excerpts
 6. DO NOT say things like "The document only discusses..." or "There is no mention of..." - just say "Transferring to human customer support."
 7. Answer in your own words - do NOT quote the exact text from the excerpts
-8. Answer straight and to the point, do not add any extra information.
+8. **Answer straight and to the point, do not add any extra information that the customer didn't ask for.**
 9. Be precise and factual
 10. Write naturally and avoid extra spaces before punctuation
 11. Start your answer directly - do NOT use phrases like "Based on the policy document" or "According to the policy"

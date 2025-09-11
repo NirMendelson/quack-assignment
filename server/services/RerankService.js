@@ -445,72 +445,25 @@ class RerankService {
    */
   async rerankChunks(query, searchResults, isSpecQuery = false) {
     try {
-      console.log(`\n🚀 RERANKING PIPELINE START`);
-      console.log(`📝 Query: "${query}"`);
-      console.log(`📊 Input search results: ${searchResults.length}`);
-      console.log(`🔍 Query type: ${isSpecQuery ? 'SPEC' : 'GENERAL'}`);
-      
-      // Log input search results
-      console.log(`\n📋 INPUT SEARCH RESULTS (top 10):`);
-      searchResults.slice(0, 10).forEach((chunk, i) => {
-        const score = chunk.score || chunk.rrfScore || 'N/A';
-        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | Score: ${score} | "${chunk.content.substring(0, 100)}..."`);
-      });
-      
       // Extract key terms
       const keyTerms = this.extractKeyTerms(query);
-      console.log(`\n📝 Extracted key terms: [${keyTerms.join(', ')}]`);
       
       // Deduplicate candidates
       const dedupedCandidates = this.deduplicateChunks(searchResults);
-      console.log(`\n🔧 Deduplication: ${searchResults.length} → ${dedupedCandidates.length} chunks`);
       
       // Find literal hits
       const literalHits = dedupedCandidates.filter(chunk => 
         this.containsLiteral(chunk.content, keyTerms)
       );
-      console.log(`\n🎯 Literal hits found: ${literalHits.length}`);
-      if (literalHits.length > 0) {
-        console.log(`📋 Literal hits (top 5):`);
-        literalHits.slice(0, 5).forEach((chunk, i) => {
-          console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | "${chunk.content.substring(0, 100)}..."`);
-        });
-      }
       
       // Apply diversity constraints
       const diverseCandidates = this.applyDiversityConstraints(dedupedCandidates, literalHits);
-      console.log(`\n🎨 Diversity constraints applied: ${diverseCandidates.length} candidates`);
-      
-      // Log diversity results
-      console.log(`📋 Diverse candidates (top 10):`);
-      diverseCandidates.slice(0, 10).forEach((chunk, i) => {
-        const score = chunk.score || chunk.rrfScore || 'N/A';
-        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | Score: ${score} | "${chunk.content.substring(0, 100)}..."`);
-      });
       
       // Use RRF results directly - no reranking needed
       const topK = diverseCandidates.slice(0, 5);
       
-      console.log(`\n🎯 FINAL TOP 5 CHUNKS (using RRF results directly):`);
-      topK.forEach((chunk, i) => {
-        const score = chunk.score || chunk.rrfScore || 'N/A';
-        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | RRF Score: ${score} | "${chunk.content.substring(0, 100)}..."`);
-      });
-      
       // Check evidence gate
       const gateResult = this.checkEvidenceGate(topK, query, isSpecQuery);
-      console.log(`\n🔍 Evidence gate: ${gateResult.passed ? 'PASSED' : 'FAILED'} (${gateResult.reason})`);
-      
-      // Log detailed results
-      console.log(`\n📊 FINAL RERANKING RESULTS:`);
-      for (let i = 0; i < topK.length; i++) {
-        const chunk = topK[i];
-        const hasLiteral = this.containsLiteral(chunk.content, keyTerms);
-        const score = chunk.score || chunk.rrfScore || 'N/A';
-        console.log(`  ${i + 1}. [${chunk.type}] ${chunk.id} | RRF Score: ${score} | Literal: ${hasLiteral} | "${chunk.content.substring(0, 100)}..."`);
-      }
-      
-      console.log(`\n🏁 RERANKING PIPELINE COMPLETE`);
       
       return {
         chunks: topK,

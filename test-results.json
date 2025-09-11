@@ -1,11 +1,11 @@
 {
-  "timestamp": "2025-09-10T12:07:32.795Z",
+  "timestamp": "2025-09-11T07:23:06.097Z",
   "summary": {
     "totalTests": 1,
     "totalQuestions": 15,
-    "correctAnswers": 15,
-    "accuracy": 1,
-    "averageConfidence": 0.07604358018519282
+    "correctAnswers": 12,
+    "accuracy": 0.8,
+    "averageConfidence": 0.07603890182261973
   },
   "testResults": [
     {
@@ -52,7 +52,7 @@
           "questionNumber": 4,
           "question": "How are refunds for team plans handled?",
           "expectedAnswer": "On a case-by-case basis by contacting finance@monday.fake.",
-          "actualAnswer": "Refunds for team plans are handled case by case. You should contact finance@monday.fake for assistance with team plan refunds.",
+          "actualAnswer": "Refunds for team plans are handled case by case. You should contact finance@monday.fake for assistance with your team plan refund.",
           "isCorrect": true,
           "confidence": 0.06315935160500749,
           "searchResults": 100,
@@ -96,7 +96,7 @@
           "questionNumber": 8,
           "question": "What happens if support does not reply within 48 hours?",
           "expectedAnswer": "The request is automatically escalated.",
-          "actualAnswer": "If support does not reply within 48 hours, the request is automatically escalated.",
+          "actualAnswer": "If support does not reply within 48 hours, your request is automatically escalated.",
           "isCorrect": true,
           "confidence": 0.06278904405186411,
           "searchResults": 100,
@@ -129,7 +129,7 @@
           "questionNumber": 11,
           "question": "Does monday.com provide physical shipping of boxes or hardware?",
           "expectedAnswer": "No, shipping is not offered at all.",
-          "actualAnswer": "No, monday.com does not provide physical shipping of boxes or hardware. Monday.com is a digital-only product with no physical components or shipping services.",
+          "actualAnswer": "No, monday.com does not provide physical shipping of boxes or hardware. Monday.com is a digital-only product with no physical components involved.",
           "isCorrect": true,
           "confidence": 0.06303983797505744,
           "searchResults": 100,
@@ -152,7 +152,7 @@
           "question": "Does the monday.com policy document mention anything about data retention or how long customer data is stored?",
           "expectedAnswer": "No data about it in the text.",
           "actualAnswer": "Transferring to human customer support.",
-          "isCorrect": true,
+          "isCorrect": false,
           "confidence": 0.08179737577979825,
           "searchResults": 100,
           "citations": 5
@@ -163,7 +163,7 @@
           "question": "Are there any details in the policy draft about integrations with third-party applications or APIs?",
           "expectedAnswer": "No data about it in the text.",
           "actualAnswer": "Transferring to human customer support.",
-          "isCorrect": true,
+          "isCorrect": false,
           "confidence": 0.06182163006567305,
           "searchResults": 100,
           "citations": 5
@@ -174,8 +174,8 @@
           "question": "Who is the CEO of Monday.com?",
           "expectedAnswer": "No data about it in the text.",
           "actualAnswer": "Transferring to human customer support.",
-          "isCorrect": true,
-          "confidence": 0.058280063425398244,
+          "isCorrect": false,
+          "confidence": 0.05820988798680175,
           "searchResults": 100,
           "citations": 5
         }
