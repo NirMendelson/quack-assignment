@@ -3,6 +3,36 @@ const nextConfig = {
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
+  webpack: (config, { isServer }) => {
+    // Fix for natural library warnings in Next.js
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        os: false,
+        crypto: false,
+      };
+    }
+
+    // Ignore Node.js-specific modules that aren't needed in browser
+    config.externals = config.externals || [];
+    config.externals.push({
+      'webworker-threads': 'commonjs webworker-threads',
+      'natural': 'commonjs natural',
+    });
+
+    // Ignore warnings for missing optional dependencies
+    config.ignoreWarnings = [
+      /Module not found: Can't resolve 'webworker-threads'/,
+      /Module not found: Can't resolve 'fs'/,
+      /Module not found: Can't resolve 'path'/,
+      /Module not found: Can't resolve 'os'/,
+      /Module not found: Can't resolve 'crypto'/,
+    ];
+
+    return config;
+  },
 }
 
 module.exports = nextConfig

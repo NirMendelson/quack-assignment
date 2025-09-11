@@ -3,6 +3,7 @@ const { logger } = require('../../utils/logger');
 
 class ChunkingService {
   constructor() {
+    // Only use the tokenizers we need - avoid loading classifiers that cause webpack issues
     this.sentenceTokenizer = new natural.SentenceTokenizer();
     this.wordTokenizer = new natural.WordTokenizer();
   }

@@ -14,7 +14,8 @@ documentProcessor.loadIndexes().then(() => {
   searchService.setDocumentProcessor(documentProcessor)
   logger.info('Services initialized and indexes loaded')
 }).catch(error => {
-  logger.warn('Could not load indexes on startup:', error)
+  // This is expected when starting fresh - indexes will be created when document is uploaded
+  logger.info('No existing indexes to load on startup - will create new ones when document is uploaded')
 })
 
 export async function POST(request: NextRequest) {

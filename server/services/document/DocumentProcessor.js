@@ -70,8 +70,8 @@ class DocumentProcessor {
       await this.indexingService.loadIndexes();
       logger.info('Indexes loaded successfully');
     } catch (error) {
-      logger.error('Error loading indexes:', error.message);
-      // Don't throw error, indexes will be rebuilt if needed
+      // This is expected when starting fresh - indexes will be created when document is uploaded
+      logger.info('No existing indexes to load - will create new ones when document is uploaded');
     }
   }
 

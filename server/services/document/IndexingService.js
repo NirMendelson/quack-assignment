@@ -147,7 +147,14 @@ class IndexingService {
       
       logger.info(`Loaded indexes from ${this.persistPath}`);
     } catch (error) {
-      logger.error('Error loading indexes:', error.message);
+      // Check if it's a file not found error (expected when starting fresh)
+      if (error.code === 'ENOENT') {
+        logger.info('No existing indexes found - will create new ones when document is uploaded');
+      } else if (error.message && error.message.includes('MiniSearch: loadJSON should be given the same options')) {
+        logger.info('Existing indexes are incompatible with current configuration - will create new ones when document is uploaded');
+      } else {
+        logger.error('Error loading indexes:', error.message || error.toString());
+      }
       // Don't throw error, just log it - indexes will be rebuilt if needed
     }
   }
