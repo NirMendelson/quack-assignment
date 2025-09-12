@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       answer: answer.text,
       citations: answer.citations,
       confidence: answer.confidence,
-      chunks: searchResults.map(r => ({
+      chunks: searchResults.map((r: any) => ({
         id: r.id,
         content: r.content,
         score: r.score
@@ -46,10 +46,11 @@ export async function POST(request: NextRequest) {
     })
     
   } catch (error) {
-    logger.error('Error processing query:', error.message)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    logger.error('Error processing query:', errorMessage)
     return NextResponse.json({ 
       error: 'Failed to process query',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: errorMessage
     }, { status: 500 })
   }
 }
