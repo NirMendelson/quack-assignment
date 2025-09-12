@@ -14,8 +14,7 @@ export function FileUpload({ onDocumentLoaded }: FileUploadProps) {
   const [error, setError] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+  const processFile = async (file: File) => {
     if (!file) return
 
     if (file.type !== 'text/markdown' && !file.name.endsWith('.md')) {
@@ -54,14 +53,18 @@ export function FileUpload({ onDocumentLoaded }: FileUploadProps) {
     }
   }
 
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      await processFile(file)
+    }
+  }
+
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
     const file = event.dataTransfer.files[0]
     if (file) {
-      const fakeEvent = {
-        target: { files: [file] }
-      } as React.ChangeEvent<HTMLInputElement>
-      handleFileSelect(fakeEvent)
+      processFile(file)
     }
   }
 
