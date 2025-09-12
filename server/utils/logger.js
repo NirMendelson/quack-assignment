@@ -37,12 +37,8 @@ class SimpleLogger {
   }
 }
 
-// Use simple logger in serverless environments, Winston otherwise
-let logger;
-
-if (isServerless) {
-  logger = new SimpleLogger();
-} else {
+// Create logger instance
+const logger = isServerless ? new SimpleLogger() : (() => {
   // Only import and use Winston in non-serverless environments
   try {
     const winston = require('winston');
@@ -61,7 +57,7 @@ if (isServerless) {
       logDir = null;
     }
 
-    logger = winston.createLogger({
+    const winstonLogger = winston.createLogger({
       level: process.env.LOG_LEVEL || 'warn',
       format: winston.format.combine(
         winston.format.timestamp(),
@@ -74,26 +70,28 @@ if (isServerless) {
 
     // Add file transports only if logDir exists
     if (logDir) {
-      logger.add(new winston.transports.File({ 
+      winstonLogger.add(new winston.transports.File({ 
         filename: path.join(logDir, 'error.log'), 
         level: 'error' 
       }));
-      logger.add(new winston.transports.File({ 
+      winstonLogger.add(new winston.transports.File({ 
         filename: path.join(logDir, 'combined.log') 
       }));
     }
 
     // Always add console transport
-    logger.add(new winston.transports.Console({
+    winstonLogger.add(new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.simple()
       )
     }));
+
+    return winstonLogger;
   } catch (error) {
     console.warn('Failed to initialize Winston, falling back to simple logger:', error.message);
-    logger = new SimpleLogger();
+    return new SimpleLogger();
   }
-}
+})();
 
 export { logger };
