@@ -1,8 +1,23 @@
 import winston from 'winston';
 import path from 'path';
+import fs from 'fs';
 
-// Create logs directory if it doesn't exist
-const logDir = path.join(process.cwd(), 'logs');
+// Check if we're in a serverless environment (Vercel, Netlify, etc.)
+const isServerless = process.env.VERCEL || process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME;
+
+// Create logs directory only if not in serverless environment
+let logDir = null;
+if (!isServerless) {
+  try {
+    logDir = path.join(process.cwd(), 'logs');
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true });
+    }
+  } catch (error) {
+    console.warn('Could not create logs directory:', error.message);
+    logDir = null;
+  }
+}
 
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'warn',
@@ -12,27 +27,26 @@ const logger = winston.createLogger({
     winston.format.json()
   ),
   defaultMeta: { service: 'quack-policy-agent' },
-  transports: [
-    // Write all logs with level 'error' and below to error.log
-    new winston.transports.File({ 
-      filename: path.join(logDir, 'error.log'), 
-      level: 'error' 
-    }),
-    // Write all logs with level 'info' and below to combined.log
-    new winston.transports.File({ 
-      filename: path.join(logDir, 'combined.log') 
-    }),
-  ],
+  transports: []
 });
 
-// If we're not in production, log to the console as well
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
-    )
+// Add file transports only if not in serverless environment and logDir exists
+if (!isServerless && logDir) {
+  logger.add(new winston.transports.File({ 
+    filename: path.join(logDir, 'error.log'), 
+    level: 'error' 
+  }));
+  logger.add(new winston.transports.File({ 
+    filename: path.join(logDir, 'combined.log') 
   }));
 }
+
+// Always add console transport for serverless environments
+logger.add(new winston.transports.Console({
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.simple()
+  )
+}));
 
 export { logger };

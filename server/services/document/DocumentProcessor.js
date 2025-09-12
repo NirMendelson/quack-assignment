@@ -89,6 +89,13 @@ class DocumentProcessor {
 
   async saveChunksForInspection(chunks, filename) {
     try {
+      // Skip saving in serverless environments
+      const isServerless = process.env.VERCEL || process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME;
+      if (isServerless) {
+        logger.info('Skipping chunk inspection save in serverless environment');
+        return;
+      }
+
       const inspectionDir = path.join(process.cwd(), 'data', 'chunks-inspection');
       await fs.mkdir(inspectionDir, { recursive: true });
       

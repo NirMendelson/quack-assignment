@@ -4,6 +4,9 @@ import fs from 'fs/promises';
 import path from 'path';
 import { logger } from '../../utils/logger.js';
 
+// Check if we're in a serverless environment
+const isServerless = process.env.VERCEL || process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME;
+
 class IndexingService {
   constructor() {
     this.voyageApiKey = process.env.VOYAGE_API_KEY;
@@ -17,7 +20,8 @@ class IndexingService {
         prefix: true
       }
     });
-    this.persistPath = path.join(process.cwd(), 'data', 'indexes');
+    // Only set persist path if not in serverless environment
+    this.persistPath = isServerless ? null : path.join(process.cwd(), 'data', 'indexes');
   }
 
   async generateEmbeddings(chunks) {
@@ -108,6 +112,12 @@ class IndexingService {
 
   async persistIndexes() {
     try {
+      // Skip persistence in serverless environments
+      if (isServerless || !this.persistPath) {
+        logger.info('Skipping index persistence in serverless environment');
+        return;
+      }
+
       // Ensure directory exists
       await fs.mkdir(this.persistPath, { recursive: true });
       
@@ -128,12 +138,21 @@ class IndexingService {
       logger.info(`Persisted indexes to ${this.persistPath}`);
     } catch (error) {
       logger.error('Error persisting indexes:', error.message);
-      throw error;
+      // Don't throw error in serverless environments
+      if (!isServerless) {
+        throw error;
+      }
     }
   }
 
   async loadIndexes() {
     try {
+      // Skip loading in serverless environments
+      if (isServerless || !this.persistPath) {
+        logger.info('Skipping index loading in serverless environment');
+        return;
+      }
+
       // Load keyword index
       const indexPath = path.join(this.persistPath, 'keyword-index.json');
       const indexData = await fs.readFile(indexPath, 'utf8');
