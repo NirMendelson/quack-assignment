@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { DocumentProcessor } from '../../../server/services/DocumentProcessor.js'
 import { logger } from '../../../server/utils/logger.js'
+import { stateManager } from '../../../lib/state'
 
 const documentProcessor = new DocumentProcessor()
 
@@ -30,8 +31,10 @@ export async function POST(request: NextRequest) {
     const searchService = new SearchService()
     searchService.setDocumentProcessor(documentProcessor)
     
-    // Store the search service globally (in a real app, you'd use a proper state management solution)
-    global.searchService = searchService
+    // Store the services in state manager
+    stateManager.setDocumentProcessor(documentProcessor)
+    stateManager.setSearchService(searchService)
+    stateManager.setInitialized(true)
     
     logger.info(`Document processed successfully: ${processedDoc.chunks.length} chunks created`)
     
@@ -43,10 +46,11 @@ export async function POST(request: NextRequest) {
     })
     
   } catch (error) {
-    logger.error('Error processing document:', error.message)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    logger.error('Error processing document:', errorMessage)
     return NextResponse.json({ 
       error: 'Failed to process document',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: errorMessage
     }, { status: 500 })
   }
 }

@@ -3,6 +3,9 @@ const nextConfig = {
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
+  experimental: {
+    serverComponentsExternalPackages: ['natural', 'winston']
+  },
   webpack: (config, { isServer }) => {
     // Fix for natural library warnings in Next.js
     if (!isServer) {
@@ -12,6 +15,10 @@ const nextConfig = {
         path: false,
         os: false,
         crypto: false,
+        stream: false,
+        util: false,
+        buffer: false,
+        events: false,
       };
     }
 
@@ -29,6 +36,10 @@ const nextConfig = {
       /Module not found: Can't resolve 'path'/,
       /Module not found: Can't resolve 'os'/,
       /Module not found: Can't resolve 'crypto'/,
+      /Module not found: Can't resolve 'stream'/,
+      /Module not found: Can't resolve 'util'/,
+      /Module not found: Can't resolve 'buffer'/,
+      /Module not found: Can't resolve 'events'/,
     ];
 
     return config;

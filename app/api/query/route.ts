@@ -3,20 +3,10 @@ import { DocumentProcessor } from '../../../server/services/DocumentProcessor.js
 import { SearchService } from '../../../server/services/SearchService.js'
 import { AnswerService } from '../../../server/services/AnswerService.js'
 import { logger } from '../../../server/utils/logger.js'
+import { stateManager } from '../../../lib/state'
 
 // Initialize services
-const documentProcessor = new DocumentProcessor()
-const searchService = new SearchService()
 const answerService = new AnswerService()
-
-// Load existing indexes on startup
-documentProcessor.loadIndexes().then(() => {
-  searchService.setDocumentProcessor(documentProcessor)
-  logger.info('Services initialized and indexes loaded')
-}).catch(error => {
-  // This is expected when starting fresh - indexes will be created when document is uploaded
-  logger.info('No existing indexes to load on startup - will create new ones when document is uploaded')
-})
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,7 +17,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if search service is available
-    if (!global.searchService) {
+    const state = stateManager.getState()
+    if (!state.searchService || !state.isInitialized) {
       return NextResponse.json({ 
         error: 'No document uploaded yet. Please upload a document first.' 
       }, { status: 400 })
@@ -36,7 +27,7 @@ export async function POST(request: NextRequest) {
     logger.info(`Processing query: ${question}`)
     
     // Search for relevant chunks
-    const searchResults = await global.searchService.search(question)
+    const searchResults = await state.searchService.search(question)
     
     // Generate answer
     const answer = await answerService.generateAnswer(question, searchResults)
